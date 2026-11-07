@@ -3,7 +3,7 @@
 **Author:** AI Generalist Candidate  
 **Target Problem:** Problem 1 — Find the Promos  
 **Show Analyzed:** *I Married a Broken Soldier. He was a Duke* (50 Episodes, 3,727 Beats)  
-**Deliverables:** GitHub Prototype & Streamlit Dashboard, Raw JSON (`outputs/promos.json`), Ranked Report (`outputs/PROMOS.md`)
+**Deliverables:** Production Next.js Web App (Omega Design System, Vercel-ready), Streamlit Dashboard (`app.py`), Python CLI Engine (`run.py`), Raw JSON (`outputs/promos.json`), Ranked Report (`outputs/PROMOS.md`), Comprehensive Unit Test Suite (`tests/`)
 
 ---
 
@@ -22,7 +22,7 @@ To achieve this, we abandoned fragile keyword matching in favor of an **Extensib
 
 ## 2. Approach, Scale & The Code vs. AI Boundary
 
-We designed a hybrid 4-stage pipeline that strictly delineates deterministic rules from semantic judgment:
+We designed a hybrid 5-stage pipeline that strictly delineates deterministic rules from semantic judgment:
 
 ```
 [Screenplays (.txt)]
@@ -33,8 +33,9 @@ We designed a hybrid 4-stage pipeline that strictly delineates deterministic rul
         │
         ▼
 [Stage 2: Candidate Window Discovery & Taxonomy Tagging (src/extractor.py)]
-   • Tags 20–60s clips opening on hooks ≤ 3s against "Blood Boils" taxonomy
+   • Tags 20–60s clips opening on hooks ≤ 3.5s against "Blood Boils" taxonomy
    • Builds Single-Episode cuts + Cross-Episode Composites (Setup + Climax)
+   • Parallelized via ThreadPoolExecutor (8 workers) for frontier LLM calls
         │
         ▼
 [Stage 3: Physical Validation, Deduplication & MMR Diversity (src/ranker.py)]
@@ -44,6 +45,12 @@ We designed a hybrid 4-stage pipeline that strictly delineates deterministic rul
         ▼
 [Stage 4: Adversarial Quality Auditor (src/auditor.py)]
    • Flags resolution leaks, context deficits, and visual dependencies
+   • Parallelized via ThreadPoolExecutor (8 workers)
+        │
+        ▼
+[Stage 5: Dual Deliverable Exporter]
+   • Unedited raw machine JSON (outputs/promos.json)
+   • Formatted report with quality critique & risk flags (outputs/PROMOS.md)
 ```
 
 ### What We Gave to Code vs. What We Kept for AI
@@ -61,7 +68,7 @@ We designed a hybrid 4-stage pipeline that strictly delineates deterministic rul
 ### Scale & Unit Economics at Volume
 - **Compute footprint:** Microdrama scripts are concise (~1,500 words per episode; 50 episodes $\approx$ 75,000 words total).
 - **Zero Vector DB overhead:** The entire show fits in memory; spinning up a vector database adds latency and brittle dependencies without improving dramatic timing.
-- **Cost per Show:** Candidate extraction + composite stitching + critique requires $\approx 52$ API calls per show. At Gemini 3.8 Flash rates (~$0.075 / 1M tokens), running an entire 50-episode show costs **$0.02 to $0.05 (under 5 cents)**.
+- **Cost & Throughput at Volume:** Candidate extraction + composite stitching + critique requires $\approx 52$ API calls per show. Parallelized across 8 worker threads, live frontier model processing finishes in under 20 seconds. At Gemini 3.8 Flash rates (~$0.075 / 1M tokens), running an entire 50-episode show costs **$0.02 to $0.05 (under 5 cents)**. The offline heuristic engine executes locally in **<2 seconds** at zero cost.
 
 ---
 
@@ -91,7 +98,17 @@ To avoid overpromising, we built an **Adversarial Quality Auditor** testing 5 ex
 
 ## 5. Prototype & Interview Re-runnability
 
-The solution is completely modular and config-driven:
-- **CLI Runner:** `python run.py --input-dir "assets/new_show"` executes in $<2$ seconds.
-- **Interactive UI:** `streamlit run app.py` provides a live editor review dashboard with hook filters, quote previews, and quality audits.
-- **Automated Tests:** Comprehensive unit test suite (`python -m unittest discover tests`) verifying parser robustness, taxonomy boundaries, MMR monotonicity, and auditor edge cases.
+The solution is completely modular, production-ready, and config-driven:
+
+### 1. Production Next.js Web Application (`app/` — Vercel-Ready)
+Built with the **Omega Design System** (`Design/omega-design-system`):
+- **Ranked Promos Dashboard (`/`):** Hero Board showcasing the #1 ranked promo on the focal dark surface, interactive archetype filter chips, search, and deep-dive modal with screenplay dialogue context and audit cards.
+- **Reusable Cut Tester Tool (`/analyze`):** Interactive editor tool allowing anyone to test any custom screenplay cut against the taxonomy, duration bounds (20–60s), and the adversarial auditor with one-click presets.
+- **50-Episode Beat Inspector (`/episodes`):** Full browser for all 50 episodes with millisecond timestamps and emotion cues.
+- **Serverless API Routes:** Direct endpoints (`/api/promos`, `/api/analyze`, `/api/episodes`, `/api/taxonomy`) enabling headless integration.
+
+### 2. Python CLI & Streamlit Alternative
+- **CLI Runner:** `PYTHONPATH=. python3 run.py --provider [gemini|openai|anthropic|heuristic]` processes 50 episodes in parallel.
+- **Streamlit UI:** `streamlit run app.py` provides a pure-Python review alternative.
+- **Automated Tests:** 10 unit tests (`PYTHONPATH=. python3 -m unittest discover tests`) verifying parser robustness, taxonomy boundaries, MMR monotonicity, and auditor edge cases.
+- **Interview Re-runnability:** 100% config-driven. Running on a new show during interviews requires only pointing `--input-dir` to the new screenplay folder and updating `config/show_context.yaml`.

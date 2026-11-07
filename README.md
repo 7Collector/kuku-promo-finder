@@ -16,9 +16,9 @@ npm install
 npm run dev
 ```
 Open [http://localhost:3000](http://localhost:3000) to view:
-- **`\` (Ranked Promos):** Featured Hero Board card, archetype filter chips, search, and detail modal.
-- **`\analyze` (Reusable Cut Tool):** Interactive tester to evaluate any custom screenplay cut against the taxonomy, duration bounds, and adversarial auditor.
-- **`\episodes` (Screenplay Inspector):** 50-episode browser with millisecond beat breakdowns.
+- **`/` (Ranked Promos):** Featured Hero Board card, archetype filter chips, search, and detail modal.
+- **`/analyze` (Reusable Cut Tool):** Interactive tester to evaluate any custom screenplay cut against the taxonomy, duration bounds, and adversarial auditor.
+- **`/episodes` (Screenplay Inspector):** 50-episode browser with millisecond beat breakdowns.
 
 ### 2. Deploy to Vercel
 Simply push to GitHub and import into Vercel:
@@ -38,10 +38,13 @@ python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 
-# 2. Run Pipeline (50 Episodes in <2 seconds)
+# 2. Run Pipeline (<2s with heuristic engine, or ~20s parallelized with frontier LLMs)
 PYTHONPATH=. python3 run.py
 
-# 3. Run Standard Unit Test Suite
+# 3. (Optional) Run Streamlit Review Dashboard
+streamlit run app.py
+
+# 4. Run Standard Unit Test Suite (10 tests)
 PYTHONPATH=. python3 -m unittest discover tests
 ```
 
@@ -161,6 +164,9 @@ python3 run.py --provider anthropic
 │   ├── test_taxonomy.py       # Word boundary & collision tests
 │   ├── test_ranker.py         # Timing constraint & MMR tests
 │   └── test_auditor.py        # Resolution leak & risk audit tests
+├── run.py                     # CLI pipeline entrypoint (parallelized)
+├── app.py                     # Streamlit review dashboard
+├── requirements.txt           # Python dependencies
 ├── package.json               # Next.js & React dependencies
 ├── tsconfig.json              # TypeScript configuration
 ├── next.config.mjs            # Next.js configuration
