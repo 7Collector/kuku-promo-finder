@@ -7,8 +7,11 @@ import os
 import json
 import requests
 from typing import Dict, Any, Optional
+from dotenv import load_dotenv
 from src.providers.base import BaseLLMProvider
 from src.utils.logging import logger
+
+load_dotenv()
 
 
 class OpenAIProvider(BaseLLMProvider):
@@ -40,11 +43,15 @@ class OpenAIProvider(BaseLLMProvider):
                 {"role": "user", "content": user_prompt}
             ],
             "response_format": {"type": "json_object"},
-            "temperature": 0.2
         }
 
+        # Temperature is not supported on GPT-6 / reasoning models (must be default 1)
+        is_reasoning_model = any(k in self._model.lower() for k in ["gpt-6", "luna", "o1", "o3", "o4", "sol", "astra"])
+        if not is_reasoning_model:
+            payload["temperature"] = 0.2
+
         logger.debug(f"Calling OpenAI API with model: {self._model}")
-        resp = requests.post(url, headers=headers, json=payload, timeout=60)
+        resp = requests.post(url, headers=headers, json=payload, timeout=90)
         resp.raise_for_status()
 
         data = resp.json()

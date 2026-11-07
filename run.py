@@ -64,16 +64,29 @@ def run_pipeline(
     extractor = PromoExtractor(taxonomy=taxonomy, llm_provider=llm_provider)
     single_candidates: List[PromoCandidate] = []
 
-    prev_summary = ""
-    for ep in episodes:
-        cands = extractor.extract_candidates_for_episode(
-            episode=ep,
-            show_context=show_context,
-            prev_episode_summary=prev_summary,
-            max_candidates=2,
-        )
-        single_candidates.extend(cands)
-        prev_summary = f"Ep {ep.episode_number}: {ep.logline}"
+    if llm_provider.name != "heuristic":
+        from concurrent.futures import ThreadPoolExecutor
+        def process_ep(ep):
+            return extractor.extract_candidates_for_episode(
+                episode=ep,
+                show_context=show_context,
+                prev_episode_summary=f"Episode {ep.episode_number}: {ep.logline}",
+                max_candidates=2,
+            )
+        with ThreadPoolExecutor(max_workers=8) as executor:
+            for r in executor.map(process_ep, episodes):
+                single_candidates.extend(r)
+    else:
+        prev_summary = ""
+        for ep in episodes:
+            cands = extractor.extract_candidates_for_episode(
+                episode=ep,
+                show_context=show_context,
+                prev_episode_summary=prev_summary,
+                max_candidates=2,
+            )
+            single_candidates.extend(cands)
+            prev_summary = f"Ep {ep.episode_number}: {ep.logline}"
 
     print(f"  • Generated {len(single_candidates)} single-episode candidate windows.")
 
@@ -109,8 +122,16 @@ def run_pipeline(
     # 5. Adversarial Quality Auditing
     print(f"\n[5/5] Running adversarial quality checks (Resolution leaks, context deficits, visual dependencies)...")
     auditor = PromoAuditor(llm_provider=llm_provider, show_context=show_context)
-    for cand in final_ranked:
-        cand.quality_audit = auditor.audit_candidate(cand)
+    if llm_provider.name != "heuristic":
+        from concurrent.futures import ThreadPoolExecutor
+        def audit_cand(cand):
+            cand.quality_audit = auditor.audit_candidate(cand)
+            return cand
+        with ThreadPoolExecutor(max_workers=8) as executor:
+            list(executor.map(audit_cand, final_ranked))
+    else:
+        for cand in final_ranked:
+            cand.quality_audit = auditor.audit_candidate(cand)
 
     # 6. Save Outputs
     os.makedirs(os.path.dirname(output_json) or ".", exist_ok=True)

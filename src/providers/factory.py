@@ -4,12 +4,15 @@ Provider Factory for LLM clients.
 
 import os
 from typing import Optional
+from dotenv import load_dotenv
 from src.providers.base import BaseLLMProvider
 from src.providers.gemini import GeminiProvider
 from src.providers.openai import OpenAIProvider
 from src.providers.anthropic import AnthropicProvider
 from src.providers.heuristic import HeuristicProvider
 from src.utils.logging import logger
+
+load_dotenv()
 
 
 def get_llm_provider(

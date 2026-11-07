@@ -8,8 +8,11 @@ import json
 import re
 import requests
 from typing import Dict, Any, Optional
+from dotenv import load_dotenv
 from src.providers.base import BaseLLMProvider
 from src.utils.logging import logger
+
+load_dotenv()
 
 
 class AnthropicProvider(BaseLLMProvider):
