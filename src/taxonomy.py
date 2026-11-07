@@ -15,8 +15,15 @@ INANIMATE_OBJECT_TOKENS = [
 
 
 class Taxonomy:
-    def __init__(self, config_path: str = "config/taxonomy.yaml"):
+    def __init__(
+        self,
+        config_path: str = "config/taxonomy.yaml",
+        show_context_path: Optional[str] = None,
+        overlay: Optional[Dict[str, List[str]]] = None,
+    ):
         self.config_path = config_path
+        self.show_context_path = show_context_path
+        self.overlay: Dict[str, List[str]] = overlay or {}
         self.hooks: List[Dict[str, Any]] = []
         self.cliffhangers: List[Dict[str, Any]] = []
         self.hook_by_id: Dict[str, Dict[str, Any]] = {}
@@ -33,6 +40,26 @@ class Taxonomy:
         data = yaml.safe_load(self._raw_yaml) or {}
         self.hooks = data.get("hooks", [])
         self.cliffhangers = data.get("cliffhangers", [])
+
+        # Load show overlay if available
+        if self.show_context_path and os.path.exists(self.show_context_path):
+            with open(self.show_context_path, "r", encoding="utf-8") as f:
+                show_data = yaml.safe_load(f) or {}
+                self.overlay.update(show_data.get("show_cues_overlay", {}))
+
+        # Merge show cues into each hook / cliffhanger
+        for h in self.hooks:
+            cues = list(h.get("generic_cues", [])) + list(h.get("example_cues", []))
+            if h["id"] in self.overlay:
+                cues.extend(self.overlay[h["id"]])
+            h["example_cues"] = list(dict.fromkeys(cues))
+
+        for c in self.cliffhangers:
+            cues = list(c.get("generic_cues", [])) + list(c.get("example_cues", []))
+            if c["id"] in self.overlay:
+                cues.extend(self.overlay[c["id"]])
+            c["example_cues"] = list(dict.fromkeys(cues))
+
         self.hook_by_id = {h["id"]: h for h in self.hooks}
         self.cliffhanger_by_id = {c["id"]: c for c in self.cliffhangers}
 

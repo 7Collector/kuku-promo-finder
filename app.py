@@ -62,7 +62,7 @@ with st.sidebar:
     hook_options = ["All"] + [h["id"] for h in taxonomy.get("hooks", [])]
     sel_hook = st.selectbox("Hook Archetype", hook_options)
 
-    min_score = st.slider("Minimum Composite Score", 5.0, 10.0, 7.0, 0.1)
+    min_score = st.slider("Minimum Effective Score", 0.0, 10.0, 0.0, 0.5)
 
     st.divider()
     st.info("💡 **Core Principle:** Injustice without immediate payoff triggers rage-bait scroll-stopping attention.")
@@ -76,7 +76,7 @@ col1, col2, col3, col4 = st.columns(4)
 with col1:
     st.metric("Total Promos Ranked", len(promos))
 with col2:
-    st.metric("Top Score", f"{promos[0]['scores']['composite_score']} / 10" if promos else "N/A")
+    st.metric("Top Score", f"{promos[0]['scores']['adjusted_score']} / 10" if promos else "N/A")
 with col3:
     st.metric("Hook Taxonomy Types", len(taxonomy.get("hooks", [])))
 with col4:
@@ -93,7 +93,8 @@ for p in promos:
         continue
     if sel_hook != "All" and p.get("hook", {}).get("type") != sel_hook:
         continue
-    if p.get("scores", {}).get("composite_score", 0) < min_score:
+    cand_score = p.get("scores", {}).get("adjusted_score") or p.get("scores", {}).get("composite_score", 0)
+    if cand_score < min_score:
         continue
     filtered_promos.append(p)
 

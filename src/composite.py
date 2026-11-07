@@ -1,10 +1,10 @@
 """
 Show-agnostic dynamic composite promo builder.
 Pairs early high-injustice setup beats with late climactic confrontation cliffhangers.
-Contains ZERO hardcoded show quotes or episode numbers.
+Slices authentic beat boundaries with exact start/end timestamps.
 """
 
-from typing import List
+from typing import List, Dict
 from src.models import (
     Episode,
     PromoCandidate,
@@ -12,6 +12,7 @@ from src.models import (
     PromoScores,
 )
 from src.taxonomy import Taxonomy
+from src.utils.timestamps import seconds_to_timestamp
 from src.utils.logging import logger
 
 
@@ -23,23 +24,25 @@ class CompositePromoBuilder:
         self,
         episodes: List[Episode],
         single_candidates: List[PromoCandidate],
-        max_composites: int = 2,
+        max_composites: int = 4,
     ) -> List[PromoCandidate]:
         """
         Dynamically pairs an early high-injustice setup hook (first 25% of episodes)
         with a late climactic confrontation cliffhanger (last 50% of episodes).
+        Snaps all cut points to authentic beat boundaries in the screenplay.
         Ensures total duration is between 20s and 60s.
         """
         if len(episodes) < 4 or not single_candidates:
             logger.info("Not enough episodes or candidates to synthesize cross-episode composites.")
             return []
 
+        episodes_by_num: Dict[int, Episode] = {ep.episode_number: ep for ep in episodes}
         cutoff_early = max(1, len(episodes) // 4)
         cutoff_late = len(episodes) // 2
 
         early_setups = [
             c for c in single_candidates
-            if c.episodes[0] <= cutoff_early and c.scores.injustice_tension >= 8.0
+            if c.episodes[0] <= cutoff_early and c.scores.injustice_tension >= 7.5
         ]
         late_climaxes = [
             c for c in single_candidates
@@ -51,42 +54,98 @@ class CompositePromoBuilder:
             return []
 
         composites: List[PromoCandidate] = []
-        for setup in early_setups:
-            for climax in late_climaxes:
-                # Build Segment 1: Short setup segment from start of setup (approx 10-15s)
-                setup_seg = setup.segments[0]
-                seg1_dur = min(15.0, max(8.0, setup_seg.duration * 0.4))
-                seg1 = Segment(
-                    start=setup_seg.start,
-                    end=setup_seg.end,
-                    start_seconds=setup_seg.start_seconds,
-                    end_seconds=setup_seg.start_seconds + seg1_dur,
-                    duration=seg1_dur,
-                )
+        used_pairs = set()
 
-                # Build Segment 2: Climax segment from climax candidate (approx 20-35s)
+        for setup in early_setups:
+            setup_ep = episodes_by_num.get(setup.episodes[0])
+            if not setup_ep or not setup.segments:
+                continue
+            setup_seg = setup.segments[0]
+            setup_beats = [
+                b for b in setup_ep.all_beats
+                if b.start_seconds >= setup_seg.start_seconds - 0.1
+            ]
+            if not setup_beats:
+                continue
+
+            # Snap seg1 end to a beat boundary giving 10-18s duration
+            target_seg1_dur = min(18.0, max(10.0, setup_seg.duration * 0.4))
+            best_seg1_beat = setup_beats[0]
+            for b in setup_beats:
+                dur = b.end_seconds - setup_seg.start_seconds
+                if dur >= 9.0:
+                    best_seg1_beat = b
+                    if dur >= target_seg1_dur:
+                        break
+
+            seg1_start_sec = setup_seg.start_seconds
+            seg1_end_sec = best_seg1_beat.end_seconds
+            seg1_dur = round(seg1_end_sec - seg1_start_sec, 2)
+            if seg1_dur <= 0:
+                continue
+
+            seg1 = Segment(
+                start=setup_seg.start,
+                end=best_seg1_beat.end_str,
+                start_seconds=seg1_start_sec,
+                end_seconds=seg1_end_sec,
+                duration=seg1_dur,
+            )
+
+            for climax in late_climaxes:
+                pair_key = (setup.episodes[0], climax.episodes[0])
+                if pair_key in used_pairs:
+                    continue
+
+                climax_ep = episodes_by_num.get(climax.episodes[0])
+                if not climax_ep or not climax.segments:
+                    continue
                 climax_seg = climax.segments[-1]
+
+                # Climax target duration: 20-35s such that total is 30-55s
                 target_total = 45.0
-                seg2_dur = min(climax_seg.duration, max(15.0, target_total - seg1_dur))
-                seg2_start_sec = max(climax_seg.start_seconds, climax_seg.end_seconds - seg2_dur)
+                target_seg2_dur = min(35.0, max(18.0, target_total - seg1_dur))
+
+                climax_beats = [
+                    b for b in climax_ep.all_beats
+                    if b.end_seconds <= climax_seg.end_seconds + 0.1 and b.start_seconds >= climax_seg.start_seconds - 0.1
+                ]
+                if not climax_beats:
+                    continue
+
+                # Find beat start that gives approx target_seg2_dur before climax_seg.end_seconds
+                best_seg2_beat = climax_beats[0]
+                for b in climax_beats:
+                    dur = climax_seg.end_seconds - b.start_seconds
+                    if dur <= target_seg2_dur + 3.0:
+                        best_seg2_beat = b
+                        break
+
+                seg2_start_sec = best_seg2_beat.start_seconds
+                seg2_end_sec = climax_seg.end_seconds
+                seg2_dur = round(seg2_end_sec - seg2_start_sec, 2)
+                if seg2_dur <= 0:
+                    continue
+
                 seg2 = Segment(
-                    start=climax_seg.start,
+                    start=best_seg2_beat.start_str,
                     end=climax_seg.end,
                     start_seconds=seg2_start_sec,
-                    end_seconds=climax_seg.end_seconds,
+                    end_seconds=seg2_end_sec,
                     duration=seg2_dur,
                 )
 
-                total_dur = seg1.duration + seg2.duration
+                total_dur = round(seg1.duration + seg2.duration, 2)
                 if not (20.0 <= total_dur <= 60.0):
                     continue
 
+                # Cross-episode promos solve context deficit by providing early injustice setup
                 scores = PromoScores(
-                    hook_strength=max(setup.scores.hook_strength, 9.0),
+                    hook_strength=max(setup.scores.hook_strength, 8.5),
                     injustice_tension=max(setup.scores.injustice_tension, 9.0),
-                    cliffhanger_strength=max(climax.scores.cliffhanger_strength, 9.0),
-                    standalone_clarity=8.5,
-                    payoff_withheld=9.0,
+                    cliffhanger_strength=max(climax.scores.cliffhanger_strength, 8.5),
+                    standalone_clarity=9.0,  # Explicitly high clarity because setup gives context
+                    payoff_withheld=max(climax.scores.payoff_withheld, 9.0),
                 )
 
                 h_w = self.taxonomy.get_hook_weight(setup.hook.type)
@@ -102,12 +161,13 @@ class CompositePromoBuilder:
                     hook=setup.hook,
                     cliffhanger=climax.cliffhanger,
                     why_it_works=(
-                        f"Dynamic composite: Bridges early setup injustice from Ep {setup.episodes[0]} "
-                        f"directly into climactic confrontation in Ep {climax.episodes[0]}."
+                        f"Cross-episode setup + climax: Establishes early character injustice in Ep {setup.episodes[0]} "
+                        f"and bridges directly into the unresolved high-stakes confrontation in Ep {climax.episodes[0]}."
                     ),
                     scores=scores,
                 )
                 composites.append(comp)
+                used_pairs.add(pair_key)
 
                 if len(composites) >= max_composites:
                     return composites

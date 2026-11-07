@@ -100,6 +100,7 @@ class PromoScores(BaseModel):
     composite_score: float = 0.0
     adjusted_score: float = 0.0
     diversity_penalty: float = 1.0
+    audit_multiplier: float = 1.0
 
     def compute_composite_score(self, hook_weight: float = 1.0, cliff_weight: float = 1.0) -> float:
         """

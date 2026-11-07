@@ -55,6 +55,10 @@ class PromoRanker:
         for cand in sorted_cands:
             is_duplicate = False
             for existing in kept:
+                # Do not deduplicate cross-episode composites against single-episode clips
+                if cand.promo_type != existing.promo_type:
+                    continue
+
                 shared_eps = set(cand.episodes).intersection(set(existing.episodes))
                 if not shared_eps:
                     continue
@@ -83,11 +87,15 @@ class PromoRanker:
         top_k: int = 15,
         hook_penalty_factor: float = 0.88,
         episode_penalty_factor: float = 0.90,
+        audit_failure_penalty: float = 0.78,
     ) -> List[PromoCandidate]:
         """
         Applies MMR diversity reranking to balance promo types and episodes.
-        Saves adjusted_score and diversity_penalty onto candidate so ranking order
-        is strictly monotonic and completely transparent.
+        Incorporates adversarial audit outcome:
+          - Passing audit: full score retained (audit_factor = 1.0)
+          - Failing audit: penalized (audit_factor = 0.78; 0.65 if resolution leak / spoiler)
+        Saves adjusted_score, diversity_penalty, and audit_multiplier onto candidate
+        so ranking order is strictly monotonic and completely transparent.
         """
         available = list(candidates)
         ranked: List[PromoCandidate] = []
@@ -98,6 +106,7 @@ class PromoRanker:
             best_idx = -1
             best_adjusted_score = -1.0
             best_total_penalty = 1.0
+            best_audit_factor = 1.0
 
             for i, cand in enumerate(available):
                 h_type = cand.hook.type
@@ -108,17 +117,29 @@ class PromoRanker:
                 ep_penalty = episode_penalty_factor ** ep_count
 
                 total_penalty = h_penalty * ep_penalty
-                adj_score = cand.scores.composite_score * total_penalty
+
+                # Audit quality gate
+                audit_factor = 1.0
+                if cand.quality_audit:
+                    if not cand.quality_audit.passed:
+                        if cand.quality_audit.flaw_type == "resolution_leak":
+                            audit_factor = audit_failure_penalty * 0.85
+                        else:
+                            audit_factor = audit_failure_penalty
+
+                adj_score = cand.scores.composite_score * total_penalty * audit_factor
 
                 if adj_score > best_adjusted_score:
                     best_adjusted_score = adj_score
                     best_total_penalty = total_penalty
+                    best_audit_factor = audit_factor
                     best_idx = i
 
             chosen = available.pop(best_idx)
             chosen.rank = len(ranked) + 1
             chosen.scores.adjusted_score = round(best_adjusted_score, 2)
             chosen.scores.diversity_penalty = round(best_total_penalty, 3)
+            chosen.scores.audit_multiplier = round(best_audit_factor, 3)
             ranked.append(chosen)
 
             # Update frequencies

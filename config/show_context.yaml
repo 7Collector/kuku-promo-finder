@@ -20,3 +20,36 @@ antagonists:
 male_lead:
   name: "Alexander (The Broken Soldier / Duke)"
   role: "Apparent cripple/soldier who is secretly a legendary Duke of immense power and wealth"
+
+# Show-Specific Cue Overlay
+# Mapped to core taxonomy IDs for domain-specific vocabulary and character cues
+show_cues_overlay:
+  public_humiliation:
+    - "kneel before lady clarissa"
+    - "turn around juliana"
+    - "laughing at her wedding gown"
+    - "throw her into the street"
+  class_status_contempt:
+    - "country bumpkin"
+    - "crippled beggar"
+    - "broken soldier"
+    - "lowborn peasant"
+  hidden_identity_irony:
+    - "address him as commander"
+    - "the real duke"
+    - "that ducal crest"
+    - "duke of kensington"
+  truth_half_revealed:
+    - "the ducal signet ring"
+    - "bloodline verification"
+    - "marriage certificate to the duke"
+    - "who really saved him"
+  unexpected_savior_arrival:
+    - "motorcade arrives"
+    - "the ducal carriage halts"
+    - "the royal guards surround"
+    - "stand back from my duchess"
+  interrupted_retaliation:
+    - "choose your next words carefully"
+    - "touch juliana again"
+    - "alexander steps forward"

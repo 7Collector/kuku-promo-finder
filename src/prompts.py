@@ -109,12 +109,16 @@ AUDIT_USER_PROMPT_TEMPLATE = """Auditing Promo Candidate:
 - Timestamps: {segments_str} (Duration: {total_duration:.1f}s)
 - Hook Tagged: {hook_type} ("{hook_quote}")
 - Cliffhanger Tagged: {cliffhanger_type} ("{cliff_quote}")
-- Why it works: {why_it_works}
+- Extractor's Claim ("Why it works"): {why_it_works}
+
+<clip_screenplay>
+{screenplay_text}
+</clip_screenplay>
 
 Audit against these 5 Failure Modes:
-1. Resolution Leak: Does the clip accidentally resolve the conflict (e.g. protagonist already gets revenge or explains the misunderstanding)?
-2. Context Deficit: Does the dialogue use pronouns or references that make no sense to someone who hasn't seen the show?
-3. Visual Dependency: Does the dramatic weight depend on visual acting/effects that the text describes but might look clumsy or muted on screen?
+1. Resolution Leak: Does the clip accidentally resolve the conflict in the dialogue or actions (e.g. protagonist already gets revenge, delivers comeuppance, or explains the misunderstanding)?
+2. Context Deficit: Does the dialogue use pronouns or unexplained character references that make no sense to someone who hasn't seen the show?
+3. Visual Dependency: Does the dramatic weight depend on subtle visual acting/effects that the text describes but might look clumsy or muted on screen?
 4. Slow Burn: Does the true hook happen at second 5-8 instead of within the first 3 seconds?
 5. Sarcasm / False Reading: Is the emotional keyword being used playfully or ironically rather than with genuine high stakes?
 
@@ -122,7 +126,7 @@ Output JSON schema:
 {{
   "pass": true,
   "lethal_flaw": null,
-  "critique": "One to two sentences honestly identifying risks, cold-viewer comprehension limits, or visual dependencies.",
+  "critique": "One to two sentences honestly identifying risks, cold-viewer comprehension limits, or visual dependencies based on the actual screenplay text.",
   "confidence_score": 8.5,
   "risks": ["Slight visual reliance on atmosphere"]
 }}

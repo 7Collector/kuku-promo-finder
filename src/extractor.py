@@ -205,7 +205,26 @@ class PromoExtractor:
             if not (matched_hook or is_emotional_lead):
                 continue
 
-            hook_id = matched_hook["id"] if matched_hook else "public_humiliation"
+            hook_id = None
+            if matched_hook:
+                hook_id = matched_hook["id"]
+            else:
+                start_lower = start_text.lower()
+                if any(w in start_lower for w in ["wedding", "sister", "fiancé", "replace you", "marrying", "divorce", "abandon"]):
+                    hook_id = "intimate_betrayal"
+                elif any(w in start_lower for w in ["slap", "shove", "grab", "collar", "strike", "drag"]):
+                    hook_id = "physical_aggression"
+                elif any(w in start_lower for w in ["beggar", "peasant", "worthless", "dirt", "servant", "filth", "lowborn", "rubbish"]):
+                    hook_id = "class_status_contempt"
+                elif any(w in start_lower for w in ["thief", "stole", "blame", "fault", "lie"]):
+                    hook_id = "unjust_accusation"
+                elif any(w in start_lower for w in ["never", "refuse", "not afraid", "kill me"]):
+                    hook_id = "life_or_death_defiance"
+                elif any(w in start_lower for w in ["who do you think", "afford this", "security", "commander", "duke"]):
+                    hook_id = "hidden_identity_irony"
+                else:
+                    hook_id = "public_humiliation"
+
             hook_name = self.taxonomy.hook_by_id.get(hook_id, {}).get("name", "Injustice Hook")
             hook_driver = self.taxonomy.hook_by_id.get(hook_id, {}).get("psychological_driver", "High-status mistreatment")
 
@@ -222,12 +241,35 @@ class PromoExtractor:
 
                 end_text = f"{b_end.text} {b_end.speaker or ''} {b_end.emotion or ''}"
                 matched_cliff = self.taxonomy.match_cliffhanger_cues(end_text)
+                if not matched_cliff and j > i:
+                    prev_beat = beats[j - 1]
+                    prev_text = f"{prev_beat.text} {prev_beat.speaker or ''} {prev_beat.emotion or ''}"
+                    matched_cliff = self.taxonomy.match_cliffhanger_cues(prev_text)
 
                 window_dialogues = [b for b in beats[i:j+1] if b.beat_type == BeatType.DIALOGUE]
                 if len(window_dialogues) < 3:
                     continue
 
-                cliff_id = matched_cliff["id"] if matched_cliff else "interrupted_retaliation"
+                cliff_id = None
+                if matched_cliff:
+                    cliff_id = matched_cliff["id"]
+                else:
+                    combined_end = (end_text + " " + (beats[j-1].text if j > i else "")).lower()
+                    if any(w in combined_end for w in ["door", "doors", "halt", "stop right", "who dares", "savior", "steps between", "arrives"]):
+                        cliff_id = "unexpected_savior_arrival"
+                    elif any(w in combined_end for w in ["seal", "ring", "heir", "duke", "commander", "truth", "document", "watch"]):
+                        cliff_id = "truth_half_revealed"
+                    elif any(w in combined_end for w in ["or else", "choose", "three seconds", "last chance", "die"]):
+                        cliff_id = "mortal_ultimatum"
+                    elif any(w in combined_end for w in ["swings", "raises blade", "raises hand", "lunges", "strikes"]):
+                        cliff_id = "mid_action_cut"
+                    elif any(w in combined_end for w in ["regret", "words carefully", "touch", "not finished", "warn", "pay"]):
+                        cliff_id = "interrupted_retaliation"
+                    elif any(w in combined_end for w in ["steps forward", "shadows", "stranger"]):
+                        cliff_id = "unexpected_arrival"
+                    else:
+                        cliff_id = "interrupted_retaliation"
+
                 cliff_name = self.taxonomy.cliffhanger_by_id.get(cliff_id, {}).get("name", "Withheld Payoff")
 
                 hook_strength = 8.5 if matched_hook else 7.5
@@ -235,7 +277,11 @@ class PromoExtractor:
                     hook_strength += 1.0
 
                 injustice_tension = 8.0
-                if any(w in (b_start.text + b_end.text).lower() for w in ["never", "beg", "servant", "marrying", "worthless", "kneel", "leave"]):
+                injustice_tokens = [
+                    "never", "beg", "servant", "marrying", "marry", "worthless", "kneel", "leave",
+                    "betray", "altar", "ruined", "ruin", "steal", "stole", "arrest", "theft", "slap", "shove", "dirt"
+                ]
+                if any(w in (b_start.text + b_end.text).lower() for w in injustice_tokens):
                     injustice_tension += 1.5
 
                 cliff_strength = 8.5 if matched_cliff else 7.5
@@ -299,7 +345,12 @@ class PromoExtractor:
         candidates_pool.sort(key=lambda c: c.scores.composite_score, reverse=True)
 
         selected: List[PromoCandidate] = []
+        selected_hooks = set()
+
+        # Pass 1: Select highest-scoring candidates across diverse hook archetypes
         for cand in candidates_pool:
+            if cand.hook.type in selected_hooks:
+                continue
             overlap = False
             for s in selected:
                 _, ratio = calculate_temporal_overlap(
@@ -313,7 +364,29 @@ class PromoExtractor:
                     break
             if not overlap:
                 selected.append(cand)
-            if len(selected) >= max_candidates:
-                break
+                selected_hooks.add(cand.hook.type)
+                if len(selected) >= max_candidates:
+                    break
+
+        # Pass 2: Fill remaining quota if needed
+        if len(selected) < max_candidates:
+            for cand in candidates_pool:
+                if cand in selected:
+                    continue
+                overlap = False
+                for s in selected:
+                    _, ratio = calculate_temporal_overlap(
+                        cand.segments[0].start_seconds,
+                        cand.segments[0].end_seconds,
+                        s.segments[0].start_seconds,
+                        s.segments[0].end_seconds,
+                    )
+                    if ratio > 0.40:
+                        overlap = True
+                        break
+                if not overlap:
+                    selected.append(cand)
+                    if len(selected) >= max_candidates:
+                        break
 
         return selected

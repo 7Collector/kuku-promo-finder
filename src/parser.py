@@ -204,3 +204,27 @@ def format_episode_for_analysis(episode: Episode, include_camera: bool = False) 
                 lines.append(f"[{b.start_str} - {b.end_str}] CAMERA: {b.text}")
 
     return "\n".join(lines)
+
+
+def format_segment_slice(
+    episode: Episode, start_seconds: float, end_seconds: float, include_camera: bool = False
+) -> str:
+    """
+    Renders the exact screenplay beats between start_seconds and end_seconds.
+    Used by the auditor to inspect authentic dialogue and actions between hook and cliffhanger.
+    """
+    lines = []
+    for b in episode.all_beats:
+        if b.end_seconds > start_seconds - 0.1 and b.start_seconds < end_seconds + 0.1:
+            if b.beat_type == BeatType.CAMERA and not include_camera:
+                continue
+            if b.beat_type == BeatType.DIALOGUE:
+                emo_str = f" ({b.emotion})" if b.emotion else ""
+                lines.append(f"[{b.start_str} - {b.end_str}] {b.speaker}{emo_str}: {b.text}")
+            elif b.beat_type == BeatType.ACTION:
+                lines.append(f"[{b.start_str} - {b.end_str}] ACTION: {b.text}")
+            elif b.beat_type == BeatType.SOUND:
+                lines.append(f"[{b.start_str} - {b.end_str}] SFX: {b.text}")
+            elif b.beat_type == BeatType.CAMERA and include_camera:
+                lines.append(f"[{b.start_str} - {b.end_str}] CAMERA: {b.text}")
+    return "\n".join(lines)

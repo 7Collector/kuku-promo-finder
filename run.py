@@ -43,7 +43,7 @@ def run_pipeline(
 
     # 1. Load Configurations
     print(f"\n[1/5] Loading taxonomy from {taxonomy_path} and context from {context_path}...")
-    taxonomy = Taxonomy(taxonomy_path)
+    taxonomy = Taxonomy(taxonomy_path, show_context_path=context_path)
     show_context = load_yaml(context_path)
     print(f"  • Hook types registered: {len(taxonomy.hooks)}")
     print(f"  • Cliffhanger types registered: {len(taxonomy.cliffhangers)}")
@@ -101,8 +101,8 @@ def run_pipeline(
 
     all_candidates = single_candidates + composites
 
-    # 4. Scoring, Constraint Enforcement & Diversity Reranking
-    print(f"\n[4/5] Scoring, physical constraint checking, and MMR diversity reranking...")
+    # 4. Scoring & Constraint Enforcement
+    print(f"\n[4/6] Scoring and physical constraint checking...")
     ranker = PromoRanker(taxonomy=taxonomy)
 
     valid_candidates = []
@@ -116,22 +116,34 @@ def run_pipeline(
     deduped = ranker.deduplicate(valid_candidates, overlap_threshold=0.35)
     print(f"  • {len(deduped)} candidates remain after deduplication.")
 
-    final_ranked = ranker.rerank_for_diversity(deduped, top_k=top_k)
-    print(f"  • Selected top {len(final_ranked)} promos balanced across hook types.")
+    # 5. Adversarial Quality Auditing (Evaluates before final ranking)
+    print(f"\n[5/6] Running adversarial quality checks with screenplay dialogue inspection...")
+    auditor = PromoAuditor(llm_provider=llm_provider, show_context=show_context, episodes=episodes)
 
-    # 5. Adversarial Quality Auditing
-    print(f"\n[5/5] Running adversarial quality checks (Resolution leaks, context deficits, visual dependencies)...")
-    auditor = PromoAuditor(llm_provider=llm_provider, show_context=show_context)
+    # Audit candidate pool with screenplay inspection so audit outcomes inform final ranking
+    audit_pool = deduped
+
     if llm_provider.name != "heuristic":
         from concurrent.futures import ThreadPoolExecutor
         def audit_cand(cand):
             cand.quality_audit = auditor.audit_candidate(cand)
             return cand
         with ThreadPoolExecutor(max_workers=8) as executor:
-            list(executor.map(audit_cand, final_ranked))
+            list(executor.map(audit_cand, audit_pool))
     else:
-        for cand in final_ranked:
+        for cand in audit_pool:
             cand.quality_audit = auditor.audit_candidate(cand)
+
+    passed_count = sum(1 for c in audit_pool if c.quality_audit and c.quality_audit.passed)
+    failed_count = len(audit_pool) - passed_count
+    print(f"  • Quality audit complete: {passed_count} passed, {failed_count} flagged with flaws.")
+
+    # 6. Audit-Informed MMR Diversity Reranking
+    print(f"\n[6/6] Audit-informed MMR diversity reranking...")
+    final_ranked = ranker.rerank_for_diversity(
+        audit_pool, top_k=top_k, hook_penalty_factor=0.82, episode_penalty_factor=0.85
+    )
+    print(f"  • Selected top {len(final_ranked)} promos (passing promos prioritized, failed penalized).")
 
     # 6. Save Outputs
     os.makedirs(os.path.dirname(output_json) or ".", exist_ok=True)
@@ -193,7 +205,12 @@ def render_markdown_report(promos: List[PromoCandidate], filepath: str, context:
                 f"> **Identified Risks / Failure Flags:** {risks_str}\n"
             )
 
-        penalty_note = f" (MMR Penalty Factor: {p.scores.diversity_penalty})" if p.scores.diversity_penalty < 1.0 else ""
+        penalty_parts = []
+        if p.scores.diversity_penalty < 1.0:
+            penalty_parts.append(f"MMR Diversity: {p.scores.diversity_penalty}")
+        if p.scores.audit_multiplier < 1.0:
+            penalty_parts.append(f"Audit Penalty: {p.scores.audit_multiplier}")
+        penalty_note = f" ({', '.join(penalty_parts)})" if penalty_parts else ""
 
         md_lines.append(f"### Rank {p.rank}: {p.hook.name} ({p.promo_type.replace('_', ' ').title()})")
         md_lines.append(f"- **Episode(s):** {eps_str}")

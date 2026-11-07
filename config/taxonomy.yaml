@@ -1,71 +1,214 @@
+# Core Generic Hook & Cliffhanger Taxonomy
+# Show-agnostic taxonomy defining emotional drivers, requirements, exclusions, and editorial prior weights.
+# Show-specific cues (e.g. character names, setting tokens) are layered via show overlay config.
+
 hooks:
   - id: public_humiliation
     name: "Public Humiliation & Scorn"
     category: "injustice"
-    psychological_driver: "Outrage at disproportionate cruelty in front of peers"
-    example_cues: ["kneel down", "beg me", "laughing at her", "stripped of dignity", "scoff", "mocking", "ridicule", "crawl"]
-    weight: 1.0
+    definition: "Protagonist mocked, stripped of dignity, or forced to grovel before a crowd or peers."
+    psychological_driver: "Outrage at disproportionate cruelty in front of witnesses"
+    requires:
+      - "Mockery, debasement, or malicious laughter"
+      - "Witnesses, crowd, or peer audience present"
+    do_not_tag_if:
+      - "Private 1-on-1 disagreement without an audience"
+      - "Playful teasing between friendly characters"
+    weight: 1.00
+    generic_cues: ["kneel", "beg", "stripped of dignity", "scoff", "mocking", "ridicule", "crawl", "unworthy", "laughing at"]
 
   - id: physical_aggression
     name: "Physical Aggression / Shock Violence"
     category: "visceral"
+    definition: "Sudden physical violation or assault on an innocent character."
     psychological_driver: "Visceral jolt and immediate threat escalation"
-    example_cues: ["slap", "slaps", "slapped", "shove", "shoves", "shoved", "grabbed by collar", "wine thrown", "pushed to ground", "strikes her", "strikes him", "thrown out", "dragged"]
+    requires:
+      - "Concrete physical blow, shove, or violent restraint directed at a person"
+    do_not_tag_if:
+      - "Striking an inanimate object (flint, table, door, gavel)"
+      - "Accidental collision, stumble, or slapstick comedy"
     weight: 0.95
+    generic_cues: ["slap", "slaps", "slapped", "shove", "shoves", "grabbed by collar", "drink thrown", "pushed to ground", "strikes them", "dragged away"]
 
   - id: intimate_betrayal
-    name: "Intimate Betrayal / Altar Abandonment"
+    name: "Intimate Betrayal / Public Abandonment"
     category: "injustice"
-    psychological_driver: "Devastation of sacred trust by spouse, lover, or parent at a pivotal moment"
-    example_cues: ["wedding canceled", "holding another's hand", "you mean nothing to me", "divorce", "abandoned at altar", "replace you", "marrying me"]
+    definition: "Devastation of sacred trust by partner, fiancé, or parent at a pivotal life milestone."
+    psychological_driver: "Devastation of sacred bond; intense empathy for betrayed victim"
+    requires:
+      - "Pre-existing romantic, marital, or immediate familial relationship"
+      - "Explicit public repudiation or betrayal for selfish gain"
+    do_not_tag_if:
+      - "Routine lovers' quarrel or misunderstanding"
+      - "Betrayal by an already known enemy"
     weight: 0.95
+    generic_cues: ["wedding canceled", "cannot marry you", "will not marry you", "holding another's hand", "you mean nothing to me", "divorce", "abandoned at altar", "replace you", "marrying someone else", "wedding is off"]
 
   - id: class_status_contempt
     name: "Class & Status Contempt"
     category: "injustice"
-    psychological_driver: "Sneering elitism treating the honest protagonist as dirt or servant"
-    example_cues: ["country bumpkin", "servant", "filth", "you're nothing without us", "worthless", "peasant", "lowborn", "beggar"]
+    definition: "Sneering elitism treating the honest protagonist as subhuman, filth, or servant."
+    psychological_driver: "Universal outrage against unearned privilege and aristocratic snobbery"
+    requires:
+      - "Explicit verbal contempt based on social rank, wealth, or perceived low birth"
+    do_not_tag_if:
+      - "Critique based on professional incompetence rather than social status"
     weight: 0.90
+    generic_cues: ["filth", "you're nothing without us", "worthless", "servant", "beggar", "trash", "lowborn", "how dare you speak to me", "beneath", "look at him", "look at you", "not fit to"]
 
   - id: hidden_identity_irony
     name: "Ignorant Disrespect (Dramatic Irony)"
     category: "irony"
-    psychological_driver: "Antagonist insults or mistreats protagonist, blind to their true royal or billionaire status"
-    example_cues: ["do you know who I am", "you can never afford this", "call security on him", "who do you think you are"]
+    definition: "Antagonist arrogantly abuses the protagonist, completely blind to their supreme hidden status."
+    psychological_driver: "Anticipation of immense satisfaction when the bully inevitably realizes their fatal mistake"
+    requires:
+      - "Antagonist flexing false superiority over the disguised protagonist"
+      - "Viewer or story awareness of the protagonist's true authority"
+    do_not_tag_if:
+      - "Protagonist has no secret identity or higher status"
     weight: 0.90
+    generic_cues: ["do you know who I am", "you can never afford this", "call security", "who do you think you are", "throw them out"]
 
   - id: unjust_accusation
     name: "Unjust Framing / False Blame"
     category: "injustice"
-    psychological_driver: "Frustration at innocent person framed while villain smirks or takes credit"
-    example_cues: ["thief", "she stole it", "how dare you lie", "take the blame", "it was her fault"]
+    definition: "Innocent protagonist framed or blamed while villain takes credit or feigns victimhood."
+    psychological_driver: "Frustration at inverted justice and gaslighting"
+    requires:
+      - "False accusation of crime, theft, or misconduct placed on the innocent"
+    do_not_tag_if:
+      - "Protagonist actually committed the act"
     weight: 0.85
+    generic_cues: ["thief", "they stole it", "how dare you lie", "take the blame", "it was their fault", "liar", "under arrest", "arrest for", "framed", "stolen", "theft"]
+
+  - id: secret_status_reveal
+    name: "Secret Status Reveal / Authority Exposure"
+    category: "reversal"
+    definition: "Protagonist's royal, billionaire, or military status is suddenly exposed to arrogant underlings."
+    psychological_driver: "Instant dopamine spike from dramatic reversal and shock"
+    requires:
+      - "Official token, insignia, title, or authority document presented"
+      - "Antagonists visibly shocked or freezing in terror"
+    do_not_tag_if:
+      - "Identity revealed only in a private monologue"
+    weight: 0.95
+    generic_cues: ["show your badge", "the real authority", "bow down", "my lord", "your excellency", "that seal belongs to"]
+
+  - id: life_or_death_defiance
+    name: "Life-or-Death Defiance"
+    category: "visceral"
+    definition: "Cornered protagonist looks oppressor in the eyes and refuses to yield despite imminent death."
+    psychological_driver: "Awe and adrenaline at heroic fortitude under extreme intimidation"
+    requires:
+      - "Imminent mortal peril or severe physical threat"
+      - "Uncompromising verbal or physical defiance"
+    do_not_tag_if:
+      - "Routine banter or low-stakes disagreement"
+    weight: 0.90
+    generic_cues: ["do your worst", "I will never bow", "kill me then", "not finished", "I am not afraid of you"]
+
+  - id: shocking_line
+    name: "Shocking Line / Taboo Disclosure"
+    category: "visceral"
+    definition: "A devastating spoken line that shatters reality, paternity, or alliance within seconds."
+    psychological_driver: "Gasps of disbelief; instant cognitive arrest"
+    requires:
+      - "Unforgivable confession, paternity rejection, or cruel ultimatum spoken aloud"
+    do_not_tag_if:
+      - "Generic insults or routine villain boasting"
+    weight: 0.90
+    generic_cues: ["you were never my child", "I never loved you", "your entire life is a lie", "they died because of you"]
+
+  - id: sacrifice_unrewarded
+    name: "Sacrifice Ignored / Credit Stolen"
+    category: "injustice"
+    definition: "Protagonist saves a life or sacrifices everything, only for a selfish antagonist to claim credit while protagonist is punished."
+    psychological_driver: "Deep indignation against stolen valor and ungratefulness"
+    requires:
+      - "Life-saving or heroic deed performed by protagonist"
+      - "Villain taking credit while victim looks on"
+    do_not_tag_if:
+      - "Ordinary task or minor chore"
+    weight: 0.88
+    generic_cues: ["I was the one who saved you", "stole my credit", "ungrateful", "they saved your life"]
 
 cliffhangers:
   - id: interrupted_retaliation
     name: "Interrupted Retaliation / Comeuppance Cut"
     category: "payoff_withheld"
-    psychological_driver: "Protagonist's eyes turn cold / starts to counterattack, cut right before strike"
-    example_cues: ["smiles faintly", "stands up slowly", "you will regret this", "eyes narrow", "steps forward", "not anymore"]
-    weight: 1.0
+    definition: "Protagonist begins a specific counter-action or verbal ultimatum; cut right before it lands."
+    psychological_driver: "Peak tension right before vindication or blow lands"
+    requires:
+      - "A concrete retaliatory action, physical move, or specific verbal threat initiated"
+      - "A named antagonist or clear confrontational target"
+    do_not_tag_if:
+      - "Only a subtle facial expression, clenched fist, or passive body-language beat"
+      - "The retaliation or comeback is shown completing on screen"
+    weight: 1.00
+    generic_cues: ["regret", "words carefully", "touch her", "touch him", "not finished", "warn", "pay for this", "last mistake"]
+
+  - id: mid_action_cut
+    name: "Mid-Action Strike Cut"
+    category: "visceral"
+    definition: "A strike, slap, or gunshot is unleashed in motion; cut at maximum kinetic momentum before impact."
+    psychological_driver: "Gasp cliffhanger: viewer must see if the blow connects or is blocked"
+    requires:
+      - "Action in flight: raised hand coming down, trigger pulled, blade swinging"
+    do_not_tag_if:
+      - "Impact is seen and reaction shown"
+      - "Static standoff without kinetic movement"
+    weight: 0.95
+    generic_cues: ["swings", "raises blade", "raises hand", "lunges", "strikes", "cuts abruptly", "blade", "blow"]
 
   - id: unexpected_savior_arrival
-    name: "The Power Arrival"
+    name: "The Power Savior Arrival"
     category: "reversal"
-    psychological_driver: "High-status savior, real authority, or mysterious protector arrives just as protagonist is cornered"
-    example_cues: ["doors burst open", "stop right there", "who dares touch her", "motorcade arrives", "halt", "steps between"]
+    definition: "A supreme authority, legendary protector, or mysterious tycoon arrives right as protagonist is cornered."
+    psychological_driver: "Massive relief coupled with burning anticipation of antagonist's ruin"
+    requires:
+      - "Protector of unquestionable power physically intervenes"
+      - "Cut before protector speaks their judgment or attacks"
+    do_not_tag_if:
+      - "An arrival of another enemy or ambiguous threat"
+      - "Protector already resolves the scene and defeats the enemy"
     weight: 0.95
+    generic_cues: ["doors", "savior", "halt", "stop right", "who dares", "steps between", "convoy arrives", "carriage halts", "protect"]
 
   - id: truth_half_revealed
     name: "The Half-Revealed Truth"
     category: "revelation"
-    psychological_driver: "Identity document, lineage, or secret token revealed, cut before reaction"
-    example_cues: ["DNA results", "address him as Commander", "that ring belongs to", "the real heir is", "crest", "poisoned"]
+    definition: "A secret lineage token, medical report, or incriminating evidence is unsealed; cut before the crowd reacts."
+    psychological_driver: "Voracious hunger to see arrogant antagonists confronted with undeniable reality"
+    requires:
+      - "Concrete physical or verbal evidence revealed to antagonist"
+    do_not_tag_if:
+      - "Truth is explained in full and accepted on screen"
+      - "Vague suspicion without concrete revelation"
     weight: 0.90
+    generic_cues: ["watch", "ring", "seal", "token", "heir", "truth", "crest", "document", "evidence", "pocket watch", "signet"]
 
   - id: mortal_ultimatum
     name: "The Impossible Ultimatum"
     category: "high_stakes"
-    psychological_driver: "Unreasonable demand with immediate consequences and a ticking clock"
-    example_cues: ["kneel and apologize or your family dies", "sign the papers or leave forever", "you have three seconds", "or watch him hang"]
+    definition: "An impossible choice with immediate life-or-death consequences and a ticking countdown."
+    psychological_driver: "Urgent dread and suspense: how will the protagonist escape?"
+    requires:
+      - "Extreme dilemma with severe immediate consequence"
+      - "Short countdown or deadline enforced"
+    do_not_tag_if:
+      - "Trivial administrative choice"
     weight: 0.85
+    generic_cues: ["sign or die", "three seconds", "last chance", "make your choice", "or else", "deadline"]
+
+  - id: unexpected_arrival
+    name: "Unknown Entrant Disruption"
+    category: "reversal"
+    definition: "A mysterious or unexpected third party steps into the climax, altering all power dynamics."
+    psychological_driver: "Curiosity and shock at who this person is and whose side they are on"
+    requires:
+      - "A new or unexpected character enters the confrontation"
+      - "Cut right as their entrance stuns everyone present"
+    do_not_tag_if:
+      - "Character was already present in the room"
+    weight: 0.88
+    generic_cues: ["shadows", "stranger enters", "who is that", "silence falls", "steps into the light"]

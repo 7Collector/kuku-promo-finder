@@ -81,6 +81,52 @@ class TestPromoAuditor(unittest.TestCase):
         self.assertEqual(len(audit.risks), 1)
         mock_provider.generate_json.assert_called_once()
 
+    def test_screenplay_slice_injected_into_prompt(self):
+        from src.models import Episode, Scene, Beat, BeatType
+        mock_provider = MagicMock()
+        mock_provider.name = "mock_llm"
+        mock_provider.generate_json.return_value = {
+            "pass": True,
+            "lethal_flaw": None,
+            "critique": "Solid cut.",
+            "confidence_score": 9.0,
+            "risks": []
+        }
+        test_ep = Episode(
+            episode_number=1,
+            episode_id="ep1",
+            logline="Test",
+            scenes=[
+                Scene(
+                    scene_number=1,
+                    heading="Test Scene",
+                    start_seconds=0,
+                    end_seconds=60,
+                    start_str="00:00.00",
+                    end_str="01:00.00",
+                    beats=[
+                        Beat(beat_type=BeatType.DIALOGUE, speaker="VILLAIN", emotion="Cruel", text="You are ruined, Juliana!", start_seconds=5.0, end_seconds=10.0, start_str="00:05.00", end_str="00:10.00"),
+                        Beat(beat_type=BeatType.ACTION, speaker=None, emotion=None, text="Alexander raises his head.", start_seconds=11.0, end_seconds=15.0, start_str="00:11.00", end_str="00:15.00"),
+                    ]
+                )
+            ]
+        )
+        auditor = PromoAuditor(llm_provider=mock_provider, episodes=[test_ep])
+        cand = PromoCandidate(
+            promo_id="slice_test",
+            episodes=[1],
+            segments=[Segment(start="00:05.00", end="00:15.00", start_seconds=5.0, end_seconds=15.0, duration=10.0)],
+            total_duration=10.0,
+            hook=HookInfo(type="public_humiliation", timestamp="00:05.00", timestamp_seconds=5.0, quote="You are ruined, Juliana!"),
+            cliffhanger=CliffhangerInfo(type="interrupted_retaliation", timestamp="00:15.00", timestamp_seconds=15.0, quote="Alexander raises his head."),
+            scores=PromoScores(payoff_withheld=9.0),
+        )
+        auditor.audit_candidate(cand)
+        user_prompt_arg = mock_provider.generate_json.call_args[0][1]
+        self.assertIn("<clip_screenplay>", user_prompt_arg)
+        self.assertIn("You are ruined, Juliana!", user_prompt_arg)
+        self.assertIn("Alexander raises his head.", user_prompt_arg)
+
 
 if __name__ == "__main__":
     unittest.main()
