@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { BookOpen, Clock, Film, MessageSquare, Sparkles } from "lucide-react";
+import { BookOpen, Clock, Film, MessageSquare, Sparkles, ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function EpisodesPage() {
   const [selectedEp, setSelectedEp] = useState(1);
+  const [selectedRange, setSelectedRange] = useState("all");
   const [epData, setEpData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
@@ -25,6 +26,21 @@ export default function EpisodesPage() {
     }
   }
 
+  function handlePrev() {
+    if (selectedEp > 1) setSelectedEp(selectedEp - 1);
+  }
+
+  function handleNext() {
+    if (selectedEp < 50) setSelectedEp(selectedEp + 1);
+  }
+
+  // Filter visible episodes by decade tab
+  const visibleEpisodes = Array.from({ length: 50 }, (_, i) => i + 1).filter((num) => {
+    if (selectedRange === "all") return true;
+    const [start, end] = selectedRange.split("-").map(Number);
+    return num >= start && num <= end;
+  });
+
   return (
     <div className="kuku-container">
       <div style={{ marginBottom: "var(--s-32)" }}>
@@ -35,34 +51,55 @@ export default function EpisodesPage() {
         </p>
       </div>
 
-      {/* Episode Selector Strip */}
+      {/* Episode Selector Strip with Zero Horizontal Scrollbars */}
       <div
         style={{
           background: "var(--surface)",
           border: "1px solid var(--hairline)",
           borderRadius: "var(--radius-lg)",
-          padding: "var(--s-16)",
+          padding: "var(--s-20)",
           marginBottom: "var(--s-24)",
+          boxShadow: "0 1px 3px rgba(0, 0, 0, 0.02)",
         }}
       >
-        <span className="om-caption" style={{ color: "var(--ink-3)", display: "block", marginBottom: 8 }}>
-          Jump to episode:
-        </span>
-        <div style={{ display: "flex", gap: 6, overflowX: "auto", paddingBottom: 6 }}>
-          {Array.from({ length: 50 }, (_, i) => i + 1).map((num) => (
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12, marginBottom: "var(--s-12)" }}>
+          <span className="om-caption" style={{ color: "var(--ink-3)", fontWeight: 500 }}>
+            Select episode ({selectedEp} of 50):
+          </span>
+
+          {/* Range quick filter tabs */}
+          <div style={{ display: "flex", alignItems: "center", gap: 4, flexWrap: "wrap" }}>
+            {[
+              { id: "all", label: "All 50" },
+              { id: "1-10", label: "1–10" },
+              { id: "11-20", label: "11–20" },
+              { id: "21-30", label: "21–30" },
+              { id: "31-40", label: "31–40" },
+              { id: "41-50", label: "41–50" },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setSelectedRange(tab.id)}
+                className={`kuku-chip kuku-chip--compact ${selectedRange === tab.id ? "active" : ""}`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Wrapped Episode Grid */}
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+          {visibleEpisodes.map((num) => (
             <button
               key={num}
               onClick={() => setSelectedEp(num)}
-              className={`om-button om-button--compact ${selectedEp === num ? "is-pressed" : ""}`}
+              className={`kuku-chip ${selectedEp === num ? "active" : ""}`}
               style={{
-                minWidth: 38,
-                height: 34,
-                padding: "0 6px",
-                background: selectedEp === num ? "var(--accent)" : "var(--sunken)",
-                color: selectedEp === num ? "var(--on-accent)" : "var(--ink)",
-                borderRadius: "var(--radius-md)",
-                fontSize: 13,
-                fontWeight: selectedEp === num ? 600 : 400,
+                minWidth: 42,
+                height: 36,
+                padding: "0 10px",
+                fontWeight: selectedEp === num ? 600 : 500,
               }}
             >
               {num}
@@ -82,15 +119,72 @@ export default function EpisodesPage() {
         </div>
       ) : (
         <div>
-          {/* Episode Info Surface */}
-          <div className="om-surface" style={{ border: "1px solid var(--hairline)", marginBottom: "var(--s-20)" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8, marginBottom: 8 }}>
-              <span className="om-title-medium">Episode {epData.episodeNumber}</span>
-              <span className="om-caption om-num" style={{ color: "var(--ink-3)" }}>
-                {epData.beatsCount} beats parsed
-              </span>
+          {/* Episode Info Surface with Prev / Next Navigation */}
+          <div
+            className="om-surface"
+            style={{
+              border: "1px solid var(--hairline)",
+              marginBottom: "var(--s-20)",
+              padding: "var(--s-20)",
+              borderRadius: "var(--radius-lg)",
+            }}
+          >
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12, marginBottom: 10 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <span className="om-title-medium">Episode {epData.episodeNumber}</span>
+                <span
+                  className="om-caption om-num"
+                  style={{
+                    background: "var(--sunken)",
+                    color: "var(--ink-2)",
+                    padding: "3px 8px",
+                    borderRadius: "var(--radius-full)",
+                    fontSize: 12,
+                    fontWeight: 600,
+                  }}
+                >
+                  {epData.beatsCount} beats parsed
+                </span>
+              </div>
+
+              {/* Prev / Next controls */}
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <button
+                  onClick={handlePrev}
+                  disabled={selectedEp <= 1}
+                  className="om-button om-button--compact"
+                  style={{
+                    background: selectedEp <= 1 ? "var(--sunken)" : "var(--surface)",
+                    color: selectedEp <= 1 ? "var(--ink-3)" : "var(--ink)",
+                    border: "1px solid var(--hairline)",
+                    minHeight: 34,
+                    padding: "0 10px",
+                    cursor: selectedEp <= 1 ? "not-allowed" : "pointer",
+                  }}
+                >
+                  <ChevronLeft size={15} />
+                  <span>Prev</span>
+                </button>
+                <button
+                  onClick={handleNext}
+                  disabled={selectedEp >= 50}
+                  className="om-button om-button--compact"
+                  style={{
+                    background: selectedEp >= 50 ? "var(--sunken)" : "var(--surface)",
+                    color: selectedEp >= 50 ? "var(--ink-3)" : "var(--ink)",
+                    border: "1px solid var(--hairline)",
+                    minHeight: 34,
+                    padding: "0 10px",
+                    cursor: selectedEp >= 50 ? "not-allowed" : "pointer",
+                  }}
+                >
+                  <span>Next</span>
+                  <ChevronRight size={15} />
+                </button>
+              </div>
             </div>
-            <p className="om-body" style={{ color: "var(--ink-2)", fontSize: 15 }}>
+
+            <p className="om-body" style={{ color: "var(--ink-2)", fontSize: 14, lineHeight: "1.5" }}>
               {epData.logline}
             </p>
           </div>
@@ -111,7 +205,7 @@ export default function EpisodesPage() {
                     borderRadius: "var(--radius-md)",
                     padding: "12px 16px",
                     display: "grid",
-                    gridTemplateColumns: "100px 140px 1fr",
+                    gridTemplateColumns: "minmax(90px, 120px) minmax(110px, 150px) 1fr",
                     gap: "var(--s-16)",
                     alignItems: "center",
                   }}
@@ -125,7 +219,7 @@ export default function EpisodesPage() {
                   <div>
                     {isDialogue ? (
                       <div>
-                        <span className="om-body-strong" style={{ fontSize: 13 }}>
+                        <span className="om-body-strong" style={{ fontSize: 13, color: "var(--ink)" }}>
                           {beat.speaker}
                         </span>
                         {beat.emotion && (
@@ -140,8 +234,8 @@ export default function EpisodesPage() {
                         style={{
                           background: isAction ? "var(--accent-container)" : "var(--sunken)",
                           color: isAction ? "var(--on-accent-container)" : "var(--ink-3)",
-                          padding: "2px 8px",
-                          borderRadius: "var(--radius-xs)",
+                          padding: "3px 8px",
+                          borderRadius: "var(--radius-full)",
                           fontSize: 11,
                           fontWeight: 600,
                         }}
@@ -159,6 +253,7 @@ export default function EpisodesPage() {
                         fontSize: 14,
                         color: isDialogue ? "var(--ink)" : "var(--ink-2)",
                         fontStyle: isDialogue ? "normal" : "italic",
+                        lineHeight: "1.4",
                       }}
                     >
                       {beat.text}

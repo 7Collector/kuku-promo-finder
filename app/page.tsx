@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import {
   Sparkles,
@@ -16,6 +16,8 @@ import {
   SlidersHorizontal,
   Table as TableIcon,
   LayoutGrid,
+  X,
+  RotateCcw,
 } from "lucide-react";
 
 interface Promo {
@@ -67,6 +69,7 @@ interface Promo {
 
 export default function HomePage() {
   const [promos, setPromos] = useState<Promo[]>([]);
+  const [allPromos, setAllPromos] = useState<Promo[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedHook, setSelectedHook] = useState("all");
   const [selectedType, setSelectedType] = useState("all");
@@ -75,6 +78,25 @@ export default function HomePage() {
   const [viewMode, setViewMode] = useState<"grid" | "table">("grid");
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [activeModalPromo, setActiveModalPromo] = useState<Promo | null>(null);
+
+  // Fetch full dataset once for accurate category counts
+  useEffect(() => {
+    fetch("/api/promos")
+      .then((res) => res.json())
+      .then((data) => setAllPromos(data.promos || []))
+      .catch(() => {});
+  }, []);
+
+  // Listen for Escape key to close modal
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        setActiveModalPromo(null);
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   useEffect(() => {
     fetchPromos();
@@ -96,6 +118,35 @@ export default function HomePage() {
     } finally {
       setLoading(false);
     }
+  }
+
+  const hookCounts = useMemo(() => {
+    const map: Record<string, number> = { all: allPromos.length };
+    allPromos.forEach((p) => {
+      map[p.hook.type] = (map[p.hook.type] || 0) + 1;
+    });
+    return map;
+  }, [allPromos]);
+
+  const typeCounts = useMemo(() => {
+    const map: Record<string, number> = { all: allPromos.length };
+    allPromos.forEach((p) => {
+      map[p.promo_type] = (map[p.promo_type] || 0) + 1;
+    });
+    return map;
+  }, [allPromos]);
+
+  const isFiltered =
+    selectedHook !== "all" ||
+    selectedType !== "all" ||
+    minScore > 6.0 ||
+    searchQuery.trim() !== "";
+
+  function resetFilters() {
+    setSelectedHook("all");
+    setSelectedType("all");
+    setMinScore(6.0);
+    setSearchQuery("");
   }
 
   function copyTimestamps(promo: Promo) {
@@ -222,7 +273,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "var(--s-24)", marginBottom: "var(--s-24)" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 280px), 1fr))", gap: "var(--s-24)", marginBottom: "var(--s-24)" }}>
             <div style={{ background: "rgba(255,255,255,0.04)", padding: "var(--s-20)", borderRadius: "var(--radius-lg)", border: "1px solid var(--board-rule)" }}>
               <span className="om-caption" style={{ color: "var(--on-board-2)", display: "block", marginBottom: 6 }}>
                 The hook (first 3 seconds) · {heroPromo.hook.name}
@@ -271,50 +322,78 @@ export default function HomePage() {
           background: "var(--surface)",
           border: "1px solid var(--hairline)",
           borderRadius: "var(--radius-lg)",
-          padding: "var(--s-16)",
+          padding: "var(--s-20)",
           marginBottom: "var(--s-24)",
           display: "flex",
           flexDirection: "column",
           gap: "var(--s-16)",
+          boxShadow: "0 1px 3px rgba(0, 0, 0, 0.02)",
         }}
       >
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "var(--s-12)" }}>
           {/* Search box */}
-          <div style={{ position: "relative", minWidth: 260, flex: "1 1 300px" }}>
+          <div style={{ position: "relative", minWidth: 260, flex: "1 1 320px" }}>
             <Search
               size={16}
-              style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", color: "var(--ink-3)" }}
+              style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "var(--ink-3)" }}
             />
             <input
               type="text"
-              placeholder="Search quotes, characters, or keywords..."
+              placeholder="Search quotes, characters, or beats..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               style={{
                 width: "100%",
-                height: 40,
-                padding: "0 var(--s-12) 0 36px",
+                height: 42,
+                padding: "0 38px 0 40px",
                 borderRadius: "var(--radius-md)",
                 border: "1px solid var(--hairline)",
                 background: "var(--paper)",
                 color: "var(--ink)",
                 fontSize: 14,
+                outline: "none",
+                transition: "border-color 0.15s ease",
               }}
             />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                style={{
+                  position: "absolute",
+                  right: 12,
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  background: "transparent",
+                  border: "none",
+                  color: "var(--ink-3)",
+                  cursor: "pointer",
+                  padding: 4,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+                title="Clear search"
+              >
+                <X size={15} />
+              </button>
+            )}
           </div>
 
           {/* View toggle */}
-          <div style={{ display: "flex", alignItems: "center", gap: 4, background: "var(--sunken)", padding: 3, borderRadius: "var(--radius-md)" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 4, background: "var(--sunken)", padding: 4, borderRadius: "var(--radius-md)" }}>
             <button
               onClick={() => setViewMode("grid")}
               className={`om-button om-button--compact ${viewMode === "grid" ? "is-pressed" : ""}`}
               style={{
-                minHeight: 32,
-                padding: "0 10px",
+                minHeight: 34,
+                padding: "0 12px",
                 background: viewMode === "grid" ? "var(--surface)" : "transparent",
                 color: viewMode === "grid" ? "var(--ink)" : "var(--ink-3)",
                 borderRadius: "var(--radius-sm)",
-                boxShadow: viewMode === "grid" ? "0 1px 3px rgba(0,0,0,0.06)" : "none",
+                fontWeight: viewMode === "grid" ? 600 : 400,
+                boxShadow: viewMode === "grid" ? "0 1px 3px rgba(0,0,0,0.08)" : "none",
+                border: "none",
+                cursor: "pointer",
               }}
             >
               <LayoutGrid size={15} />
@@ -324,12 +403,15 @@ export default function HomePage() {
               onClick={() => setViewMode("table")}
               className={`om-button om-button--compact ${viewMode === "table" ? "is-pressed" : ""}`}
               style={{
-                minHeight: 32,
-                padding: "0 10px",
+                minHeight: 34,
+                padding: "0 12px",
                 background: viewMode === "table" ? "var(--surface)" : "transparent",
                 color: viewMode === "table" ? "var(--ink)" : "var(--ink-3)",
                 borderRadius: "var(--radius-sm)",
-                boxShadow: viewMode === "table" ? "0 1px 3px rgba(0,0,0,0.06)" : "none",
+                fontWeight: viewMode === "table" ? 600 : 400,
+                boxShadow: viewMode === "table" ? "0 1px 3px rgba(0,0,0,0.08)" : "none",
+                border: "none",
+                cursor: "pointer",
               }}
             >
               <TableIcon size={15} />
@@ -339,53 +421,62 @@ export default function HomePage() {
         </div>
 
         {/* Hook Filter Chips */}
-        <div style={{ display: "flex", alignItems: "center", gap: "var(--s-8)", flexWrap: "wrap" }}>
-          <span className="om-caption" style={{ color: "var(--ink-3)", marginRight: 4 }}>
-            Hook type:
+        <div>
+          <span className="om-caption" style={{ color: "var(--ink-3)", display: "block", marginBottom: 8 }}>
+            Filter by hook trigger:
           </span>
-          {[
-            { id: "all", label: "All hooks" },
-            { id: "public_humiliation", label: "Public humiliation" },
-            { id: "physical_aggression", label: "Physical aggression" },
-            { id: "intimate_betrayal", label: "Intimate betrayal" },
-            { id: "class_status_contempt", label: "Class contempt" },
-            { id: "hidden_identity_irony", label: "Hidden identity" },
-            { id: "unjust_accusation", label: "Unjust accusation" },
-          ].map((chip) => (
-            <button
-              key={chip.id}
-              onClick={() => setSelectedHook(chip.id)}
-              className={`kuku-chip ${selectedHook === chip.id ? "active" : ""}`}
-            >
-              {chip.label}
-            </button>
-          ))}
+          <div style={{ display: "flex", alignItems: "center", gap: "var(--s-8)", flexWrap: "wrap" }}>
+            {[
+              { id: "all", label: "All hooks" },
+              { id: "public_humiliation", label: "Public humiliation" },
+              { id: "physical_aggression", label: "Physical aggression" },
+              { id: "intimate_betrayal", label: "Intimate betrayal" },
+              { id: "class_status_contempt", label: "Class contempt" },
+              { id: "hidden_identity_irony", label: "Hidden identity" },
+              { id: "unjust_accusation", label: "Unjust accusation" },
+            ].map((chip) => {
+              const count = hookCounts[chip.id];
+              return (
+                <button
+                  key={chip.id}
+                  onClick={() => setSelectedHook(chip.id)}
+                  className={`kuku-chip ${selectedHook === chip.id ? "active" : ""}`}
+                >
+                  <span>{chip.label}</span>
+                  {count !== undefined && (
+                    <span className="kuku-chip-count">{count}</span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         {/* Format & Score Slider */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "var(--s-16)", paddingTop: "var(--s-8)", borderTop: "1px solid var(--hairline)" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "var(--s-8)" }}>
-            <span className="om-caption" style={{ color: "var(--ink-3)" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "var(--s-16)", paddingTop: "var(--s-12)", borderTop: "1px solid var(--hairline)" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "var(--s-8)", flexWrap: "wrap" }}>
+            <span className="om-caption" style={{ color: "var(--ink-3)", marginRight: 2 }}>
               Format:
             </span>
-            <button
-              onClick={() => setSelectedType("all")}
-              className={`kuku-chip ${selectedType === "all" ? "active" : ""}`}
-            >
-              All formats
-            </button>
-            <button
-              onClick={() => setSelectedType("single_episode")}
-              className={`kuku-chip ${selectedType === "single_episode" ? "active" : ""}`}
-            >
-              Single episode
-            </button>
-            <button
-              onClick={() => setSelectedType("cross_episode")}
-              className={`kuku-chip ${selectedType === "cross_episode" ? "active" : ""}`}
-            >
-              Cross-episode composite
-            </button>
+            {[
+              { id: "all", label: "All formats" },
+              { id: "single_episode", label: "Single episode" },
+              { id: "cross_episode", label: "Cross-episode composite" },
+            ].map((chip) => {
+              const count = typeCounts[chip.id];
+              return (
+                <button
+                  key={chip.id}
+                  onClick={() => setSelectedType(chip.id)}
+                  className={`kuku-chip ${selectedType === chip.id ? "active" : ""}`}
+                >
+                  <span>{chip.label}</span>
+                  {count !== undefined && (
+                    <span className="kuku-chip-count">{count}</span>
+                  )}
+                </button>
+              );
+            })}
           </div>
 
           <div style={{ display: "flex", alignItems: "center", gap: "var(--s-12)" }}>
@@ -399,9 +490,39 @@ export default function HomePage() {
               step="0.5"
               value={minScore}
               onChange={(e) => setMinScore(parseFloat(e.target.value))}
-              style={{ width: 120, accentColor: "var(--accent)" }}
+              style={{ width: 130, accentColor: "var(--accent)" }}
             />
           </div>
+        </div>
+
+        {/* Filter Feedback Strip */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "var(--s-8)", paddingTop: "var(--s-8)", borderTop: "1px dashed var(--hairline)", fontSize: 13 }}>
+          <span style={{ color: "var(--ink-2)" }}>
+            Showing <strong className="om-num" style={{ color: "var(--ink)" }}>{promos.length}</strong> of <span className="om-num">{allPromos.length || promos.length}</span> ranked promos
+            {selectedHook !== "all" && <span> · Hook: <em>{selectedHook.replace(/_/g, " ")}</em></span>}
+            {selectedType !== "all" && <span> · Format: <em>{selectedType.replace(/_/g, " ")}</em></span>}
+          </span>
+          {isFiltered && (
+            <button
+              onClick={resetFilters}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 4,
+                background: "transparent",
+                border: "none",
+                color: "var(--accent)",
+                cursor: "pointer",
+                fontSize: 12,
+                fontWeight: 600,
+                padding: "2px 6px",
+                borderRadius: "var(--radius-xs)",
+              }}
+            >
+              <RotateCcw size={12} />
+              <span>Reset all filters</span>
+            </button>
+          )}
         </div>
       </div>
 
@@ -437,6 +558,7 @@ export default function HomePage() {
             const isTop3 = p.rank <= 3;
             const effScore = p.scores.adjusted_score || p.scores.composite_score;
             const penalty = p.scores.diversity_penalty;
+            const isCopied = copiedId === p.promo_id;
 
             return (
               <div key={p.promo_id} className="kuku-card">
@@ -445,23 +567,24 @@ export default function HomePage() {
                   <div style={{ display: "flex", alignItems: "center", gap: "var(--s-8)" }}>
                     <span
                       style={{
-                        width: 28,
-                        height: 28,
-                        borderRadius: "var(--radius-xs)",
-                        background: isTop3 ? "var(--ink)" : "var(--sunken)",
-                        color: isTop3 ? "#fff" : "var(--ink)",
+                        width: 30,
+                        height: 30,
+                        borderRadius: "var(--radius-sm)",
+                        background: p.rank === 1 ? "var(--board)" : isTop3 ? "var(--accent)" : "var(--sunken)",
+                        color: isTop3 ? "#ffffff" : "var(--ink)",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
                         fontSize: 13,
                         fontWeight: 700,
                         fontFamily: "var(--font-sans)",
+                        boxShadow: isTop3 ? "0 2px 6px rgba(0,0,0,0.15)" : "none",
                       }}
                     >
                       {p.rank}
                     </span>
                     <div>
-                      <span className="om-body-strong" style={{ display: "block" }}>
+                      <span className="om-body-strong" style={{ display: "block", fontSize: 15 }}>
                         {p.hook.name}
                       </span>
                       <span className="om-caption" style={{ color: "var(--ink-3)" }}>
@@ -471,9 +594,12 @@ export default function HomePage() {
                   </div>
 
                   <div style={{ textAlign: "right" }}>
-                    <span className="om-headline om-num" style={{ color: "var(--ink)" }}>
-                      {effScore.toFixed(2)}
-                    </span>
+                    <div style={{ display: "inline-flex", alignItems: "baseline", gap: 2 }}>
+                      <span className="om-headline om-num" style={{ color: effScore >= 8.0 ? "var(--accent)" : "var(--ink)", fontSize: 18 }}>
+                        {effScore.toFixed(2)}
+                      </span>
+                      <span className="om-caption" style={{ color: "var(--ink-3)", fontSize: 11 }}>/10</span>
+                    </div>
                     {penalty < 1.0 && (
                       <span className="om-caption" style={{ display: "block", color: "var(--ink-3)", fontSize: 11 }}>
                         MMR: ×{penalty.toFixed(2)}
@@ -482,29 +608,70 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                {/* Timestamps Pill */}
-                <div
-                  style={{
-                    background: "var(--sunken)",
-                    borderRadius: "var(--radius-md)",
-                    padding: "6px 10px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    marginBottom: "var(--s-12)",
-                    fontSize: 12,
-                  }}
-                >
-                  <span className="om-num" style={{ color: "var(--ink-2)", fontWeight: 500 }}>
-                    {p.segments.map((s) => `${s.start} → ${s.end}`).join(" | ")} ({p.total_duration.toFixed(1)}s)
-                  </span>
-                  <button
-                    onClick={() => copyTimestamps(p)}
-                    style={{ color: "var(--ink-2)", padding: 2 }}
-                    title="Copy timestamps"
+                {/* Timestamps Pill & Visual Duration Track */}
+                <div style={{ marginBottom: "var(--s-12)" }}>
+                  <div
+                    style={{
+                      background: "var(--sunken)",
+                      borderRadius: "var(--radius-md)",
+                      padding: "7px 10px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      fontSize: 12,
+                    }}
                   >
-                    {copiedId === p.promo_id ? <Check size={14} style={{ color: "var(--success-strong)" }} /> : <Copy size={14} />}
-                  </button>
+                    <span className="om-num" style={{ color: "var(--ink)", fontWeight: 600 }}>
+                      {p.segments.map((s) => `${s.start} → ${s.end}`).join(" | ")}
+                    </span>
+                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                      <span
+                        className="om-tag"
+                        style={{
+                          background: "var(--surface)",
+                          border: "1px solid var(--hairline)",
+                          fontSize: 11,
+                          padding: "2px 7px",
+                          borderRadius: "var(--radius-full)",
+                        }}
+                      >
+                        {p.total_duration.toFixed(1)}s
+                      </span>
+                      <button
+                        onClick={() => copyTimestamps(p)}
+                        style={{
+                          color: isCopied ? "var(--success-strong)" : "var(--ink-2)",
+                          background: isCopied ? "var(--success-container)" : "transparent",
+                          borderRadius: "var(--radius-xs)",
+                          padding: "3px 6px",
+                          border: "none",
+                          cursor: "pointer",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 3,
+                          fontSize: 11,
+                          fontWeight: 500,
+                          transition: "all 0.15s ease",
+                        }}
+                        title="Copy timestamps"
+                      >
+                        {isCopied ? <Check size={12} /> : <Copy size={12} />}
+                        <span>{isCopied ? "Copied" : "Copy"}</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Visual Duration Meter (20-60s) */}
+                  <div style={{ width: "100%", height: 3, background: "var(--hairline)", borderRadius: 2, overflow: "hidden", marginTop: 4 }}>
+                    <div
+                      style={{
+                        width: `${Math.min(100, (p.total_duration / 60) * 100)}%`,
+                        height: "100%",
+                        background: p.total_duration <= 35 ? "var(--accent)" : p.total_duration <= 50 ? "var(--info-strong)" : "var(--tip-strong)",
+                        borderRadius: 2,
+                      }}
+                    />
+                  </div>
                 </div>
 
                 {/* Hook Quote */}
@@ -512,7 +679,7 @@ export default function HomePage() {
                   <span className="om-caption" style={{ color: "var(--ink-3)", display: "block", marginBottom: 4 }}>
                     Hook (first 3s):
                   </span>
-                  <p className="om-body" style={{ color: "var(--ink)", fontStyle: "italic", fontSize: 14 }}>
+                  <p className="om-body" style={{ color: "var(--ink)", fontStyle: "italic", fontSize: 14, lineHeight: "1.4" }}>
                     &ldquo;{p.hook.quote}&rdquo;
                   </p>
                 </div>
@@ -522,7 +689,7 @@ export default function HomePage() {
                   <span className="om-caption" style={{ color: "var(--ink-3)", display: "block", marginBottom: 4 }}>
                     Cliffhanger (payoff withheld):
                   </span>
-                  <p className="om-subhead" style={{ color: "var(--ink-2)", fontSize: 13 }}>
+                  <p className="om-subhead" style={{ color: "var(--ink-2)", fontSize: 13, lineHeight: "1.4" }}>
                     &ldquo;{p.cliffhanger.quote}&rdquo;
                   </p>
                 </div>
@@ -535,11 +702,11 @@ export default function HomePage() {
 
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                     {p.quality_audit?.passed ? (
-                      <span style={{ fontSize: 12, color: "var(--success-strong)", display: "flex", alignItems: "center", gap: 4 }}>
+                      <span style={{ fontSize: 12, color: "var(--success-strong)", display: "flex", alignItems: "center", gap: 4, fontWeight: 500 }}>
                         <ShieldCheck size={14} /> Passed audit
                       </span>
                     ) : (
-                      <span style={{ fontSize: 12, color: "var(--warning-strong)", display: "flex", alignItems: "center", gap: 4 }}>
+                      <span style={{ fontSize: 12, color: "var(--warning-strong)", display: "flex", alignItems: "center", gap: 4, fontWeight: 500 }}>
                         <AlertTriangle size={14} /> Audit flag
                       </span>
                     )}
@@ -552,10 +719,15 @@ export default function HomePage() {
                         color: "var(--accent)",
                         display: "flex",
                         alignItems: "center",
-                        gap: 2,
+                        gap: 3,
+                        background: "transparent",
+                        border: "none",
+                        cursor: "pointer",
+                        padding: "4px 6px",
+                        borderRadius: "var(--radius-xs)",
                       }}
                     >
-                      Inspect <ArrowRight size={13} />
+                      Inspect cut <ArrowRight size={13} />
                     </button>
                   </div>
                 </div>
@@ -565,55 +737,57 @@ export default function HomePage() {
         </div>
       ) : (
         /* Table View */
-        <div style={{ background: "var(--surface)", border: "1px solid var(--hairline)", borderRadius: "var(--radius-lg)", overflow: "hidden" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left", fontSize: 14 }}>
-            <thead>
-              <tr style={{ background: "var(--paper)", borderBottom: "1px solid var(--hairline)", color: "var(--ink-3)", fontSize: 12 }}>
-                <th style={{ padding: "12px 16px" }}>Rank</th>
-                <th style={{ padding: "12px 16px" }}>Score</th>
-                <th style={{ padding: "12px 16px" }}>Episode</th>
-                <th style={{ padding: "12px 16px" }}>Duration</th>
-                <th style={{ padding: "12px 16px" }}>Hook archetype</th>
-                <th style={{ padding: "12px 16px" }}>Opening quote</th>
-                <th style={{ padding: "12px 16px" }}>Timestamps</th>
-                <th style={{ padding: "12px 16px" }}>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {promos.map((p) => (
-                <tr key={p.promo_id} style={{ borderBottom: "1px solid var(--hairline)" }}>
-                  <td style={{ padding: "12px 16px", fontWeight: 700 }}>#{p.rank}</td>
-                  <td style={{ padding: "12px 16px" }} className="om-num">
-                    <strong>{(p.scores.adjusted_score || p.scores.composite_score).toFixed(2)}</strong>
-                  </td>
-                  <td style={{ padding: "12px 16px" }}>Ep {p.episodes.join(" & ")}</td>
-                  <td style={{ padding: "12px 16px" }} className="om-num">
-                    {p.total_duration.toFixed(1)}s
-                  </td>
-                  <td style={{ padding: "12px 16px" }}>
-                    <span className="om-tag" style={{ background: "var(--sunken)", padding: "2px 8px", borderRadius: "var(--radius-xs)", fontSize: 12 }}>
-                      {p.hook.name}
-                    </span>
-                  </td>
-                  <td style={{ padding: "12px 16px", maxWidth: 280, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                    &ldquo;{p.hook.quote}&rdquo;
-                  </td>
-                  <td style={{ padding: "12px 16px", fontFamily: "var(--font-sans)", fontSize: 12 }} className="om-num">
-                    {p.segments.map((s) => `${s.start}→${s.end}`).join(", ")}
-                  </td>
-                  <td style={{ padding: "12px 16px" }}>
-                    <button
-                      onClick={() => setActiveModalPromo(p)}
-                      className="om-button om-button--compact"
-                      style={{ background: "var(--paper)", color: "var(--accent)", minHeight: 30, padding: "0 8px" }}
-                    >
-                      Details
-                    </button>
-                  </td>
+        <div style={{ background: "var(--surface)", border: "1px solid var(--hairline)", borderRadius: "var(--radius-lg)", overflow: "hidden", boxShadow: "0 1px 3px rgba(0,0,0,0.02)" }}>
+          <div className="no-scrollbar" style={{ width: "100%", overflowX: "auto", WebkitOverflowScrolling: "touch" }}>
+            <table style={{ width: "100%", minWidth: 780, borderCollapse: "collapse", textAlign: "left", fontSize: 14 }}>
+              <thead>
+                <tr style={{ background: "var(--paper)", borderBottom: "1px solid var(--hairline)", color: "var(--ink-3)", fontSize: 12 }}>
+                  <th style={{ padding: "12px 16px" }}>Rank</th>
+                  <th style={{ padding: "12px 16px" }}>Score</th>
+                  <th style={{ padding: "12px 16px" }}>Episode</th>
+                  <th style={{ padding: "12px 16px" }}>Duration</th>
+                  <th style={{ padding: "12px 16px" }}>Hook archetype</th>
+                  <th style={{ padding: "12px 16px" }}>Opening quote</th>
+                  <th style={{ padding: "12px 16px" }}>Timestamps</th>
+                  <th style={{ padding: "12px 16px", textAlign: "right" }}>Action</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {promos.map((p) => (
+                  <tr key={p.promo_id} style={{ borderBottom: "1px solid var(--hairline)" }}>
+                    <td style={{ padding: "12px 16px", fontWeight: 700 }}>#{p.rank}</td>
+                    <td style={{ padding: "12px 16px" }} className="om-num">
+                      <strong>{(p.scores.adjusted_score || p.scores.composite_score).toFixed(2)}</strong>
+                    </td>
+                    <td style={{ padding: "12px 16px" }}>Ep {p.episodes.join(" & ")}</td>
+                    <td style={{ padding: "12px 16px" }} className="om-num">
+                      {p.total_duration.toFixed(1)}s
+                    </td>
+                    <td style={{ padding: "12px 16px" }}>
+                      <span className="om-tag" style={{ background: "var(--sunken)", padding: "3px 8px", borderRadius: "var(--radius-full)", fontSize: 12 }}>
+                        {p.hook.name}
+                      </span>
+                    </td>
+                    <td style={{ padding: "12px 16px", maxWidth: 260, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                      &ldquo;{p.hook.quote}&rdquo;
+                    </td>
+                    <td style={{ padding: "12px 16px", fontFamily: "var(--font-sans)", fontSize: 12 }} className="om-num">
+                      {p.segments.map((s) => `${s.start}→${s.end}`).join(", ")}
+                    </td>
+                    <td style={{ padding: "12px 16px", textAlign: "right" }}>
+                      <button
+                        onClick={() => setActiveModalPromo(p)}
+                        className="om-button om-button--compact"
+                        style={{ background: "var(--paper)", color: "var(--accent)", minHeight: 30, padding: "0 10px", border: "1px solid var(--hairline)" }}
+                      >
+                        Inspect
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 
@@ -623,7 +797,9 @@ export default function HomePage() {
           style={{
             position: "fixed",
             inset: 0,
-            background: "var(--scrim)",
+            background: "rgba(23, 25, 27, 0.45)",
+            backdropFilter: "blur(6px)",
+            WebkitBackdropFilter: "blur(6px)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -641,9 +817,11 @@ export default function HomePage() {
               maxHeight: "90vh",
               overflowY: "auto",
               padding: "var(--s-32)",
-              boxShadow: "0 20px 48px rgba(0,0,0,0.2)",
+              boxShadow: "0 24px 64px rgba(0,0,0,0.24)",
+              border: "1px solid var(--hairline)",
             }}
             onClick={(e) => e.stopPropagation()}
+            className="no-scrollbar"
           >
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "var(--s-20)" }}>
               <div>
@@ -656,7 +834,17 @@ export default function HomePage() {
               </div>
               <button
                 onClick={() => setActiveModalPromo(null)}
-                style={{ padding: 8, color: "var(--ink-3)", borderRadius: "var(--radius-full)" }}
+                style={{
+                  padding: "6px 10px",
+                  color: "var(--ink-3)",
+                  background: "var(--sunken)",
+                  border: "none",
+                  borderRadius: "var(--radius-full)",
+                  cursor: "pointer",
+                  fontSize: 14,
+                  fontWeight: 600,
+                }}
+                title="Close modal (Esc)"
               >
                 ✕
               </button>
@@ -667,16 +855,18 @@ export default function HomePage() {
               style={{
                 background: "var(--sunken)",
                 borderRadius: "var(--radius-md)",
-                padding: "var(--s-12)",
+                padding: "var(--s-16)",
                 marginBottom: "var(--s-20)",
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
+                flexWrap: "wrap",
+                gap: 12,
               }}
             >
               <div>
                 <span className="om-caption" style={{ display: "block", color: "var(--ink-3)" }}>
-                  Target cut timestamps
+                  Target cut timestamps ({activeModalPromo.total_duration.toFixed(1)}s total)
                 </span>
                 <span className="om-headline om-num" style={{ color: "var(--ink)" }}>
                   {activeModalPromo.segments.map((s) => `${s.start} → ${s.end}`).join("  |  ")}
@@ -694,7 +884,7 @@ export default function HomePage() {
 
             {/* Hook and Cliffhanger Blocks */}
             <div style={{ display: "flex", flexDirection: "column", gap: "var(--s-16)", marginBottom: "var(--s-24)" }}>
-              <div style={{ borderLeft: "3px solid var(--accent)", paddingLeft: "var(--s-12)" }}>
+              <div style={{ borderLeft: "3px solid var(--accent)", paddingLeft: "var(--s-16)" }}>
                 <span className="om-caption" style={{ color: "var(--ink-3)" }}>
                   The psychological hook ({activeModalPromo.hook.type})
                 </span>
@@ -706,7 +896,7 @@ export default function HomePage() {
                 </p>
               </div>
 
-              <div style={{ borderLeft: "3px solid var(--warning-strong)", paddingLeft: "var(--s-12)" }}>
+              <div style={{ borderLeft: "3px solid var(--warning-strong)", paddingLeft: "var(--s-16)" }}>
                 <span className="om-caption" style={{ color: "var(--ink-3)" }}>
                   The cliffhanger cut point ({activeModalPromo.cliffhanger.type})
                 </span>
@@ -766,7 +956,7 @@ export default function HomePage() {
                           display: "inline-block",
                           background: "var(--warning-container)",
                           color: "var(--warning-on-container)",
-                          padding: "3px 8px",
+                          padding: "4px 10px",
                           borderRadius: "var(--radius-xs)",
                           fontSize: 12,
                           marginRight: 6,

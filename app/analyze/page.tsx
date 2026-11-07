@@ -10,6 +10,7 @@ export default function AnalyzeToolPage() {
   const [cliffQuote] = useState("Long enough to know he was never going to marry you.");
   const [hookType, setHookType] = useState("intimate_betrayal");
   const [cliffType, setCliffType] = useState("interrupted_retaliation");
+  const [selectedPresetIndex, setSelectedPresetIndex] = useState<number | null>(0);
 
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
@@ -44,14 +45,28 @@ export default function AnalyzeToolPage() {
     },
   ];
 
-  function applyPreset(p: (typeof presets)[0]) {
+  function applyPreset(p: (typeof presets)[0], index: number) {
     setStart(p.start);
     setEnd(p.end);
     setHookQuote(p.hook);
     setHookType(p.hookType);
     setCliffType(p.cliffType);
+    setSelectedPresetIndex(index);
     setResult(null);
   }
+
+  function parseTimestampToSec(ts: string): number {
+    try {
+      const parts = ts.trim().split(":");
+      if (parts.length === 2) {
+        return parseFloat(parts[0]) * 60 + parseFloat(parts[1]);
+      }
+    } catch {}
+    return 0;
+  }
+
+  const liveDuration = Math.max(0, parseTimestampToSec(end) - parseTimestampToSec(start));
+  const isValidDuration = liveDuration >= 20.0 && liveDuration <= 60.0;
 
   async function handleAnalyze() {
     setLoading(true);
@@ -103,31 +118,30 @@ export default function AnalyzeToolPage() {
         </p>
       </div>
 
-      {/* Presets */}
+      {/* Presets with Clean Padding & Active State */}
       <div style={{ display: "flex", alignItems: "center", gap: "var(--s-8)", marginBottom: "var(--s-24)", flexWrap: "wrap" }}>
-        <span className="om-caption" style={{ color: "var(--ink-3)" }}>
+        <span className="om-caption" style={{ color: "var(--ink-3)", marginRight: 4 }}>
           Try a preset cut:
         </span>
         {presets.map((p, idx) => (
           <button
             key={idx}
-            onClick={() => applyPreset(p)}
-            className="kuku-chip"
-            style={{ fontSize: 13 }}
+            onClick={() => applyPreset(p, idx)}
+            className={`kuku-chip ${selectedPresetIndex === idx ? "active" : ""}`}
           >
-            {p.name}
+            <span>{p.name}</span>
           </button>
         ))}
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(360px, 1fr))", gap: "var(--s-24)" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 340px), 1fr))", gap: "var(--s-24)" }}>
         {/* Input Form */}
-        <div className="om-surface" style={{ border: "1px solid var(--hairline)" }}>
+        <div className="om-surface" style={{ border: "1px solid var(--hairline)", padding: "var(--s-24)", borderRadius: "var(--radius-lg)" }}>
           <h3 className="om-headline" style={{ marginBottom: "var(--s-16)" }}>
             Cut Parameters
           </h3>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "var(--s-12)", marginBottom: "var(--s-16)" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "var(--s-12)", marginBottom: 8 }}>
             <div>
               <label className="om-caption" style={{ color: "var(--ink-2)", display: "block", marginBottom: 4 }}>
                 Start timestamp
@@ -135,7 +149,10 @@ export default function AnalyzeToolPage() {
               <input
                 type="text"
                 value={start}
-                onChange={(e) => setStart(e.target.value)}
+                onChange={(e) => {
+                  setStart(e.target.value);
+                  setSelectedPresetIndex(null);
+                }}
                 style={{
                   width: "100%",
                   height: 40,
@@ -153,7 +170,10 @@ export default function AnalyzeToolPage() {
               <input
                 type="text"
                 value={end}
-                onChange={(e) => setEnd(e.target.value)}
+                onChange={(e) => {
+                  setEnd(e.target.value);
+                  setSelectedPresetIndex(null);
+                }}
                 style={{
                   width: "100%",
                   height: 40,
@@ -166,13 +186,34 @@ export default function AnalyzeToolPage() {
             </div>
           </div>
 
+          {/* Live Duration Feedback Pill */}
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: "var(--s-16)" }}>
+            <span className="om-caption" style={{ color: "var(--ink-3)" }}>Live duration:</span>
+            <span
+              className="om-num"
+              style={{
+                fontSize: 12,
+                fontWeight: 600,
+                padding: "2px 8px",
+                borderRadius: "var(--radius-full)",
+                background: isValidDuration ? "var(--success-container)" : "var(--warning-container)",
+                color: isValidDuration ? "var(--success-on-container)" : "var(--warning-on-container)",
+              }}
+            >
+              {liveDuration.toFixed(1)}s {isValidDuration ? "✓ Valid 20–60s" : "⚠️ Must be 20–60s"}
+            </span>
+          </div>
+
           <div style={{ marginBottom: "var(--s-16)" }}>
             <label className="om-caption" style={{ color: "var(--ink-2)", display: "block", marginBottom: 4 }}>
               Hook archetype
             </label>
             <select
               value={hookType}
-              onChange={(e) => setHookType(e.target.value)}
+              onChange={(e) => {
+                setHookType(e.target.value);
+                setSelectedPresetIndex(null);
+              }}
               style={{
                 width: "100%",
                 height: 40,
@@ -199,7 +240,10 @@ export default function AnalyzeToolPage() {
             <textarea
               rows={2}
               value={hookQuote}
-              onChange={(e) => setHookQuote(e.target.value)}
+              onChange={(e) => {
+                setHookQuote(e.target.value);
+                setSelectedPresetIndex(null);
+              }}
               placeholder="e.g. Why are you holding her hand?"
               style={{
                 width: "100%",
@@ -218,7 +262,10 @@ export default function AnalyzeToolPage() {
             </label>
             <select
               value={cliffType}
-              onChange={(e) => setCliffType(e.target.value)}
+              onChange={(e) => {
+                setCliffType(e.target.value);
+                setSelectedPresetIndex(null);
+              }}
               style={{
                 width: "100%",
                 height: 40,
