@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import "./globals.css";
+import { readMeta } from "@/lib/kuku";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Kuku Promo Finder — AI Microdrama Acquisition Engine",
@@ -93,18 +96,6 @@ export default function RootLayout({
                   Ranked promos
                 </Link>
                 <Link
-                  href="/analyze"
-                  className="om-button om-button--compact"
-                  style={{
-                    background: "transparent",
-                    color: "var(--ink)",
-                    minHeight: 36,
-                    padding: "0 var(--s-12)",
-                  }}
-                >
-                  Cut tool
-                </Link>
-                <Link
                   href="/episodes"
                   className="om-button om-button--compact"
                   style={{
@@ -131,23 +122,9 @@ export default function RootLayout({
                   fontFamily: "var(--font-sans)",
                 }}
               >
-                50 episodes · 3,727 beats
+                {(() => { const m = readMeta(); return m ? `${m.episodes} episodes · ${m.beats.toLocaleString()} beats` : "no run found"; })()}
               </span>
-              <a
-                href="https://github.com"
-                target="_blank"
-                rel="noreferrer"
-                className="om-button om-button--compact"
-                style={{
-                  background: "var(--surface)",
-                  color: "var(--ink)",
-                  border: "1px solid var(--hairline)",
-                  minHeight: 36,
-                  padding: "0 var(--s-12)",
-                }}
-              >
-                GitHub
-              </a>
+
             </div>
           </div>
         </header>

@@ -8,6 +8,7 @@ import re
 import yaml
 from typing import Dict, List, Any, Optional
 
+# Objects that make a "physical aggression" cue a false positive. Extend per show if needed.
 INANIMATE_OBJECT_TOKENS = [
     "flint", "steel", "kindling", "spark", "sparks", "gavel", "sound block",
     "clock", "bell", "chime", "door", "doors", "table", "chair", "candle", "lamp"
@@ -63,11 +64,38 @@ class Taxonomy:
         self.hook_by_id = {h["id"]: h for h in self.hooks}
         self.cliffhanger_by_id = {c["id"]: c for c in self.cliffhangers}
 
+    # Weight for a model-proposed "new:<name>" type: neutral, so it is neither rewarded nor
+    # punished for not being in the registry.
+    NEW_TYPE_WEIGHT = 0.90
+
     def get_hook_weight(self, hook_id: str) -> float:
-        return self.hook_by_id.get(hook_id, {}).get("weight", 0.80)
+        return self.hook_by_id.get(hook_id, {}).get("weight", self.NEW_TYPE_WEIGHT)
 
     def get_cliffhanger_weight(self, cliff_id: str) -> float:
-        return self.cliffhanger_by_id.get(cliff_id, {}).get("weight", 0.80)
+        return self.cliffhanger_by_id.get(cliff_id, {}).get("weight", self.NEW_TYPE_WEIGHT)
+
+    def normalize_type(self, raw: str, kind: str, default: str) -> str:
+        """Maps a model-supplied type to a registered id, or to 'new:<slug>' when unregistered."""
+        registry = self.hook_by_id if kind == "hook" else self.cliffhanger_by_id
+        value = (raw or "").strip()
+        if value in registry:
+            return value
+        slug = re.sub(r"[^a-z0-9]+", "_", value.lower().removeprefix("new:")).strip("_")
+        if slug in registry:
+            return slug
+        return f"new:{slug}" if slug else default
+
+    def describe_type(self, type_id: str, kind: str) -> str:
+        """Definition, requirements and exclusions of a tagged type, for the auditor prompt."""
+        t = (self.hook_by_id if kind == "hook" else self.cliffhanger_by_id).get(type_id)
+        if not t:
+            return f"{type_id}: (model-proposed type, no registry definition)"
+        lines = [f"{t['id']} - {t.get('name', '')}: {t.get('definition', '')}"]
+        if t.get("requires"):
+            lines.append("  requires: " + "; ".join(t["requires"]))
+        if t.get("do_not_tag_if"):
+            lines.append("  do NOT tag if: " + "; ".join(t["do_not_tag_if"]))
+        return "\n".join(lines)
 
     def match_hook_cues(self, text: str) -> Optional[Dict[str, Any]]:
         """

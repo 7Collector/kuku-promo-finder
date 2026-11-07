@@ -4,7 +4,7 @@ Core domain data models for Kuku Promo Finder pipeline (Pydantic v2).
 
 from enum import Enum
 from typing import List, Optional, Dict, Any, Literal
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field, model_validator, field_validator
 from src.utils.timestamps import (
     parse_timestamp_to_seconds,
     seconds_to_timestamp,
@@ -60,6 +60,7 @@ class Episode(BaseModel):
 
 
 class Segment(BaseModel):
+    episode: Optional[int] = None
     start: str
     end: str
     start_seconds: float
@@ -70,6 +71,7 @@ class Segment(BaseModel):
     def compute_duration(self) -> "Segment":
         if self.duration <= 0.0:
             self.duration = max(0.0, self.end_seconds - self.start_seconds)
+        self.duration = round(self.duration, 2)
         return self
 
 
@@ -102,6 +104,14 @@ class PromoScores(BaseModel):
     diversity_penalty: float = 1.0
     audit_multiplier: float = 1.0
 
+    @field_validator(
+        "hook_strength", "injustice_tension", "cliffhanger_strength",
+        "standalone_clarity", "payoff_withheld", mode="after",
+    )
+    @classmethod
+    def _clamp_0_10(cls, v: float) -> float:
+        return max(0.0, min(10.0, float(v)))
+
     def compute_composite_score(self, hook_weight: float = 1.0, cliff_weight: float = 1.0) -> float:
         """
         Single canonical scoring formula for the entire pipeline:
@@ -123,6 +133,10 @@ class PromoScores(BaseModel):
 
 class QualityAudit(BaseModel):
     passed: bool = True
+    # "llm" = model read the clip screenplay; "rules" = offline lint (NOT a quality judgement);
+    # "error" = the audit call failed and the candidate is unaudited.
+    method: Literal["llm", "rules", "error"] = "rules"
+    audit_model: str = ""
     flaw_type: Optional[str] = None
     critique: str = ""
     confidence_score: float = 8.0
@@ -139,8 +153,11 @@ class PromoCandidate(BaseModel):
     hook: HookInfo
     cliffhanger: CliffhangerInfo
     why_it_works: str = ""
+    risks: List[str] = Field(default_factory=list)
     scores: PromoScores = Field(default_factory=PromoScores)
     quality_audit: Optional[QualityAudit] = None
+    engine: str = ""
+    model: str = ""
 
     @model_validator(mode="after")
     def sync_total_duration(self) -> "PromoCandidate":
@@ -148,6 +165,7 @@ class PromoCandidate(BaseModel):
             calc_dur = sum(s.duration for s in self.segments)
             if self.total_duration <= 0.0 or abs(self.total_duration - calc_dur) > 0.5:
                 self.total_duration = round(calc_dur, 2)
+        self.total_duration = round(self.total_duration, 2)
         return self
 
     @property

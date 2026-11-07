@@ -10,7 +10,7 @@ moments that make a cold viewer stop scrolling and need to see what happens next
 
 A valid promo:
 - is 20-60 seconds in total, made of one or more segments
-- OPENS on a hook inside its first 3 seconds
+- OPENS on a hook inside its first 3 seconds (a bare establishing shot or atmosphere is never a hook)
 - ENDS on a cliffhanger: cut while the payoff is still withheld
 - makes sense to someone who has never seen the show
 
@@ -32,6 +32,7 @@ PROMO_USER_PROMPT_TEMPLATE = """## Show context
 Title: {show_title}
 Genre/premise: {show_premise}
 Protagonist: {protagonist_description}
+Other characters: {cast}
 Target audience: {audience}
 
 ## Hook taxonomy (tag against these; each has a weight)
@@ -57,9 +58,10 @@ For each candidate:
 1. Choose one or more segments (start, end) copied from screenplay timestamps.
    Total duration must be 20-60s. Prefer ONE continuous segment. Add a short
    setup segment only if the hook cannot make sense cold without it.
-2. Identify the hook: the exact moment within the first 3 seconds of the
+2. Identify the hook: a beat that STARTS within the first 3 seconds of the
    first segment. Tag it with a hook type id, or propose a new type with
-   "new:<name>" if none fits.
+   "new:<name>" if none fits. Only tag a type if its "requires" are met and none
+   of its "do_not_tag_if" conditions apply.
 3. Identify the cliffhanger: the final beat, tagged with a cliffhanger type id.
    State what payoff is being withheld.
 4. Score each dimension from 0 to 10:
@@ -102,18 +104,26 @@ backstory).
 
 AUDIT_SYSTEM_PROMPT = """You are an adversarial video marketing auditor. Your job is to rigorously
 identify FALSE POSITIVES and explain why a proposed promo will fail in the wild on Instagram/TikTok.
+Base every judgement on the clip screenplay you are given, not on any claim about it.
 Respond in strict JSON matching the schema."""
 
-AUDIT_USER_PROMPT_TEMPLATE = """Auditing Promo Candidate:
+AUDIT_USER_PROMPT_TEMPLATE = """## Show
+{show_title}: {show_premise}
+
+Auditing Promo Candidate:
 - Episode(s): {episodes}
 - Timestamps: {segments_str} (Duration: {total_duration:.1f}s)
-- Hook Tagged: {hook_type} ("{hook_quote}")
-- Cliffhanger Tagged: {cliffhanger_type} ("{cliff_quote}")
-- Extractor's Claim ("Why it works"): {why_it_works}
+- Hook tagged: {hook_type} ("{hook_quote}")
+- Cliffhanger tagged: {cliffhanger_type} ("{cliff_quote}")
+
+Definitions of the tags used (the tag is wrong if requires are unmet or a do-not-tag condition holds):
+{tag_definitions}
 
 <clip_screenplay>
 {screenplay_text}
 </clip_screenplay>
+
+A viewer sees ONLY this clip, in this order, with no prior knowledge of the show.
 
 Audit against these 5 Failure Modes:
 1. Resolution Leak: Does the clip accidentally resolve the conflict in the dialogue or actions (e.g. protagonist already gets revenge, delivers comeuppance, or explains the misunderstanding)?
@@ -121,6 +131,10 @@ Audit against these 5 Failure Modes:
 3. Visual Dependency: Does the dramatic weight depend on subtle visual acting/effects that the text describes but might look clumsy or muted on screen?
 4. Slow Burn: Does the true hook happen at second 5-8 instead of within the first 3 seconds?
 5. Sarcasm / False Reading: Is the emotional keyword being used playfully or ironically rather than with genuine high stakes?
+
+"lethal_flaw" must be exactly one of: "resolution_leak", "context_deficit", "visual_dependency",
+"slow_burn", "false_reading", "wrong_tag", "other" (when pass is false), or null (when pass is true).
+"pass" must be a JSON boolean.
 
 Output JSON schema:
 {{

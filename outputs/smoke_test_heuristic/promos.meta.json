@@ -1,0 +1,51 @@
+{
+  "generated_at": "2026-11-07T13:08:44Z",
+  "git_commit": "809d946",
+  "show": "I Married a Broken Soldier. He was a Duke",
+  "input_dir": "assets/I Married a Broken Soldier. He was a Duke",
+  "episodes": 50,
+  "beats": 3727,
+  "extractor": {
+    "provider": "heuristic",
+    "model": "heuristic-offline-engine"
+  },
+  "auditor": {
+    "provider": "heuristic",
+    "model": "heuristic-offline-engine",
+    "method": "rules"
+  },
+  "composites_enabled": false,
+  "counts": {
+    "single_candidates": 87,
+    "composites": 0,
+    "valid": 87,
+    "after_dedup": 86,
+    "ranked": 15,
+    "audit_passed": 86,
+    "audit_failed": 0,
+    "audit_errors": 0,
+    "ranked_audit_passed": 15
+  },
+  "rejected_by_validation": {},
+  "constraint_violations": {},
+  "extraction_failures": {},
+  "usage": {
+    "extractor": {
+      "calls": 0,
+      "cache_hits": 0,
+      "prompt_tokens": 0,
+      "completion_tokens": 0,
+      "reasoning_tokens": 0,
+      "latency_s": 0.0
+    },
+    "auditor": {
+      "calls": 0,
+      "cache_hits": 0,
+      "prompt_tokens": 0,
+      "completion_tokens": 0,
+      "reasoning_tokens": 0,
+      "latency_s": 0.0
+    }
+  },
+  "wall_seconds": 1.0
+}

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
 import YAML from "yaml";
+import { readShowProfile } from "@/lib/kuku";
 
 export async function GET() {
   try {
@@ -9,20 +10,8 @@ export async function GET() {
     if (!fs.existsSync(filePath)) {
       return NextResponse.json({ error: "taxonomy.yaml not found" }, { status: 404 });
     }
-
-    const fileContent = fs.readFileSync(filePath, "utf-8");
-    const parsed = YAML.parse(fileContent);
-
-    const contextPath = path.join(process.cwd(), "config", "show_context.yaml");
-    let showContext = {};
-    if (fs.existsSync(contextPath)) {
-      showContext = YAML.parse(fs.readFileSync(contextPath, "utf-8"));
-    }
-
-    return NextResponse.json({
-      taxonomy: parsed,
-      context: showContext,
-    });
+    const taxonomy = YAML.parse(fs.readFileSync(filePath, "utf-8"));
+    return NextResponse.json({ taxonomy, context: readShowProfile() });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

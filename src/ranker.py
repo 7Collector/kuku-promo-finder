@@ -3,6 +3,7 @@ Ranking, physical constraint enforcement, deduplication, and MMR diversity reran
 """
 
 from typing import List, Dict
+from src.constants import EPS, HOOK_WINDOW, MAX_DURATION, MIN_DURATION
 from src.models import PromoCandidate
 from src.taxonomy import Taxonomy
 from src.utils.timestamps import calculate_temporal_overlap
@@ -20,12 +21,12 @@ class PromoRanker:
 
     def validate_constraints(self, candidate: PromoCandidate) -> bool:
         """
-        Enforces hard constraints:
-        1. Total duration between 20s and 60s (with 0.5s tolerance).
-        2. Hook inside first 3.5s of the first segment.
+        Enforces the brief's hard constraints (see src/constants.py):
+        1. Total duration 20-60s (float tolerance only).
+        2. Hook within the first 3s of the first segment.
         3. Segments have positive duration.
         """
-        if not (19.5 <= candidate.total_duration <= 60.5):
+        if not (MIN_DURATION - EPS <= candidate.total_duration <= MAX_DURATION + EPS):
             return False
 
         if not candidate.segments:
@@ -33,7 +34,7 @@ class PromoRanker:
 
         first_seg = candidate.segments[0]
         hook_delay = candidate.hook.timestamp_seconds - first_seg.start_seconds
-        if hook_delay < -0.1 or hook_delay > 3.5:
+        if hook_delay < -EPS or hook_delay > HOOK_WINDOW + EPS:
             return False
 
         for seg in candidate.segments:
@@ -65,6 +66,9 @@ class PromoRanker:
 
                 for seg_c in cand.segments:
                     for seg_e in existing.segments:
+                        # Clock times only mean something inside the same episode.
+                        if seg_c.episode != seg_e.episode and None not in (seg_c.episode, seg_e.episode):
+                            continue
                         _, ratio = calculate_temporal_overlap(
                             seg_c.start_seconds,
                             seg_c.end_seconds,
@@ -85,17 +89,17 @@ class PromoRanker:
         self,
         candidates: List[PromoCandidate],
         top_k: int = 15,
-        hook_penalty_factor: float = 0.88,
-        episode_penalty_factor: float = 0.90,
+        hook_penalty_factor: float = 0.82,
+        episode_penalty_factor: float = 0.85,
         audit_failure_penalty: float = 0.78,
     ) -> List[PromoCandidate]:
         """
-        Applies MMR diversity reranking to balance promo types and episodes.
-        Incorporates adversarial audit outcome:
-          - Passing audit: full score retained (audit_factor = 1.0)
-          - Failing audit: penalized (audit_factor = 0.78; 0.65 if resolution leak / spoiler)
-        Saves adjusted_score, diversity_penalty, and audit_multiplier onto candidate
-        so ranking order is strictly monotonic and completely transparent.
+        Greedy diversity-penalised ranking (a count-based penalty per repeated hook type and
+        episode; not embedding-based MMR). Audit outcome is a gate: while any audited-passing
+        candidate remains, failing ones cannot be picked, so every pass outranks every fail.
+        Failing candidates are still listed after the passes, with a 0.78x multiplier
+        (0.65x for a resolution leak), so the report shows them honestly flagged.
+        adjusted_score, diversity_penalty and audit_multiplier are stored on each candidate.
         """
         available = list(candidates)
         ranked: List[PromoCandidate] = []
@@ -108,7 +112,11 @@ class PromoRanker:
             best_total_penalty = 1.0
             best_audit_factor = 1.0
 
+            any_passing = any(not (c.quality_audit and not c.quality_audit.passed) for c in available)
+
             for i, cand in enumerate(available):
+                if any_passing and cand.quality_audit and not cand.quality_audit.passed:
+                    continue
                 h_type = cand.hook.type
                 h_count = hook_counts.get(h_type, 0)
                 h_penalty = hook_penalty_factor ** h_count

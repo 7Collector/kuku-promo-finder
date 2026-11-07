@@ -3,7 +3,11 @@ Promo candidate extraction engine.
 Combines deterministic window analysis with LLM dramatic tagging.
 """
 
-from typing import List, Dict, Any, Optional
+import threading
+from collections import Counter
+from typing import List, Dict, Any, Optional, Tuple
+from src.constants import CLIFF_WINDOW, EPS, HOOK_WINDOW, MAX_DURATION, MIN_DURATION
+from src.validation import find_quote_beat, snap_to_beat_edge, spoken_beats
 from src.models import (
     Episode,
     Beat,
@@ -20,7 +24,7 @@ from src.providers.base import BaseLLMProvider
 from src.providers.factory import get_llm_provider
 from src.prompts import PROMO_SYSTEM_PROMPT, PROMO_USER_PROMPT_TEMPLATE
 from src.utils.timestamps import (
-    parse_timestamp_to_seconds,
+    try_parse_timestamp,
     seconds_to_timestamp,
     calculate_temporal_overlap,
 )
@@ -31,6 +35,12 @@ class PromoExtractor:
     def __init__(self, taxonomy: Taxonomy, llm_provider: Optional[BaseLLMProvider] = None):
         self.taxonomy = taxonomy
         self.llm_provider = llm_provider or get_llm_provider()
+        self._lock = threading.Lock()
+        # Provenance and diagnostics, surfaced in run metadata.
+        self.failures: Dict[int, str] = {}           # episode -> error (LLM call failed after retries)
+        self.drop_reasons: Counter = Counter()        # why LLM candidates were rejected by validation
+        self.dropped: List[Dict[str, Any]] = []       # the rejected candidates themselves
+        self.near_misses: List[Dict[str, Any]] = []   # model-reported near misses, per episode
 
     def extract_candidates_for_episode(
         self,
@@ -40,20 +50,35 @@ class PromoExtractor:
         max_candidates: int = 3,
     ) -> List[PromoCandidate]:
         """
-        Extracts promo candidates from a single episode.
-        Calls LLM if live provider is active; falls back to deterministic heuristic window scanner.
+        Extracts promo candidates from a single episode with the active provider.
+        A live provider that fails is recorded in `self.failures` and yields no candidates:
+        output from a different engine is never substituted silently.
         """
-        if self.llm_provider.name != "heuristic":
+        if not self.llm_provider.is_live:
+            cands = self._extract_via_heuristics(episode, show_context, max_candidates)
+        else:
             try:
-                candidates = self._extract_via_llm(
-                    episode, show_context, prev_episode_summary, max_candidates
-                )
-                if candidates:
-                    return candidates
+                cands = self._extract_via_llm(episode, show_context, prev_episode_summary, max_candidates)
             except Exception as e:
-                logger.warning(f"LLM extraction failed for Ep {episode.episode_number}: {e}. Falling back to heuristic scanner.")
+                logger.error(f"Extraction failed for Ep {episode.episode_number}: {e}")
+                with self._lock:
+                    self.failures[episode.episode_number] = str(e)
+                return []
+        for c in cands:
+            c.engine = self.llm_provider.name
+            c.model = self.llm_provider.model
+        return cands
 
-        return self._extract_via_heuristics(episode, show_context, max_candidates)
+    @staticmethod
+    def _cast_line(show_context: Dict[str, Any]) -> str:
+        names = []
+        for ant in show_context.get("antagonists", []) or []:
+            if ant.get("name"):
+                names.append(f"{ant['name']} (antagonist: {ant.get('role', '')})".strip())
+        ml = show_context.get("male_lead") or {}
+        if ml.get("name"):
+            names.append(f"{ml['name']} ({ml.get('role', 'male lead')})")
+        return "; ".join(names) or "(none listed)"
 
     def _extract_via_llm(
         self,
@@ -68,11 +93,16 @@ class PromoExtractor:
             if prev_episode_summary
             else ""
         )
+        protagonist = show_context.get("protagonist", {}) or {}
+        protagonist_desc = protagonist.get("name", "Protagonist")
+        if protagonist.get("archetype"):
+            protagonist_desc += f" - {protagonist['archetype']}"
 
         user_prompt = PROMO_USER_PROMPT_TEMPLATE.format(
             show_title=show_context.get("show_title", "Microdrama"),
             show_premise=show_context.get("premise", ""),
-            protagonist_description=show_context.get("protagonist", {}).get("name", "Protagonist"),
+            protagonist_description=protagonist_desc,
+            cast=self._cast_line(show_context),
             audience=show_context.get("target_platform", "TikTok / Instagram"),
             hook_types_yaml=self.taxonomy.hooks_to_yaml_string(),
             cliffhanger_types_yaml=self.taxonomy.cliffhangers_to_yaml_string(),
@@ -85,66 +115,97 @@ class PromoExtractor:
 
         resp = self.llm_provider.generate_json(PROMO_SYSTEM_PROMPT, user_prompt)
         raw_candidates = resp.get("candidates", [])
+        if not isinstance(raw_candidates, list):
+            raise ValueError("'candidates' is not a list")
+
+        with self._lock:
+            for nm in resp.get("rejected_near_misses", []) or []:
+                if isinstance(nm, dict):
+                    self.near_misses.append({"episode": episode.episode_number, **nm})
 
         results: List[PromoCandidate] = []
-        for idx, rc in enumerate(raw_candidates):
-            parsed_cand = self._convert_raw_to_candidate(rc, episode, idx)
-            if parsed_cand:
-                results.append(parsed_cand)
-
+        for idx, rc in enumerate(raw_candidates[:max_candidates]):
+            cand, reason = self._convert_raw_to_candidate(rc, episode, idx)
+            if cand:
+                results.append(cand)
+            else:
+                with self._lock:
+                    self.drop_reasons[reason] += 1
+                    self.dropped.append({"episode": episode.episode_number, "reason": reason, "raw": rc})
         return results
 
     def _convert_raw_to_candidate(
         self, rc: Dict[str, Any], episode: Episode, candidate_index: int
-    ) -> Optional[PromoCandidate]:
-        segments_data = rc.get("segments", [])
-        if not segments_data:
-            return None
+    ) -> Tuple[Optional[PromoCandidate], str]:
+        """
+        Turns one model proposal into a validated PromoCandidate, or (None, reason).
+        Cut points are snapped to authentic beat edges (tolerance SNAP_TOLERANCE) or rejected;
+        quotes must exist in the screenplay; scores are clamped; types are normalized.
+        """
+        if not isinstance(rc, dict):
+            return None, "candidate is not an object"
+        segments_data = rc.get("segments") or []
+        if not isinstance(segments_data, list) or not segments_data:
+            return None, "no segments"
 
         segments: List[Segment] = []
-        total_sec = 0.0
         for seg in segments_data:
-            s_str = seg.get("start", "")
-            e_str = seg.get("end", "")
-            s_sec = parse_timestamp_to_seconds(s_str)
-            e_sec = parse_timestamp_to_seconds(e_str)
-            dur = max(0.0, e_sec - s_sec)
-            total_sec += dur
-            segments.append(
-                Segment(
-                    start=s_str,
-                    end=e_str,
-                    start_seconds=s_sec,
-                    end_seconds=e_sec,
-                    duration=dur,
-                )
-            )
+            if not isinstance(seg, dict):
+                return None, "malformed segment"
+            s_sec = try_parse_timestamp(seg.get("start"))
+            e_sec = try_parse_timestamp(seg.get("end"))
+            if s_sec is None or e_sec is None:
+                return None, "invalid timestamp"
+            b_start = snap_to_beat_edge(episode, s_sec, "start")
+            b_end = snap_to_beat_edge(episode, e_sec, "end")
+            if b_start is None or b_end is None:
+                return None, "cut point is not on a real beat edge"
+            if b_end.end_seconds <= b_start.start_seconds:
+                return None, "segment end before start"
+            segments.append(Segment(
+                episode=episode.episode_number,
+                start=b_start.start_str, end=b_end.end_str,
+                start_seconds=b_start.start_seconds, end_seconds=b_end.end_seconds,
+            ))
 
-        if not (18.0 <= total_sec <= 65.0):
-            return None
+        total_sec = round(sum(s.duration for s in segments), 2)
+        if not (MIN_DURATION - EPS <= total_sec <= MAX_DURATION + EPS):
+            return None, "duration outside 20-60s"
 
-        hook_data = rc.get("hook", {})
-        h_ts_str = hook_data.get("timestamp", segments[0].start)
-        h_ts_sec = parse_timestamp_to_seconds(h_ts_str)
+        hook_data = rc.get("hook") or {}
+        cliff_data = rc.get("cliffhanger") or {}
+        hook_quote = str(hook_data.get("text", "")).strip()
+        cliff_quote = str(cliff_data.get("text", "")).strip()
 
-        if (h_ts_sec - segments[0].start_seconds) > 3.5:
-            return None
-
-        cliff_data = rc.get("cliffhanger", {})
-        c_ts_str = cliff_data.get("timestamp", segments[-1].end)
-        c_ts_sec = parse_timestamp_to_seconds(c_ts_str)
-
-        scores_dict = rc.get("scores", {})
-        scores = PromoScores(
-            hook_strength=float(scores_dict.get("hook_strength", 7.0)),
-            injustice_tension=float(scores_dict.get("injustice_tension", 7.0)),
-            cliffhanger_strength=float(scores_dict.get("cliffhanger_strength", 7.0)),
-            standalone_clarity=float(scores_dict.get("standalone_clarity", 7.0)),
-            payoff_withheld=float(scores_dict.get("payoff_withheld", 7.0)),
+        first, last = segments[0], segments[-1]
+        beats = spoken_beats(episode)
+        hook_beat = find_quote_beat(
+            [b for b in beats if first.start_seconds - EPS <= b.start_seconds <= first.start_seconds + HOOK_WINDOW + EPS],
+            hook_quote,
         )
+        if hook_beat is None:
+            return None, "hook quote not in a beat starting within 3s of the cut"
+        cliff_beat = find_quote_beat(
+            [b for b in beats if last.start_seconds - EPS <= b.start_seconds
+             and last.end_seconds - CLIFF_WINDOW <= b.end_seconds <= last.end_seconds + EPS],
+            cliff_quote,
+        )
+        if cliff_beat is None:
+            return None, "cliffhanger quote not in the last 6s of the clip"
 
-        hook_type = hook_data.get("type", "public_humiliation")
-        cliff_type = cliff_data.get("type", "interrupted_retaliation")
+        scores_dict = rc.get("scores") or {}
+        try:
+            scores = PromoScores(**{
+                k: float(scores_dict.get(k, 5.0))
+                for k in ("hook_strength", "injustice_tension", "cliffhanger_strength",
+                          "standalone_clarity", "payoff_withheld")
+            })
+        except (TypeError, ValueError):
+            return None, "non-numeric scores"
+
+        hook_type = self.taxonomy.normalize_type(hook_data.get("type", ""), "hook", "new:unspecified")
+        cliff_type = self.taxonomy.normalize_type(cliff_data.get("type", ""), "cliffhanger", "new:unspecified")
+        risks = rc.get("risks") or []
 
         cand = PromoCandidate(
             promo_id=f"ep{episode.episode_number:02d}_cand_{candidate_index+1}",
@@ -155,27 +216,27 @@ class PromoExtractor:
             hook=HookInfo(
                 type=hook_type,
                 name=self.taxonomy.hook_by_id.get(hook_type, {}).get("name", hook_type),
-                timestamp=h_ts_str,
-                timestamp_seconds=h_ts_sec,
-                quote=hook_data.get("text", ""),
+                timestamp=hook_beat.start_str,
+                timestamp_seconds=hook_beat.start_seconds,
+                quote=hook_quote,
                 psychological_trigger=self.taxonomy.hook_by_id.get(hook_type, {}).get("psychological_driver", ""),
             ),
             cliffhanger=CliffhangerInfo(
                 type=cliff_type,
                 name=self.taxonomy.cliffhanger_by_id.get(cliff_type, {}).get("name", cliff_type),
-                timestamp=c_ts_str,
-                timestamp_seconds=c_ts_sec,
-                quote=cliff_data.get("text", ""),
-                withheld_payoff=cliff_data.get("withheld_payoff", "Conflict cuts before resolution"),
+                timestamp=cliff_beat.end_str,
+                timestamp_seconds=cliff_beat.end_seconds,
+                quote=cliff_quote,
+                withheld_payoff=str(cliff_data.get("withheld_payoff", "")),
             ),
-            why_it_works=rc.get("why_it_works", "High stakes conflict cuts before resolution."),
+            why_it_works=str(rc.get("why_it_works", "")),
+            risks=[str(r) for r in risks] if isinstance(risks, list) else [str(risks)],
             scores=scores,
         )
-
-        h_w = self.taxonomy.get_hook_weight(hook_type)
-        c_w = self.taxonomy.get_cliffhanger_weight(cliff_type)
-        cand.scores.compute_composite_score(h_w, c_w)
-        return cand
+        cand.scores.compute_composite_score(
+            self.taxonomy.get_hook_weight(hook_type), self.taxonomy.get_cliffhanger_weight(cliff_type)
+        )
+        return cand, ""
 
     def _extract_via_heuristics(
         self, episode: Episode, show_context: Dict[str, Any], max_candidates: int
@@ -231,9 +292,9 @@ class PromoExtractor:
             for j in range(i + 1, len(beats)):
                 b_end = beats[j]
                 dur = b_end.end_seconds - b_start.start_seconds
-                if dur < 20.0:
+                if dur < MIN_DURATION:
                     continue
-                if dur > 60.0:
+                if dur > MAX_DURATION:
                     break
 
                 if b_end.beat_type not in [BeatType.DIALOGUE, BeatType.ACTION]:
@@ -300,20 +361,21 @@ class PromoExtractor:
                     episodes=[episode.episode_number],
                     segments=[
                         Segment(
+                            episode=episode.episode_number,
                             start=b_start.start_str,
                             end=b_end.end_str,
                             start_seconds=b_start.start_seconds,
                             end_seconds=b_end.end_seconds,
-                            duration=dur,
+                            duration=round(dur, 2),
                         )
                     ],
-                    total_duration=dur,
+                    total_duration=round(dur, 2),
                     hook=HookInfo(
                         type=hook_id,
                         name=hook_name,
                         timestamp=b_start.start_str,
                         timestamp_seconds=b_start.start_seconds,
-                        quote=b_start.text[:120],
+                        quote=b_start.text,
                         psychological_trigger=hook_driver,
                     ),
                     cliffhanger=CliffhangerInfo(
@@ -321,7 +383,7 @@ class PromoExtractor:
                         name=cliff_name,
                         timestamp=b_end.end_str,
                         timestamp_seconds=b_end.end_seconds,
-                        quote=b_end.text[:120],
+                        quote=b_end.text,
                         withheld_payoff="Conflict cuts before resolution or comeuppance.",
                     ),
                     why_it_works=why,

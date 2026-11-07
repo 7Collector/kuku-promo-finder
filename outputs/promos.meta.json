@@ -1,0 +1,60 @@
+{
+  "generated_at": "2026-11-07T13:13:21Z",
+  "git_commit": "809d946",
+  "show": "I Married a Broken Soldier. He was a Duke",
+  "input_dir": "assets/I Married a Broken Soldier. He was a Duke",
+  "episodes": 50,
+  "beats": 3727,
+  "extractor": {
+    "provider": "openai",
+    "model": "gpt-6-luna"
+  },
+  "auditor": {
+    "provider": "openai",
+    "model": "gpt-6-luna",
+    "method": "llm"
+  },
+  "composites_enabled": false,
+  "counts": {
+    "single_candidates": 44,
+    "composites": 0,
+    "valid": 44,
+    "after_dedup": 42,
+    "ranked": 15,
+    "audit_passed": 23,
+    "audit_failed": 19,
+    "audit_errors": 0,
+    "ranked_audit_passed": 15
+  },
+  "rejected_by_validation": {
+    "cliffhanger quote not in the last 6s of the clip": 3,
+    "cut point is not on a real beat edge": 1
+  },
+  "constraint_violations": {},
+  "extraction_failures": {},
+  "usage": {
+    "extractor_and_auditor_combined": {
+      "calls": 0,
+      "cache_hits": 92,
+      "prompt_tokens": 0,
+      "completion_tokens": 0,
+      "reasoning_tokens": 0,
+      "latency_s": 0.0
+    }
+  },
+  "wall_seconds": 0.4,
+  "measured_uncached_run": {
+    "note": "Token/time cost of the original uncached live run (92 calls). The committed promos.json was regenerated from the response cache after tightening the cliffhanger-at-end rule, so this file's top-level usage shows cache hits only.",
+    "usage": {
+      "extractor_and_auditor_combined": {
+        "calls": 92,
+        "cache_hits": 0,
+        "prompt_tokens": 376060,
+        "completion_tokens": 170525,
+        "reasoning_tokens": 138056,
+        "latency_s": 1867.0235261917114
+      }
+    },
+    "wall_seconds": 250.7
+  }
+}

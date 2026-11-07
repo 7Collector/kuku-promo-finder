@@ -8,6 +8,8 @@ export default function EpisodesPage() {
   const [selectedRange, setSelectedRange] = useState("all");
   const [epData, setEpData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [epNumbers, setEpNumbers] = useState<number[]>([]);
+  const maxEp = epNumbers.length ? epNumbers[epNumbers.length - 1] : 1;
 
   useEffect(() => {
     fetchEpisode(selectedEp);
@@ -18,7 +20,9 @@ export default function EpisodesPage() {
     try {
       const res = await fetch(`/api/episodes?ep=${ep}`);
       const data = await res.json();
+      if (data.error) throw new Error(data.error);
       setEpData(data);
+      if (data.episodes) setEpNumbers(data.episodes.map((e: any) => e.number));
     } catch (e) {
       console.error(e);
     } finally {
@@ -27,15 +31,17 @@ export default function EpisodesPage() {
   }
 
   function handlePrev() {
-    if (selectedEp > 1) setSelectedEp(selectedEp - 1);
+    const i = epNumbers.indexOf(selectedEp);
+    if (i > 0) setSelectedEp(epNumbers[i - 1]);
   }
 
   function handleNext() {
-    if (selectedEp < 50) setSelectedEp(selectedEp + 1);
+    const i = epNumbers.indexOf(selectedEp);
+    if (i >= 0 && i < epNumbers.length - 1) setSelectedEp(epNumbers[i + 1]);
   }
 
   // Filter visible episodes by decade tab
-  const visibleEpisodes = Array.from({ length: 50 }, (_, i) => i + 1).filter((num) => {
+  const visibleEpisodes = epNumbers.filter((num) => {
     if (selectedRange === "all") return true;
     const [start, end] = selectedRange.split("-").map(Number);
     return num >= start && num <= end;
@@ -46,8 +52,8 @@ export default function EpisodesPage() {
       <div style={{ marginBottom: "var(--s-32)" }}>
         <h1 className="om-display">Screenplay Beat Browser</h1>
         <p className="om-body" style={{ color: "var(--ink-2)", maxWidth: 720 }}>
-          Inspect the deterministic parsing of any of the 50 microdrama episodes.
-          Every dialogue line, action beat, and camera cut is indexed with millisecond timestamps.
+          Inspect the deterministic parsing of any episode of the show.
+          Every dialogue line, action beat, and camera cut is indexed with its centisecond timestamps.
         </p>
       </div>
 
@@ -64,7 +70,7 @@ export default function EpisodesPage() {
       >
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12, marginBottom: "var(--s-12)" }}>
           <span className="om-caption" style={{ color: "var(--ink-3)", fontWeight: 500 }}>
-            Select episode ({selectedEp} of 50):
+            Select episode ({selectedEp} of {maxEp}):
           </span>
 
           {/* Range quick filter tabs */}
@@ -167,15 +173,15 @@ export default function EpisodesPage() {
                 </button>
                 <button
                   onClick={handleNext}
-                  disabled={selectedEp >= 50}
+                  disabled={selectedEp >= maxEp}
                   className="om-button om-button--compact"
                   style={{
-                    background: selectedEp >= 50 ? "var(--sunken)" : "var(--surface)",
-                    color: selectedEp >= 50 ? "var(--ink-3)" : "var(--ink)",
+                    background: selectedEp >= maxEp ? "var(--sunken)" : "var(--surface)",
+                    color: selectedEp >= maxEp ? "var(--ink-3)" : "var(--ink)",
                     border: "1px solid var(--hairline)",
                     minHeight: 34,
                     padding: "0 10px",
-                    cursor: selectedEp >= 50 ? "not-allowed" : "pointer",
+                    cursor: selectedEp >= maxEp ? "not-allowed" : "pointer",
                   }}
                 >
                   <span>Next</span>

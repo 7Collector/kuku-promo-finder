@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
+import { OUTPUT_DIR, readMeta } from "@/lib/kuku";
 
 export async function GET(request: Request) {
   try {
@@ -10,7 +11,7 @@ export async function GET(request: Request) {
     const minScore = parseFloat(searchParams.get("min_score") || "0");
     const query = (searchParams.get("q") || "").toLowerCase().trim();
 
-    const filePath = path.join(process.cwd(), "outputs", "promos.json");
+    const filePath = path.join(OUTPUT_DIR, "promos.json");
     if (!fs.existsSync(filePath)) {
       return NextResponse.json({ error: "promos.json not found" }, { status: 404 });
     }
@@ -51,6 +52,7 @@ export async function GET(request: Request) {
 
     return NextResponse.json({
       total: filtered.length,
+      meta: readMeta(),
       promos: filtered,
     });
   } catch (error: any) {

@@ -58,6 +58,8 @@ class TestPromoAuditor(unittest.TestCase):
     def test_llm_provider_audit_with_mock(self):
         mock_provider = MagicMock()
         mock_provider.name = "mock_llm"
+        mock_provider.model = "mock-model"
+        mock_provider.is_live = True
         mock_provider.generate_json.return_value = {
             "pass": True,
             "lethal_flaw": None,
@@ -85,6 +87,8 @@ class TestPromoAuditor(unittest.TestCase):
         from src.models import Episode, Scene, Beat, BeatType
         mock_provider = MagicMock()
         mock_provider.name = "mock_llm"
+        mock_provider.model = "mock-model"
+        mock_provider.is_live = True
         mock_provider.generate_json.return_value = {
             "pass": True,
             "lethal_flaw": None,

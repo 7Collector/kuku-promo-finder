@@ -86,7 +86,10 @@ class TestCompositePromoBuilder(unittest.TestCase):
         self.assertTrue(20.0 <= comp.total_duration <= 60.0)
         self.assertEqual(comp.hook.quote, "Kneel down!")
         self.assertEqual(comp.cliffhanger.quote, "Doors burst open!")
-        self.assertGreaterEqual(comp.scores.standalone_clarity, 8.5)
+        # Scores are inherited (never boosted): clarity is the weaker half's clarity.
+        self.assertEqual(comp.scores.standalone_clarity,
+                         min(self.early_cand.scores.standalone_clarity, self.late_cand.scores.standalone_clarity))
+        self.assertEqual([s.episode for s in comp.segments], [1, 20])
 
 
 if __name__ == "__main__":

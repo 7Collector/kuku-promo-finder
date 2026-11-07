@@ -4,11 +4,10 @@ Default model: gpt-6-luna
 """
 
 import os
-import json
-import requests
 from typing import Dict, Any, Optional
 from dotenv import load_dotenv
 from src.providers.base import BaseLLMProvider
+from src.providers.http import post_json, extract_json_object, ProviderError
 from src.utils.logging import logger
 
 load_dotenv()
@@ -29,35 +28,33 @@ class OpenAIProvider(BaseLLMProvider):
 
     def generate_json(self, system_prompt: str, user_prompt: str) -> Dict[str, Any]:
         if not self.api_key:
-            raise ValueError("OPENAI_API_KEY is not configured.")
+            raise ProviderError("OPENAI_API_KEY is not configured.")
 
-        url = "https://api.openai.com/v1/chat/completions"
-        headers = {
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {self.api_key}"
-        }
         payload = {
             "model": self._model,
             "messages": [
                 {"role": "system", "content": system_prompt},
-                {"role": "user", "content": user_prompt}
+                {"role": "user", "content": user_prompt},
             ],
             "response_format": {"type": "json_object"},
         }
-
-        # Temperature is not supported on GPT-6 / reasoning models (must be default 1)
+        # Reasoning models only accept the default temperature.
         is_reasoning_model = any(k in self._model.lower() for k in ["gpt-6", "luna", "o1", "o3", "o4", "sol", "astra"])
         if not is_reasoning_model:
             payload["temperature"] = 0.2
 
         logger.debug(f"Calling OpenAI API with model: {self._model}")
-        resp = requests.post(url, headers=headers, json=payload, timeout=90)
-        resp.raise_for_status()
-
-        data = resp.json()
+        data, latency = post_json(
+            "https://api.openai.com/v1/chat/completions",
+            {"Content-Type": "application/json", "Authorization": f"Bearer {self.api_key}"},
+            payload, timeout=180, secret=self.api_key,
+        )
+        usage = data.get("usage", {})
+        self.record_usage(
+            usage.get("prompt_tokens", 0), usage.get("completion_tokens", 0),
+            (usage.get("completion_tokens_details") or {}).get("reasoning_tokens", 0), latency,
+        )
         choices = data.get("choices", [])
         if not choices:
-            raise RuntimeError(f"OpenAI API returned no choices: {data}")
-
-        raw_text = choices[0]["message"]["content"]
-        return json.loads(raw_text)
+            raise ProviderError("OpenAI returned no choices", retryable=True)
+        return extract_json_object(choices[0]["message"]["content"])

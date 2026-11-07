@@ -1,20 +1,17 @@
 # Agents & AI Collaboration Log
 
-## Tools Used
+## Tools used
+- **Antigravity** (earlier sessions) and **Claude Code** (audit and fix session, 2026-11-07): coding assistants for the parser, taxonomy, pipeline, UI and tests.
+- **gpt-6-luna**: the runtime model for extraction and audit (`outputs/promos.meta.json`).
 
-- **Antigravity (Claude Opus 4.6 Thinking)** — Primary AI coding assistant for architecture design, deterministic parser implementation, two-layer taxonomy design, and CLI engine.
-- **Claude** — Used for prompt drafting, adversarial failure mode categorization, and iterative refinement of hook/cliffhanger schemas.
+Authorship note: which design ideas (e.g. the "Blood Boils" framing, the two-layer taxonomy) came from the author versus an assistant cannot be reconstructed from the repository, so none are attributed here.
 
-## Where AI Got It Wrong
+## Where AI got it wrong (each item has an artifact in git history or `outputs/`)
 
-1. **Timestamp Hallucination & Interval Math Drift**:
-   When prompt-tested zero-shot on raw screenplay text, LLMs frequently hallucinated clean, rounded timestamps (e.g. inventing `00:45.00` or `01:00.00` when the actual dialogue was at `00:47.80`) that did not exist in the screenplay, and routinely miscalculated time intervals (claiming `00:18.00` to `00:52.00` was 40 seconds).
-   *How we fixed it:* Kept timestamp arithmetic, duration bounds (20–60s), and boundary matching 100% deterministic in Python code (`src/parser.py` and `src/ranker.py`), requiring every cut point to match an authentic beat start/end.
+1. **A self-audit that could not fail.** The keyword engine's audit fail-conditions required scores the engine never produced, so it passed 87/87 candidates while the LLM auditor failed 13 of the same 15 shipped promos. Found by re-running the project's own `PromoAuditor` on the committed `outputs/promos.json` at commit `809d946`. Fix: audits are labelled by method (`llm` / `rules` / `error`), rule lint is not described as quality, and a failed audit call is marked unaudited instead of passing.
+2. **Invented demo content in the UI.** The old `/analyze` page presets quoted lines ("Who dares enter", "royal sanctuary") that exist in none of the 50 screenplays, and its "auditor" was a regex that scored "Hello there" 8.79. Fix: the page and API were removed.
+3. **Unsupported numbers in the write-up.** An earlier `SOLUTION_DOC.md` reported "100% Top-10 recall" and "84% passed" with no ground-truth file or run behind them, and a cost of "under 5 cents" for a run that measured 546,585 tokens. Fix: the document now cites only `outputs/promos.meta.json`; recall is reported as unmeasured.
+4. **Auditor blind to the clip (earlier history).** Early audit prompts contained only the extractor's quotes and its own explanation, so it graded the extractor's pitch. Fix: the clip screenplay is injected (`src/auditor.py`), now with camera beats and tag definitions.
+5. **Model output trusted.** Quotes and cuts from the model were accepted unchecked (`tests/test_validation.py` reproduces an invented quote, an off-beat cut and a cliffhanger far from the end; in the first live run, ranks 8 and 11 had a cliffhanger quote 19.5s and 23s before the clip ended, caught by an independent re-check script and fixed by the 6s cliffhanger window). Fix: `src/validation.py`.
 
-2. **Conflating Atmospheric Cinematography with Viral Hooks**:
-   Without explicit negative constraints, LLMs repeatedly proposed opening promos on establishing shots (e.g., `00:00.00` camera pans across the cathedral doors). On vertical short-form platforms (TikTok/Reels), 3 seconds of a camera panning an empty doorway leads to an immediate swipe.
-   *How we fixed it:* Enforced a hard code constraint that the hook must trigger within ≤ 3.0 seconds of the opening cut, backed by our "Blood Boils" taxonomy requiring immediate interpersonal injustice or dialogue confrontation.
-
-3. **Auditor Blindness to Mid-Segment Dialogue**:
-   In early prompt iterations, the adversarial auditor template evaluated candidates using only the hook quote, cliffhanger quote, and the extractor's own "why it works" explanation. Because it never received the screenplay text occurring between the cuts, the model hallucinated whether a "resolution leak" occurred in the middle, grading its own summary rather than ground-truth beats.
-   *How we fixed it:* Updated `src/parser.py` and `src/auditor.py` to slice and inject the authentic dialogue and action beat sequence (`<clip_screenplay>`) into every audit call, giving the auditor ground-truth visibility into the entire clip.
+Earlier versions of this file described three other failures (invented round timestamps, establishing-shot hooks) without any log or output behind them; they were removed rather than kept unsupported.

@@ -1,0 +1,917 @@
+[
+  {
+    "promo_id": "ep05_0059.00_0140.80",
+    "rank": 1,
+    "promo_type": "single_episode",
+    "episodes": [
+      5
+    ],
+    "segments": [
+      {
+        "episode": 5,
+        "start": "00:59.00",
+        "end": "01:40.80",
+        "start_seconds": 59.0,
+        "end_seconds": 100.8,
+        "duration": 41.8
+      }
+    ],
+    "total_duration": 41.8,
+    "hook": {
+      "type": "public_humiliation",
+      "name": "Public Humiliation & Scorn",
+      "timestamp": "00:59.00",
+      "timestamp_seconds": 59.0,
+      "quote": "\"Even your mother's precious legacy has been cast into the dirt!\"",
+      "psychological_trigger": "Outrage at disproportionate cruelty in front of witnesses"
+    },
+    "cliffhanger": {
+      "type": "interrupted_retaliation",
+      "name": "Interrupted Retaliation / Comeuppance Cut",
+      "timestamp": "01:40.80",
+      "timestamp_seconds": 100.8,
+      "quote": "\"Choose your next words carefully.\"",
+      "withheld_payoff": "Conflict cuts before resolution or comeuppance."
+    },
+    "why_it_works": "Cold viewers instantly lock onto CLARISSA's confrontation; cuts right as tension peaks without resolving.",
+    "risks": [],
+    "scores": {
+      "hook_strength": 9.5,
+      "injustice_tension": 9.5,
+      "cliffhanger_strength": 8.5,
+      "standalone_clarity": 8.5,
+      "payoff_withheld": 9.0,
+      "composite_score": 9.05,
+      "adjusted_score": 9.05,
+      "diversity_penalty": 1.0,
+      "audit_multiplier": 1.0
+    },
+    "quality_audit": {
+      "passed": true,
+      "method": "rules",
+      "audit_model": "rule-lint",
+      "flaw_type": null,
+      "critique": "[rule lint, not a quality judgement] Relies moderately on visual acting/cinematography described in stage directions.",
+      "confidence_score": 0.0,
+      "risks": [
+        "Relies moderately on visual acting/cinematography described in stage directions."
+      ]
+    },
+    "engine": "heuristic",
+    "model": "heuristic-offline-engine"
+  },
+  {
+    "promo_id": "ep02_0000.00_0023.70",
+    "rank": 2,
+    "promo_type": "single_episode",
+    "episodes": [
+      2
+    ],
+    "segments": [
+      {
+        "episode": 2,
+        "start": "00:00.00",
+        "end": "00:23.70",
+        "start_seconds": 0.0,
+        "end_seconds": 23.7,
+        "duration": 23.7
+      }
+    ],
+    "total_duration": 23.7,
+    "hook": {
+      "type": "intimate_betrayal",
+      "name": "Intimate Betrayal / Public Abandonment",
+      "timestamp": "00:00.00",
+      "timestamp_seconds": 0.0,
+      "quote": "\"I cannot marry you, Juliana.\"",
+      "psychological_trigger": "Devastation of sacred bond; intense empathy for betrayed victim"
+    },
+    "cliffhanger": {
+      "type": "interrupted_retaliation",
+      "name": "Interrupted Retaliation / Comeuppance Cut",
+      "timestamp": "00:23.70",
+      "timestamp_seconds": 23.7,
+      "quote": "\"Promises change when a better choice appears.\"",
+      "withheld_payoff": "Conflict cuts before resolution or comeuppance."
+    },
+    "why_it_works": "Cold viewers instantly lock onto THE FORMER GROOM's confrontation; cuts right as tension peaks without resolving.",
+    "risks": [],
+    "scores": {
+      "hook_strength": 9.5,
+      "injustice_tension": 9.5,
+      "cliffhanger_strength": 7.5,
+      "standalone_clarity": 8.5,
+      "payoff_withheld": 9.0,
+      "composite_score": 8.36,
+      "adjusted_score": 8.36,
+      "diversity_penalty": 1.0,
+      "audit_multiplier": 1.0
+    },
+    "quality_audit": {
+      "passed": true,
+      "method": "rules",
+      "audit_model": "rule-lint",
+      "flaw_type": null,
+      "critique": "[rule lint, not a quality judgement] Relies moderately on visual acting/cinematography described in stage directions.",
+      "confidence_score": 0.0,
+      "risks": [
+        "Relies moderately on visual acting/cinematography described in stage directions."
+      ]
+    },
+    "engine": "heuristic",
+    "model": "heuristic-offline-engine"
+  },
+  {
+    "promo_id": "ep15_0047.40_0107.50",
+    "rank": 3,
+    "promo_type": "single_episode",
+    "episodes": [
+      15
+    ],
+    "segments": [
+      {
+        "episode": 15,
+        "start": "00:47.40",
+        "end": "01:07.50",
+        "start_seconds": 47.4,
+        "end_seconds": 67.5,
+        "duration": 20.1
+      }
+    ],
+    "total_duration": 20.1,
+    "hook": {
+      "type": "physical_aggression",
+      "name": "Physical Aggression / Shock Violence",
+      "timestamp": "00:47.40",
+      "timestamp_seconds": 47.4,
+      "quote": "The Thug with Cap violently shoves Juliana back with both hands; she cries out as she loses her balance and crashes hard onto the wet stone path.",
+      "psychological_trigger": "Visceral jolt and immediate threat escalation"
+    },
+    "cliffhanger": {
+      "type": "interrupted_retaliation",
+      "name": "Interrupted Retaliation / Comeuppance Cut",
+      "timestamp": "01:07.50",
+      "timestamp_seconds": 67.5,
+      "quote": "Alexander storms forward with lethal intensity, dark hair flying, breath misting in the cold, radiating untamed rage.",
+      "withheld_payoff": "Conflict cuts before resolution or comeuppance."
+    },
+    "why_it_works": "Cold viewers lock onto the sudden confrontation; cuts at the peak of injustice before any payoff.",
+    "risks": [],
+    "scores": {
+      "hook_strength": 8.5,
+      "injustice_tension": 9.5,
+      "cliffhanger_strength": 7.5,
+      "standalone_clarity": 8.5,
+      "payoff_withheld": 9.0,
+      "composite_score": 8.07,
+      "adjusted_score": 8.07,
+      "diversity_penalty": 1.0,
+      "audit_multiplier": 1.0
+    },
+    "quality_audit": {
+      "passed": true,
+      "method": "rules",
+      "audit_model": "rule-lint",
+      "flaw_type": null,
+      "critique": "[rule lint, not a quality judgement] Relies moderately on visual acting/cinematography described in stage directions.",
+      "confidence_score": 0.0,
+      "risks": [
+        "Relies moderately on visual acting/cinematography described in stage directions."
+      ]
+    },
+    "engine": "heuristic",
+    "model": "heuristic-offline-engine"
+  },
+  {
+    "promo_id": "ep33_0109.50_0132.50",
+    "rank": 4,
+    "promo_type": "single_episode",
+    "episodes": [
+      33
+    ],
+    "segments": [
+      {
+        "episode": 33,
+        "start": "01:09.50",
+        "end": "01:32.50",
+        "start_seconds": 69.5,
+        "end_seconds": 92.5,
+        "duration": 23.0
+      }
+    ],
+    "total_duration": 23.0,
+    "hook": {
+      "type": "secret_status_reveal",
+      "name": "Secret Status Reveal / Authority Exposure",
+      "timestamp": "01:09.50",
+      "timestamp_seconds": 69.5,
+      "quote": "\"Please, my Lord... he is only seven!\"",
+      "psychological_trigger": "Instant dopamine spike from dramatic reversal and shock"
+    },
+    "cliffhanger": {
+      "type": "interrupted_retaliation",
+      "name": "Interrupted Retaliation / Comeuppance Cut",
+      "timestamp": "01:32.50",
+      "timestamp_seconds": 92.5,
+      "quote": "\"Like a circle?\"",
+      "withheld_payoff": "Conflict cuts before resolution or comeuppance."
+    },
+    "why_it_works": "Cold viewers instantly lock onto MAID's confrontation; cuts right as tension peaks without resolving.",
+    "risks": [],
+    "scores": {
+      "hook_strength": 9.5,
+      "injustice_tension": 8.0,
+      "cliffhanger_strength": 7.5,
+      "standalone_clarity": 8.5,
+      "payoff_withheld": 9.0,
+      "composite_score": 8.07,
+      "adjusted_score": 8.07,
+      "diversity_penalty": 1.0,
+      "audit_multiplier": 1.0
+    },
+    "quality_audit": {
+      "passed": true,
+      "method": "rules",
+      "audit_model": "rule-lint",
+      "flaw_type": null,
+      "critique": "[rule lint, not a quality judgement] Relies moderately on visual acting/cinematography described in stage directions.",
+      "confidence_score": 0.0,
+      "risks": [
+        "Relies moderately on visual acting/cinematography described in stage directions."
+      ]
+    },
+    "engine": "heuristic",
+    "model": "heuristic-offline-engine"
+  },
+  {
+    "promo_id": "ep20_0015.40_0039.10",
+    "rank": 5,
+    "promo_type": "single_episode",
+    "episodes": [
+      20
+    ],
+    "segments": [
+      {
+        "episode": 20,
+        "start": "00:15.40",
+        "end": "00:39.10",
+        "start_seconds": 15.4,
+        "end_seconds": 39.1,
+        "duration": 23.7
+      }
+    ],
+    "total_duration": 23.7,
+    "hook": {
+      "type": "class_status_contempt",
+      "name": "Class & Status Contempt",
+      "timestamp": "00:15.40",
+      "timestamp_seconds": 15.4,
+      "quote": "\"'Practically' is a word for beggars. I do not marry a practical Duke.\"",
+      "psychological_trigger": "Universal outrage against unearned privilege and aristocratic snobbery"
+    },
+    "cliffhanger": {
+      "type": "interrupted_retaliation",
+      "name": "Interrupted Retaliation / Comeuppance Cut",
+      "timestamp": "00:39.10",
+      "timestamp_seconds": 39.1,
+      "quote": "\"How much longer can the frail thing survive?\"",
+      "withheld_payoff": "Conflict cuts before resolution or comeuppance."
+    },
+    "why_it_works": "Cold viewers instantly lock onto CATHERINE's confrontation; cuts right as tension peaks without resolving.",
+    "risks": [],
+    "scores": {
+      "hook_strength": 8.5,
+      "injustice_tension": 9.5,
+      "cliffhanger_strength": 7.5,
+      "standalone_clarity": 8.5,
+      "payoff_withheld": 9.0,
+      "composite_score": 7.65,
+      "adjusted_score": 7.65,
+      "diversity_penalty": 1.0,
+      "audit_multiplier": 1.0
+    },
+    "quality_audit": {
+      "passed": true,
+      "method": "rules",
+      "audit_model": "rule-lint",
+      "flaw_type": null,
+      "critique": "[rule lint, not a quality judgement] Relies moderately on visual acting/cinematography described in stage directions.",
+      "confidence_score": 0.0,
+      "risks": [
+        "Relies moderately on visual acting/cinematography described in stage directions."
+      ]
+    },
+    "engine": "heuristic",
+    "model": "heuristic-offline-engine"
+  },
+  {
+    "promo_id": "ep44_0049.20_0110.40",
+    "rank": 6,
+    "promo_type": "single_episode",
+    "episodes": [
+      44
+    ],
+    "segments": [
+      {
+        "episode": 44,
+        "start": "00:49.20",
+        "end": "01:10.40",
+        "start_seconds": 49.2,
+        "end_seconds": 70.4,
+        "duration": 21.2
+      }
+    ],
+    "total_duration": 21.2,
+    "hook": {
+      "type": "life_or_death_defiance",
+      "name": "Life-or-Death Defiance",
+      "timestamp": "00:49.20",
+      "timestamp_seconds": 49.2,
+      "quote": "\"You were never my Duchess.\"",
+      "psychological_trigger": "Awe and adrenaline at heroic fortitude under extreme intimidation"
+    },
+    "cliffhanger": {
+      "type": "interrupted_retaliation",
+      "name": "Interrupted Retaliation / Comeuppance Cut",
+      "timestamp": "01:10.40",
+      "timestamp_seconds": 70.4,
+      "quote": "\"Her?!\"",
+      "withheld_payoff": "Conflict cuts before resolution or comeuppance."
+    },
+    "why_it_works": "Cold viewers instantly lock onto ALEXANDER's confrontation; cuts right as tension peaks without resolving.",
+    "risks": [],
+    "scores": {
+      "hook_strength": 8.5,
+      "injustice_tension": 9.5,
+      "cliffhanger_strength": 7.5,
+      "standalone_clarity": 8.5,
+      "payoff_withheld": 9.0,
+      "composite_score": 7.65,
+      "adjusted_score": 7.65,
+      "diversity_penalty": 1.0,
+      "audit_multiplier": 1.0
+    },
+    "quality_audit": {
+      "passed": true,
+      "method": "rules",
+      "audit_model": "rule-lint",
+      "flaw_type": null,
+      "critique": "[rule lint, not a quality judgement] Relies moderately on visual acting/cinematography described in stage directions.",
+      "confidence_score": 0.0,
+      "risks": [
+        "Relies moderately on visual acting/cinematography described in stage directions."
+      ]
+    },
+    "engine": "heuristic",
+    "model": "heuristic-offline-engine"
+  },
+  {
+    "promo_id": "ep11_0107.50_0132.20",
+    "rank": 7,
+    "promo_type": "single_episode",
+    "episodes": [
+      11
+    ],
+    "segments": [
+      {
+        "episode": 11,
+        "start": "01:07.50",
+        "end": "01:32.20",
+        "start_seconds": 67.5,
+        "end_seconds": 92.2,
+        "duration": 24.7
+      }
+    ],
+    "total_duration": 24.7,
+    "hook": {
+      "type": "unjust_accusation",
+      "name": "Unjust Framing / False Blame",
+      "timestamp": "01:07.50",
+      "timestamp_seconds": 67.5,
+      "quote": "\"Stand aside. Look at this place. A perfect hiding hole for a thief.\"",
+      "psychological_trigger": "Frustration at inverted justice and gaslighting"
+    },
+    "cliffhanger": {
+      "type": "interrupted_retaliation",
+      "name": "Interrupted Retaliation / Comeuppance Cut",
+      "timestamp": "01:32.20",
+      "timestamp_seconds": 92.2,
+      "quote": "The Constable grabs the coat by the collar and begins rummaging through its deep pockets.",
+      "withheld_payoff": "Conflict cuts before resolution or comeuppance."
+    },
+    "why_it_works": "Cold viewers instantly lock onto GERALD's confrontation; cuts right as tension peaks without resolving.",
+    "risks": [],
+    "scores": {
+      "hook_strength": 9.5,
+      "injustice_tension": 9.5,
+      "cliffhanger_strength": 7.5,
+      "standalone_clarity": 8.5,
+      "payoff_withheld": 9.0,
+      "composite_score": 7.48,
+      "adjusted_score": 7.48,
+      "diversity_penalty": 1.0,
+      "audit_multiplier": 1.0
+    },
+    "quality_audit": {
+      "passed": true,
+      "method": "rules",
+      "audit_model": "rule-lint",
+      "flaw_type": null,
+      "critique": "[rule lint, not a quality judgement] Relies moderately on visual acting/cinematography described in stage directions.",
+      "confidence_score": 0.0,
+      "risks": [
+        "Relies moderately on visual acting/cinematography described in stage directions."
+      ]
+    },
+    "engine": "heuristic",
+    "model": "heuristic-offline-engine"
+  },
+  {
+    "promo_id": "ep03_0002.10_0043.30",
+    "rank": 8,
+    "promo_type": "single_episode",
+    "episodes": [
+      3
+    ],
+    "segments": [
+      {
+        "episode": 3,
+        "start": "00:02.10",
+        "end": "00:43.30",
+        "start_seconds": 2.1,
+        "end_seconds": 43.3,
+        "duration": 41.2
+      }
+    ],
+    "total_duration": 41.2,
+    "hook": {
+      "type": "public_humiliation",
+      "name": "Public Humiliation & Scorn",
+      "timestamp": "00:02.10",
+      "timestamp_seconds": 2.1,
+      "quote": "\"Look at you...\"",
+      "psychological_trigger": "Outrage at disproportionate cruelty in front of witnesses"
+    },
+    "cliffhanger": {
+      "type": "interrupted_retaliation",
+      "name": "Interrupted Retaliation / Comeuppance Cut",
+      "timestamp": "00:43.30",
+      "timestamp_seconds": 43.3,
+      "quote": "\"Leave where?\"",
+      "withheld_payoff": "Conflict cuts before resolution or comeuppance."
+    },
+    "why_it_works": "Cold viewers instantly lock onto LADY IN GOLD GOWN's confrontation; cuts right as tension peaks without resolving.",
+    "risks": [],
+    "scores": {
+      "hook_strength": 9.5,
+      "injustice_tension": 9.5,
+      "cliffhanger_strength": 7.5,
+      "standalone_clarity": 8.5,
+      "payoff_withheld": 9.0,
+      "composite_score": 8.8,
+      "adjusted_score": 7.22,
+      "diversity_penalty": 0.82,
+      "audit_multiplier": 1.0
+    },
+    "quality_audit": {
+      "passed": true,
+      "method": "rules",
+      "audit_model": "rule-lint",
+      "flaw_type": null,
+      "critique": "[rule lint, not a quality judgement] Relies moderately on visual acting/cinematography described in stage directions.",
+      "confidence_score": 0.0,
+      "risks": [
+        "Relies moderately on visual acting/cinematography described in stage directions."
+      ]
+    },
+    "engine": "heuristic",
+    "model": "heuristic-offline-engine"
+  },
+  {
+    "promo_id": "ep46_0141.80_0203.60",
+    "rank": 9,
+    "promo_type": "single_episode",
+    "episodes": [
+      46
+    ],
+    "segments": [
+      {
+        "episode": 46,
+        "start": "01:41.80",
+        "end": "02:03.60",
+        "start_seconds": 101.8,
+        "end_seconds": 123.6,
+        "duration": 21.8
+      }
+    ],
+    "total_duration": 21.8,
+    "hook": {
+      "type": "hidden_identity_irony",
+      "name": "Ignorant Disrespect (Dramatic Irony)",
+      "timestamp": "01:41.80",
+      "timestamp_seconds": 101.8,
+      "quote": "\"A Duke's marriage is judged by the Crown's peerage court, not by a parish priest's seal.\"",
+      "psychological_trigger": "Anticipation of immense satisfaction when the bully inevitably realizes their fatal mistake"
+    },
+    "cliffhanger": {
+      "type": "truth_half_revealed",
+      "name": "The Half-Revealed Truth",
+      "timestamp": "02:03.60",
+      "timestamp_seconds": 123.6,
+      "quote": "\"Ten days. And if the council rules against you, this county watches you lose her twice.\"",
+      "withheld_payoff": "Conflict cuts before resolution or comeuppance."
+    },
+    "why_it_works": "Cold viewers instantly lock onto ALEXANDER's confrontation; cuts right as tension peaks without resolving.",
+    "risks": [],
+    "scores": {
+      "hook_strength": 8.5,
+      "injustice_tension": 8.0,
+      "cliffhanger_strength": 7.5,
+      "standalone_clarity": 8.5,
+      "payoff_withheld": 9.0,
+      "composite_score": 6.64,
+      "adjusted_score": 6.64,
+      "diversity_penalty": 1.0,
+      "audit_multiplier": 1.0
+    },
+    "quality_audit": {
+      "passed": true,
+      "method": "rules",
+      "audit_model": "rule-lint",
+      "flaw_type": null,
+      "critique": "[rule lint, not a quality judgement] Relies moderately on visual acting/cinematography described in stage directions.",
+      "confidence_score": 0.0,
+      "risks": [
+        "Relies moderately on visual acting/cinematography described in stage directions."
+      ]
+    },
+    "engine": "heuristic",
+    "model": "heuristic-offline-engine"
+  },
+  {
+    "promo_id": "ep01_0039.10_0100.00",
+    "rank": 10,
+    "promo_type": "single_episode",
+    "episodes": [
+      1
+    ],
+    "segments": [
+      {
+        "episode": 1,
+        "start": "00:39.10",
+        "end": "01:00.00",
+        "start_seconds": 39.1,
+        "end_seconds": 60.0,
+        "duration": 20.9
+      }
+    ],
+    "total_duration": 20.9,
+    "hook": {
+      "type": "intimate_betrayal",
+      "name": "Intimate Betrayal / Public Abandonment",
+      "timestamp": "00:39.10",
+      "timestamp_seconds": 39.1,
+      "quote": "\"Because he is marrying me.\"",
+      "psychological_trigger": "Devastation of sacred bond; intense empathy for betrayed victim"
+    },
+    "cliffhanger": {
+      "type": "interrupted_retaliation",
+      "name": "Interrupted Retaliation / Comeuppance Cut",
+      "timestamp": "01:00.00",
+      "timestamp_seconds": 60.0,
+      "quote": "\"You let me believe I was walking toward my husband!\"",
+      "withheld_payoff": "Conflict cuts before resolution or comeuppance."
+    },
+    "why_it_works": "Cold viewers instantly lock onto LADY IN GOLD GOWN's confrontation; cuts right as tension peaks without resolving.",
+    "risks": [],
+    "scores": {
+      "hook_strength": 8.5,
+      "injustice_tension": 9.5,
+      "cliffhanger_strength": 7.5,
+      "standalone_clarity": 8.5,
+      "payoff_withheld": 9.0,
+      "composite_score": 8.07,
+      "adjusted_score": 6.62,
+      "diversity_penalty": 0.82,
+      "audit_multiplier": 1.0
+    },
+    "quality_audit": {
+      "passed": true,
+      "method": "rules",
+      "audit_model": "rule-lint",
+      "flaw_type": null,
+      "critique": "[rule lint, not a quality judgement] Relies moderately on visual acting/cinematography described in stage directions.",
+      "confidence_score": 0.0,
+      "risks": [
+        "Relies moderately on visual acting/cinematography described in stage directions."
+      ]
+    },
+    "engine": "heuristic",
+    "model": "heuristic-offline-engine"
+  },
+  {
+    "promo_id": "ep29_0124.00_0148.80",
+    "rank": 11,
+    "promo_type": "single_episode",
+    "episodes": [
+      29
+    ],
+    "segments": [
+      {
+        "episode": 29,
+        "start": "01:24.00",
+        "end": "01:48.80",
+        "start_seconds": 84.0,
+        "end_seconds": 108.8,
+        "duration": 24.8
+      }
+    ],
+    "total_duration": 24.8,
+    "hook": {
+      "type": "physical_aggression",
+      "name": "Physical Aggression / Shock Violence",
+      "timestamp": "01:24.00",
+      "timestamp_seconds": 84.0,
+      "quote": "The guards shove Juliana violently into the cell; she falls hard onto all fours across the cold, wet stone floor.",
+      "psychological_trigger": "Visceral jolt and immediate threat escalation"
+    },
+    "cliffhanger": {
+      "type": "interrupted_retaliation",
+      "name": "Interrupted Retaliation / Comeuppance Cut",
+      "timestamp": "01:48.80",
+      "timestamp_seconds": 108.8,
+      "quote": "\"They took my mother's ledger...\"",
+      "withheld_payoff": "Conflict cuts before resolution or comeuppance."
+    },
+    "why_it_works": "Cold viewers lock onto the sudden confrontation; cuts at the peak of injustice before any payoff.",
+    "risks": [],
+    "scores": {
+      "hook_strength": 8.5,
+      "injustice_tension": 9.5,
+      "cliffhanger_strength": 7.5,
+      "standalone_clarity": 8.5,
+      "payoff_withheld": 9.0,
+      "composite_score": 8.07,
+      "adjusted_score": 6.62,
+      "diversity_penalty": 0.82,
+      "audit_multiplier": 1.0
+    },
+    "quality_audit": {
+      "passed": true,
+      "method": "rules",
+      "audit_model": "rule-lint",
+      "flaw_type": null,
+      "critique": "[rule lint, not a quality judgement] Relies moderately on visual acting/cinematography described in stage directions.",
+      "confidence_score": 0.0,
+      "risks": [
+        "Relies moderately on visual acting/cinematography described in stage directions."
+      ]
+    },
+    "engine": "heuristic",
+    "model": "heuristic-offline-engine"
+  },
+  {
+    "promo_id": "ep40_0106.90_0150.08",
+    "rank": 12,
+    "promo_type": "single_episode",
+    "episodes": [
+      40
+    ],
+    "segments": [
+      {
+        "episode": 40,
+        "start": "01:06.90",
+        "end": "01:50.08",
+        "start_seconds": 66.9,
+        "end_seconds": 110.08,
+        "duration": 43.18
+      }
+    ],
+    "total_duration": 43.18,
+    "hook": {
+      "type": "secret_status_reveal",
+      "name": "Secret Status Reveal / Authority Exposure",
+      "timestamp": "01:06.90",
+      "timestamp_seconds": 66.9,
+      "quote": "\"Every one, my Lord.\"",
+      "psychological_trigger": "Instant dopamine spike from dramatic reversal and shock"
+    },
+    "cliffhanger": {
+      "type": "interrupted_retaliation",
+      "name": "Interrupted Retaliation / Comeuppance Cut",
+      "timestamp": "01:50.08",
+      "timestamp_seconds": 110.08,
+      "quote": "Rupert and Catherine exchange conspiratorial, triumphant smiles at the altar as the solemn organ chord holds and the scene cuts to black.",
+      "withheld_payoff": "Conflict cuts before resolution or comeuppance."
+    },
+    "why_it_works": "Cold viewers instantly lock onto ROYAL GUARD's confrontation; cuts right as tension peaks without resolving.",
+    "risks": [],
+    "scores": {
+      "hook_strength": 8.5,
+      "injustice_tension": 9.5,
+      "cliffhanger_strength": 7.5,
+      "standalone_clarity": 8.5,
+      "payoff_withheld": 9.0,
+      "composite_score": 8.07,
+      "adjusted_score": 6.62,
+      "diversity_penalty": 0.82,
+      "audit_multiplier": 1.0
+    },
+    "quality_audit": {
+      "passed": true,
+      "method": "rules",
+      "audit_model": "rule-lint",
+      "flaw_type": null,
+      "critique": "[rule lint, not a quality judgement] Relies moderately on visual acting/cinematography described in stage directions.",
+      "confidence_score": 0.0,
+      "risks": [
+        "Relies moderately on visual acting/cinematography described in stage directions."
+      ]
+    },
+    "engine": "heuristic",
+    "model": "heuristic-offline-engine"
+  },
+  {
+    "promo_id": "ep26_0030.80_0055.50",
+    "rank": 13,
+    "promo_type": "single_episode",
+    "episodes": [
+      26
+    ],
+    "segments": [
+      {
+        "episode": 26,
+        "start": "00:30.80",
+        "end": "00:55.50",
+        "start_seconds": 30.8,
+        "end_seconds": 55.5,
+        "duration": 24.7
+      }
+    ],
+    "total_duration": 24.7,
+    "hook": {
+      "type": "class_status_contempt",
+      "name": "Class & Status Contempt",
+      "timestamp": "00:30.80",
+      "timestamp_seconds": 30.8,
+      "quote": "\"You... you are no common servant. You took Catherine's whip for me the other day.\"",
+      "psychological_trigger": "Universal outrage against unearned privilege and aristocratic snobbery"
+    },
+    "cliffhanger": {
+      "type": "interrupted_retaliation",
+      "name": "Interrupted Retaliation / Comeuppance Cut",
+      "timestamp": "00:55.50",
+      "timestamp_seconds": 55.5,
+      "quote": "The Duchess clutches the blanket against her chest, her breathing quickening with dismay.",
+      "withheld_payoff": "Conflict cuts before resolution or comeuppance."
+    },
+    "why_it_works": "Cold viewers instantly lock onto DOWAGER DUCHESS's confrontation; cuts right as tension peaks without resolving.",
+    "risks": [],
+    "scores": {
+      "hook_strength": 8.5,
+      "injustice_tension": 9.5,
+      "cliffhanger_strength": 7.5,
+      "standalone_clarity": 8.5,
+      "payoff_withheld": 9.0,
+      "composite_score": 7.65,
+      "adjusted_score": 6.27,
+      "diversity_penalty": 0.82,
+      "audit_multiplier": 1.0
+    },
+    "quality_audit": {
+      "passed": true,
+      "method": "rules",
+      "audit_model": "rule-lint",
+      "flaw_type": null,
+      "critique": "[rule lint, not a quality judgement] Relies moderately on visual acting/cinematography described in stage directions.",
+      "confidence_score": 0.0,
+      "risks": [
+        "Relies moderately on visual acting/cinematography described in stage directions."
+      ]
+    },
+    "engine": "heuristic",
+    "model": "heuristic-offline-engine"
+  },
+  {
+    "promo_id": "ep12_0000.50_0023.60",
+    "rank": 14,
+    "promo_type": "single_episode",
+    "episodes": [
+      12
+    ],
+    "segments": [
+      {
+        "episode": 12,
+        "start": "00:00.50",
+        "end": "00:23.60",
+        "start_seconds": 0.5,
+        "end_seconds": 23.6,
+        "duration": 23.1
+      }
+    ],
+    "total_duration": 23.1,
+    "hook": {
+      "type": "unjust_accusation",
+      "name": "Unjust Framing / False Blame",
+      "timestamp": "00:00.50",
+      "timestamp_seconds": 0.5,
+      "quote": "\"Put out your hands, veteran. You are under arrest for theft.\"",
+      "psychological_trigger": "Frustration at inverted justice and gaslighting"
+    },
+    "cliffhanger": {
+      "type": "interrupted_retaliation",
+      "name": "Interrupted Retaliation / Comeuppance Cut",
+      "timestamp": "00:23.60",
+      "timestamp_seconds": 23.6,
+      "quote": "\"I have never touched your property.\"",
+      "withheld_payoff": "Conflict cuts before resolution or comeuppance."
+    },
+    "why_it_works": "Cold viewers instantly lock onto CONSTABLE's confrontation; cuts right as tension peaks without resolving.",
+    "risks": [],
+    "scores": {
+      "hook_strength": 8.5,
+      "injustice_tension": 9.5,
+      "cliffhanger_strength": 7.5,
+      "standalone_clarity": 8.5,
+      "payoff_withheld": 9.0,
+      "composite_score": 7.22,
+      "adjusted_score": 5.92,
+      "diversity_penalty": 0.82,
+      "audit_multiplier": 1.0
+    },
+    "quality_audit": {
+      "passed": true,
+      "method": "rules",
+      "audit_model": "rule-lint",
+      "flaw_type": null,
+      "critique": "[rule lint, not a quality judgement] Relies moderately on visual acting/cinematography described in stage directions.",
+      "confidence_score": 0.0,
+      "risks": [
+        "Relies moderately on visual acting/cinematography described in stage directions."
+      ]
+    },
+    "engine": "heuristic",
+    "model": "heuristic-offline-engine"
+  },
+  {
+    "promo_id": "ep04_0003.40_0036.00",
+    "rank": 15,
+    "promo_type": "single_episode",
+    "episodes": [
+      4
+    ],
+    "segments": [
+      {
+        "episode": 4,
+        "start": "00:03.40",
+        "end": "00:36.00",
+        "start_seconds": 3.4,
+        "end_seconds": 36.0,
+        "duration": 32.6
+      }
+    ],
+    "total_duration": 32.6,
+    "hook": {
+      "type": "public_humiliation",
+      "name": "Public Humiliation & Scorn",
+      "timestamp": "00:03.40",
+      "timestamp_seconds": 3.4,
+      "quote": "\"Look at him.\"",
+      "psychological_trigger": "Outrage at disproportionate cruelty in front of witnesses"
+    },
+    "cliffhanger": {
+      "type": "interrupted_retaliation",
+      "name": "Interrupted Retaliation / Comeuppance Cut",
+      "timestamp": "00:36.00",
+      "timestamp_seconds": 36.0,
+      "quote": "\"A woman who was betrayed.\"",
+      "withheld_payoff": "Conflict cuts before resolution or comeuppance."
+    },
+    "why_it_works": "Cold viewers instantly lock onto GERALD's confrontation; cuts right as tension peaks without resolving.",
+    "risks": [],
+    "scores": {
+      "hook_strength": 9.5,
+      "injustice_tension": 9.5,
+      "cliffhanger_strength": 7.5,
+      "standalone_clarity": 8.5,
+      "payoff_withheld": 9.0,
+      "composite_score": 8.8,
+      "adjusted_score": 5.92,
+      "diversity_penalty": 0.672,
+      "audit_multiplier": 1.0
+    },
+    "quality_audit": {
+      "passed": true,
+      "method": "rules",
+      "audit_model": "rule-lint",
+      "flaw_type": null,
+      "critique": "[rule lint, not a quality judgement] Relies moderately on visual acting/cinematography described in stage directions.",
+      "confidence_score": 0.0,
+      "risks": [
+        "Relies moderately on visual acting/cinematography described in stage directions."
+      ]
+    },
+    "engine": "heuristic",
+    "model": "heuristic-offline-engine"
+  }
+]

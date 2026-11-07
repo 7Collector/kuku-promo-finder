@@ -1,0 +1,20 @@
+# Copy to config/shows/<your_show>.yaml and run:  python run.py --show <your_show> --input-dir <dir>
+show_id: "my_show"
+show_title: "Title of the show"
+genre: "Genre / setting"
+target_platform: "Instagram Reels / TikTok / YouTube Shorts"
+premise: >
+  Two or three sentences: who the protagonist is, who wrongs them, what is at stake.
+protagonist:
+  name: "Protagonist name"
+  archetype: "One line"
+antagonists:
+  - name: "Antagonist name"
+    role: "What they do to the protagonist"
+male_lead:            # optional; delete if not applicable
+  name: "Name"
+  role: "Role"
+# Optional: extra cue phrases per taxonomy id, merged into config/taxonomy.yaml cues.
+show_cues_overlay:
+  public_humiliation:
+    - "a phrase typical of this show"

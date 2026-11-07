@@ -58,8 +58,11 @@ interface Promo {
     adjusted_score: number;
     diversity_penalty: number;
   };
+  engine?: string;
+  model?: string;
   quality_audit?: {
     passed: boolean;
+    method?: "llm" | "rules" | "error";
     flaw_type?: string;
     critique: string;
     confidence_score: number;
@@ -71,6 +74,7 @@ export default function HomePage() {
   const [promos, setPromos] = useState<Promo[]>([]);
   const [allPromos, setAllPromos] = useState<Promo[]>([]);
   const [loading, setLoading] = useState(true);
+  const [meta, setMeta] = useState<any>(null);
   const [selectedHook, setSelectedHook] = useState("all");
   const [selectedType, setSelectedType] = useState("all");
   const [minScore, setMinScore] = useState(6.0);
@@ -83,7 +87,10 @@ export default function HomePage() {
   useEffect(() => {
     fetch("/api/promos")
       .then((res) => res.json())
-      .then((data) => setAllPromos(data.promos || []))
+      .then((data) => {
+        setAllPromos(data.promos || []);
+        setMeta(data.meta || null);
+      })
       .catch(() => {});
   }, []);
 
@@ -180,7 +187,7 @@ export default function HomePage() {
             }}
           >
             <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--accent)" }} />
-            Show: I Married a Broken Soldier. He was a Duke
+            Show: {meta?.show ?? "(no run found)"}
           </span>
           <span
             style={{
@@ -191,10 +198,15 @@ export default function HomePage() {
               color: "var(--ink-3)",
             }}
           >
-            US vertical microdrama · 50 episodes
+            {meta ? `${meta.episodes} episodes · ${meta.extractor.provider}/${meta.extractor.model}` : ""}
           </span>
         </div>
 
+        {meta && meta.auditor?.method !== "llm" && (
+          <p className="om-caption" style={{ color: "var(--warning-strong)", marginBottom: "var(--s-12)" }}>
+            Smoke-test output from the offline keyword engine. "Passed rule lint" is not a quality judgement.
+          </p>
+        )}
         <h1 className="om-display" style={{ color: "var(--ink)", marginBottom: "var(--s-8)" }}>
           Viral Acquisition Promos
         </h1>
@@ -701,13 +713,17 @@ export default function HomePage() {
                   </p>
 
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                    {p.quality_audit?.passed ? (
+                    {p.quality_audit?.method === "error" ? (
+                      <span style={{ fontSize: 12, color: "var(--warning-strong)", display: "flex", alignItems: "center", gap: 4, fontWeight: 500 }}>
+                        <AlertTriangle size={14} /> Unaudited
+                      </span>
+                    ) : p.quality_audit?.passed ? (
                       <span style={{ fontSize: 12, color: "var(--success-strong)", display: "flex", alignItems: "center", gap: 4, fontWeight: 500 }}>
-                        <ShieldCheck size={14} /> Passed audit
+                        <ShieldCheck size={14} /> {p.quality_audit.method === "llm" ? "Passed LLM audit" : "Passed rule lint"}
                       </span>
                     ) : (
                       <span style={{ fontSize: 12, color: "var(--warning-strong)", display: "flex", alignItems: "center", gap: 4, fontWeight: 500 }}>
-                        <AlertTriangle size={14} /> Audit flag
+                        <AlertTriangle size={14} /> Failed audit{p.quality_audit?.flaw_type ? `: ${p.quality_audit.flaw_type}` : ""}
                       </span>
                     )}
 

@@ -1,171 +1,67 @@
-# 🎬 Kuku Promo Finder — AI Microdrama Acquisition Engine
+# Kuku Promo Finder
 
-> Automated scroll-stopping promo discovery for vertical microdramas (Instagram Reels, TikTok, YouTube Shorts).  
-> Built for the **Kuku AI Generalist Assignment (Problem 1: Find the Promos)**.  
-> Combines deterministic Python parsing, an extensible two-layer taxonomy, cross-episode composite stitching, and adversarial quality auditing.
+Finds 20-60s promo clips (hook in the first 3s, cliffhanger ending, understandable cold) in timestamped microdrama screenplays, ranks them, and audits each one. Built for the Kuku AI Generalist assignment, Problem 1.
 
----
+- Engine: Python (`run.py`). Viewer: Next.js (`app/`), read-only.
+- Write-up: `SOLUTION_DOC.md` (PDF: `SOLUTION_DOC.pdf`). AI collaboration log: `AGENTS.md`.
 
-## 🐍 1. Python Core Pipeline Quickstart (Headline Path)
-
-The headline deliverable is a production-grade, reproducible Python engine with zero mandatory external API costs.
+## Run it
 
 ```bash
-# 1. Setup Python Virtual Environment
-python3 -m venv .venv
-source .venv/bin/activate
+python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
+cp .env.example .env      # add ONE key: OPENAI_API_KEY, GEMINI_API_KEY or ANTHROPIC_API_KEY
 
-# 2. Run Pipeline (<2s with offline heuristic engine, or ~20s parallelized with frontier LLMs)
-PYTHONPATH=. python3 run.py
-
-# 3. (Optional) Run Streamlit Review Dashboard
-streamlit run app.py
-
-# 4. Run Automated Test Suite (14 unit tests)
-PYTHONPATH=. python3 -m unittest discover tests
+python run.py                       # first provider with a key (about 4 min for 50 episodes, 8 parallel calls)
+python run.py --provider openai --model gpt-6-luna
+python run.py --provider heuristic  # offline keyword smoke test (about 1s); labelled as such in every output
+python -m unittest discover -s tests -t .
 ```
 
-Outputs are automatically generated to:
-- **`outputs/promos.json`:** Raw, unedited JSON output meeting all assignment schema requirements.
-- **`outputs/PROMOS.md`:** Ranked editorial report complete with timestamps, hook/cliffhanger quotes, and quality audit cards.
+A provider you name explicitly must have its key; otherwise the run stops with an error. It never silently switches to the keyword engine. Responses are cached in `.cache/kuku/`, so re-running an unchanged prompt is free; use `--no-cache` to force fresh calls.
 
----
+### Outputs (`outputs/`)
 
-## 🚀 2. Next.js Web Application & Vercel Deployment
+| File | Contents |
+|---|---|
+| `promos.json` | Top 15, with segments, hook, cliffhanger, scores, audit result, `engine`, `model` |
+| `PROMOS.md` | Readable report; states engine, model, audit method and counts in its header |
+| `promos.pool.json` | All candidates after validation and de-duplication, with audits |
+| `promos.rejected.json` | Model-reported near misses and proposals dropped by validation |
+| `promos.meta.json` | Provider/model, counts, failures, token usage, wall time, git commit |
+| `smoke_test_heuristic/` | Keyword-engine output, kept for comparison only |
 
-An interactive visual explorer styled with the **Omega Design System** (`Design/omega-design-system`), engineered for instant **Vercel** deployment:
+Exit codes: 0 ok; 1 completed but incomplete (failed episodes or unaudited candidates, see meta); 2 bad input or configuration; 3 nothing to write. Existing outputs are never overwritten by an empty or failed run.
 
+## What is enforced in code
+`src/validation.py` and `src/ranker.py`: total 20-60s; hook beat starts within 3s of the opening cut; every cut is on a real beat edge (LLM times within 0.5s are snapped, others dropped); hook and cliffhanger quotes exist verbatim in the screenplay; the cliffhanger ends the clip (last 6s); scores clamped to 0-10. Audit-passing promos rank above failing ones, with a count-based penalty for repeated hook types and episodes.
+
+## Another show
 ```bash
-# Run web application locally
-npm install
-npm run dev
+cp config/shows/_template.yaml config/shows/my_show.yaml    # edit title, premise, characters
+python run.py --show my_show --input-dir path/to/screenplays
 ```
+Screenplays must use the same layout: `**SPEAKER (emotion):**` then `Start: (mm:ss.ss) | End: (mm:ss.ss)` then the text. Anything else parses to zero beats and the run stops with an error. A custom `--input-dir` without `--show`/`--context` is refused, and outputs go to `outputs/<show>/`. Hook types are config; add one in `config/taxonomy.yaml` with no code change.
 
-Open [http://localhost:3000](http://localhost:3000) to view:
-- **`/` (Ranked Promos):** Hero Board showcasing the #1 ranked promo on the focal dark surface, archetype filter chips, search, and detail modal.
-- **`/analyze` (Reusable Cut Tool):** Interactive editor tool allowing reviewers to test any custom screenplay cut against the taxonomy, duration bounds (20–60s), and adversarial auditor with one-click presets.
-- **`/episodes` (Screenplay Inspector):** 50-episode browser with centisecond beat breakdowns and emotion tags.
+Other options: `--audit-model` / `--audit-provider` (independent judge; by default the extractor model grades its own picks), `--composites` (experimental cross-episode splices, off by default), `--top-k`, `--workers`.
 
-To deploy on Vercel:
+## Evaluation
+No hand-picked ground truth exists yet, so recall is unmeasured. To measure it: write your picks to `eval/ground_truth.json` (format in `eval/recall.py`) before looking at the output, then `python eval/recall.py`.
+
+## Web viewer
 ```bash
-vercel
+npm install && npm run dev      # http://localhost:3000
 ```
+Pages: ranked promos (with audit verdict and flaw type) and a screenplay beat browser. It reads `outputs/` and `assets/` from disk (override with `KUKU_OUTPUT_DIR`, `KUKU_ASSETS_DIR`, `KUKU_SHOW`); it has no approve/reject controls and has not been deployed.
 
----
-
-## 🤖 Supported Frontier Models
-
-The pipeline implements the **Provider Strategy Pattern** (`src/providers/`):
-- **Google Gemini:** `gemini-3.8-flash` (Default for `--provider gemini`)
-- **OpenAI:** `gpt-6-luna` (Default for `--provider openai`)
-- **Anthropic Claude:** `claude-sonnet-5-5` (Default for `--provider anthropic`)
-- **Offline Heuristic Engine:** Runs instantaneously at $0.00 cost when no API keys are configured.
-
-To run with a live provider:
-```bash
-export OPENAI_API_KEY="your-openai-key"
-python3 run.py --provider openai
-
-# Or with Gemini:
-export GEMINI_API_KEY="your-gemini-key"
-python3 run.py --provider gemini
-
-# Or with Claude:
-export ANTHROPIC_API_KEY="your-anthropic-key"
-python3 run.py --provider anthropic
+## Layout
 ```
-
----
-
-## 🎯 Architecture & Pipeline Stages
-
-```
-[Screenplays (.txt)]
-        │
-        ▼
-[Stage 1: Deterministic Screenplay Parser (src/parser.py)]
-   • Extracts 3,727 beats across 50 episodes with centisecond timestamps (ss.ss)
-        │
-        ▼
-[Stage 2: Candidate Discovery & Composite Pairing (src/extractor.py, src/composite.py)]
-   • Scans 20–60s windows opening on hooks ≤ 3.5s
-   • Tags against the Two-Layer Taxonomy (core generic rules + show cue overlay)
-   • Synthesizes Single-Episode cuts + Cross-Episode Composites (Setup + Climax)
-        │
-        ▼
-[Stage 3: Physical Validation & Deduplication (src/ranker.py)]
-   • Enforces 20–60s duration and verified screenplay timestamp cut points
-   • Deduplicates overlapping candidates (>35% temporal overlap pruned)
-        │
-        ▼
-[Stage 4: Adversarial Quality Auditor (src/auditor.py)]
-   • Injects exact <clip_screenplay> dialogue slices between hook and cliffhanger
-   • Tests 5 failure modes: resolution leaks, context deficits, visual dependencies, slow burns, sarcasm
-        │
-        ▼
-[Stage 5: Audit-Informed MMR Diversity Reranking (src/ranker.py)]
-   • Penalizes failed audits (0.78x multiplier; 0.65x for resolution leaks)
-   • MMR penalty ensures balanced marketing variety across hook archetypes
-        │
-        ▼
-[Deliverables: outputs/promos.json + outputs/PROMOS.md + Streamlit & Next.js UIs]
-```
-
----
-
-## 📁 Repository Structure
-
-```
-├── run.py                     # CLI pipeline entrypoint (parallelized)
-├── app.py                     # Streamlit review dashboard
-├── config/
-│   ├── taxonomy.yaml          # Core generic hook & cliffhanger taxonomy (with requires/do_not_tag_if)
-│   ├── show_context.yaml      # Show profile, characters & show cue overlay
-│   └── shows/                 # Modular show overlays (e.g. broken_soldier.yaml)
-├── src/
-│   ├── parser.py              # Screenplay parser (100% deterministic, centisecond math)
-│   ├── models.py              # Pydantic data schemas (PromoScores, PromoCandidate, QualityAudit)
-│   ├── extractor.py           # Window discovery & taxonomy tagging
-│   ├── composite.py           # Dynamic cross-episode composite promo builder
-│   ├── ranker.py              # Canonical scoring, deduplication & audit-informed MMR
-│   ├── auditor.py             # Adversarial quality check with screenplay beat injection
-│   ├── prompts.py             # Decoupled domain prompt templates
-│   ├── taxonomy.py            # Two-layer taxonomy loader & word-boundary regex matcher
-│   ├── utils/
-│   │   ├── timestamps.py      # Timestamp conversion & overlap math
-│   │   └── logging.py         # Structured application logger
-│   └── providers/
-│       ├── base.py            # BaseLLMProvider interface
-│       ├── gemini.py          # Gemini 3.8 Flash adapter
-│       ├── openai.py          # GPT-6 Luna adapter
-│       ├── anthropic.py       # Claude Sonnet 5.5 adapter
-│       ├── heuristic.py       # Offline fallback adapter
-│       └── factory.py         # Provider factory
-├── app/                       # Next.js App Router (Omega Design System, Vercel-ready)
-│   ├── globals.css            # Omega Design System token imports & layout
-│   ├── layout.tsx             # Root scaffold with Omega navigation header
-│   ├── page.tsx               # Main dashboard (Hero Board, Filter Bar, Detail Modal)
-│   ├── analyze/page.tsx       # Reusable interactive promo cut tool
-│   ├── episodes/page.tsx      # 50-episode screenplay browser
-│   └── api/                   # Serverless API routes (/api/promos, /api/analyze, etc.)
-├── Design/
-│   └── omega-design-system/   # Complete Omega tokens, CSS, components & guidelines
-├── outputs/
-│   ├── promos.json            # Unedited raw submission output
-│   └── PROMOS.md              # Formatted report with quality audits
-├── tests/
-│   ├── test_parser.py         # Screenplay parser tests
-│   ├── test_taxonomy.py       # Word boundary & collision tests
-│   ├── test_ranker.py         # Timing constraint, audit penalty & MMR tests
-│   ├── test_auditor.py        # Resolution leak, visual risk & slice injection tests
-│   └── test_composite.py      # Cross-episode composite builder tests
-├── requirements.txt           # Python dependencies
-├── package.json               # Next.js & React dependencies
-├── tsconfig.json              # TypeScript configuration
-├── next.config.mjs            # Next.js configuration
-├── SOLUTION_DOC.md            # Official 2-page submission solution document
-├── AGENTS.md                  # AI collaboration & failure analysis
-├── CLAIMS_VERIFICATION.md     # Codebase audit & claims verification matrix
-└── PROGRESS.md                # Task tracker and verification record
+run.py            CLI pipeline          eval/recall.py     recall against your picks
+src/parser.py     screenplay -> beats   src/validation.py  hard-rule checks
+src/extractor.py  LLM / keyword windows src/auditor.py     adversarial audit
+src/ranker.py     scoring, ranking      src/composite.py   experimental splices
+src/providers/    gemini, openai, anthropic, heuristic, retry, cache
+config/           taxonomy.yaml, shows/<show>.yaml
+app/ lib/         Next.js viewer        tests/             unit tests
+outputs/          committed results     AUDIT.md           the audit these changes answer
 ```

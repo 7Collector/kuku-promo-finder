@@ -24,9 +24,10 @@ from src.utils.logging import logger
 BEAT_PATTERN = re.compile(
     r"\*\*([^*]+)\*\*\s*\n"
     r"Start:\s*\(?([0-9:\.]+)\)?\s*\|\s*End:\s*\(?([0-9:\.]+)\)?\s*\n"
-    r"(.*?)(?=\n\*\*[^*]+\*\*\s*\nStart:|\nSCENE\s+\d+|\Z)",
+    r"(.*?)(?=\n\*\*[^*]+\*\*\s*\nStart:|\nSCENE\s+\d+|\n-{3,}\s*SCRIPT END|\Z)",
     re.DOTALL,
 )
+START_LINE_PATTERN = re.compile(r"^\s*Start:", re.MULTILINE)
 
 EPISODE_NUM_PATTERN = re.compile(
     r"EPISODE NUMBER:\s*(?:Episode\s*)?(\d+)", re.IGNORECASE
@@ -73,10 +74,21 @@ def parse_header_type(raw_header: str) -> Tuple[BeatType, Optional[str], Optiona
         return BeatType.DIALOGUE, speaker, emotion
 
 
-def parse_screenplay_text(content: str, filename: str = "") -> Episode:
+def _number_from_filename(filename: str) -> Optional[int]:
+    m = re.search(r"episode[-_ ]?0*(\d+)", os.path.basename(filename), re.IGNORECASE)
+    return int(m.group(1)) if m else None
+
+
+def parse_screenplay_text(content: str, filename: str = "", default_number: Optional[int] = None) -> Episode:
     """Parses raw screenplay text into a structured Episode model."""
     ep_match = EPISODE_NUM_PATTERN.search(content)
-    ep_number = int(ep_match.group(1)) if ep_match else 1
+    if ep_match:
+        ep_number = int(ep_match.group(1))
+    else:
+        ep_number = _number_from_filename(filename) or default_number or 1
+        logger.warning(
+            f"{filename or 'screenplay'}: no 'EPISODE NUMBER:' line; using episode number {ep_number}."
+        )
 
     if filename:
         ep_id = os.path.splitext(os.path.basename(filename))[0]
@@ -119,6 +131,9 @@ def parse_screenplay_text(content: str, filename: str = "") -> Episode:
 
             b_start_sec = parse_timestamp_to_seconds(b_start_str)
             b_end_sec = parse_timestamp_to_seconds(b_end_str)
+            if b_end_sec < b_start_sec:
+                logger.warning(f"{ep_id}: dropped beat with end before start ({b_start_str} -> {b_end_str}).")
+                continue
             max_end_time = max(max_end_time, b_end_sec)
 
             b_type, speaker, emotion = parse_header_type(raw_header)
@@ -148,6 +163,14 @@ def parse_screenplay_text(content: str, filename: str = "") -> Episode:
             )
         )
 
+    parsed_beats = sum(len(sc.beats) for sc in parsed_scenes)
+    expected_beats = len(START_LINE_PATTERN.findall(content))
+    if parsed_beats != expected_beats:
+        logger.warning(
+            f"{ep_id}: parsed {parsed_beats} beats but found {expected_beats} 'Start:' lines; "
+            f"{expected_beats - parsed_beats} malformed or dropped."
+        )
+
     return Episode(
         episode_number=ep_number,
         episode_id=ep_id,
@@ -160,19 +183,34 @@ def parse_screenplay_text(content: str, filename: str = "") -> Episode:
 
 def parse_screenplay_file(file_path: str) -> Episode:
     """Reads and parses a single screenplay .txt file."""
-    with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
+    with open(file_path, "r", encoding="utf-8-sig", errors="replace") as f:
         content = f.read()
     return parse_screenplay_text(content, filename=file_path)
 
 
 def parse_all_episodes(directory_path: str) -> List[Episode]:
     """Parses all screenplay files in a directory, sorted by episode number."""
-    files = glob.glob(os.path.join(directory_path, "*.txt"))
+    if not os.path.isdir(directory_path):
+        raise FileNotFoundError(f"Input directory not found: {directory_path}")
+    files = sorted(glob.glob(os.path.join(directory_path, "*.txt")))
     if not files:
-        logger.warning(f"No .txt files found in directory: {directory_path}")
-        return []
+        raise FileNotFoundError(f"No .txt screenplay files found in: {directory_path}")
 
-    episodes = [parse_screenplay_file(f) for f in files]
+    episodes = []
+    seen = {}
+    for f in files:
+        ep = parse_screenplay_file(f)
+        if not ep.all_beats:
+            logger.warning(f"{os.path.basename(f)}: 0 beats parsed (unsupported format?); skipped.")
+            continue
+        if ep.episode_number in seen:
+            logger.warning(
+                f"{os.path.basename(f)}: duplicate episode number {ep.episode_number} "
+                f"(also {seen[ep.episode_number]}); skipped."
+            )
+            continue
+        seen[ep.episode_number] = os.path.basename(f)
+        episodes.append(ep)
     episodes.sort(key=lambda ep: ep.episode_number)
     return episodes
 

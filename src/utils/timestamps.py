@@ -2,29 +2,41 @@
 Timestamp and temporal geometry utilities for microdrama screenplays.
 """
 
-from typing import Tuple
+import re
+from typing import Optional, Tuple
+
+_TS_RE = re.compile(r"^(?:(\d+):)?(\d{1,2}):(\d{1,2}(?:\.\d+)?)$|^(\d+(?:\.\d+)?)$")
+
+
+def try_parse_timestamp(ts: object) -> Optional[float]:
+    """
+    Strict timestamp parser. Returns seconds or None when the value is not a valid timestamp.
+    Accepts '(00:11.30)', '00:11.30', '1:05.50', '01:02:15.00', '45.0'.
+    Rejects minutes/seconds fields >= 60 (e.g. '09:99.00') and anything non-numeric.
+    """
+    if not isinstance(ts, (str, int, float)):
+        return None
+    s = str(ts).strip("() \t")
+    m = _TS_RE.match(s)
+    if not m:
+        return None
+    if m.group(4) is not None:
+        return float(m.group(4))
+    hours = int(m.group(1) or 0)
+    minutes = int(m.group(2))
+    seconds = float(m.group(3))
+    if minutes >= 60 or seconds >= 60.0:
+        return None
+    return hours * 3600.0 + minutes * 60.0 + seconds
 
 
 def parse_timestamp_to_seconds(ts: str) -> float:
     """
-    Converts timestamp string to seconds (float).
-    Supports: '(00:11.30)', '00:11.30', '1:05.50', '01:02:15.00', '45.0'.
+    Lenient wrapper kept for screenplay parsing. Invalid or empty input returns 0.0;
+    use try_parse_timestamp() wherever invalid input must be detected.
     """
-    ts_clean = ts.strip("() ").strip()
-    if not ts_clean:
-        return 0.0
-
-    parts = ts_clean.split(":")
-    try:
-        if len(parts) == 1:
-            return float(parts[0])
-        elif len(parts) == 2:
-            return float(parts[0]) * 60.0 + float(parts[1])
-        elif len(parts) == 3:
-            return float(parts[0]) * 3600.0 + float(parts[1]) * 60.0 + float(parts[2])
-    except ValueError:
-        return 0.0
-    return 0.0
+    value = try_parse_timestamp(ts)
+    return 0.0 if value is None else value
 
 
 def seconds_to_timestamp(sec: float) -> str:

@@ -1,6 +1,7 @@
 """
-Show-agnostic dynamic composite promo builder.
-Pairs early high-injustice setup beats with late climactic confrontation cliffhangers.
+EXPERIMENTAL composite promo builder (opt-in via `run.py --composites`).
+Pairs an early high-injustice setup with a late climactic cliffhanger. It has no notion of plot,
+so pairs are not guaranteed to cohere; the quality audit is what decides whether they ship.
 Slices authentic beat boundaries with exact start/end timestamps.
 """
 
@@ -37,8 +38,10 @@ class CompositePromoBuilder:
             return []
 
         episodes_by_num: Dict[int, Episode] = {ep.episode_number: ep for ep in episodes}
-        cutoff_early = max(1, len(episodes) // 4)
-        cutoff_late = len(episodes) // 2
+        # Cutoffs are expressed in real episode numbers, so gaps in numbering cannot skew them.
+        numbers = sorted(episodes_by_num)
+        cutoff_early = numbers[max(0, len(numbers) // 4 - 1)]
+        cutoff_late = numbers[len(numbers) // 2]
 
         early_setups = [
             c for c in single_candidates
@@ -85,6 +88,7 @@ class CompositePromoBuilder:
                 continue
 
             seg1 = Segment(
+                episode=setup.episodes[0],
                 start=setup_seg.start,
                 end=best_seg1_beat.end_str,
                 start_seconds=seg1_start_sec,
@@ -128,6 +132,7 @@ class CompositePromoBuilder:
                     continue
 
                 seg2 = Segment(
+                    episode=climax.episodes[0],
                     start=best_seg2_beat.start_str,
                     end=climax_seg.end,
                     start_seconds=seg2_start_sec,
@@ -139,13 +144,14 @@ class CompositePromoBuilder:
                 if not (20.0 <= total_dur <= 60.0):
                     continue
 
-                # Cross-episode promos solve context deficit by providing early injustice setup
+                # Scores are inherited from the two parts, never floored or boosted: a spliced
+                # clip is only as clear as its weaker half.
                 scores = PromoScores(
-                    hook_strength=max(setup.scores.hook_strength, 8.5),
-                    injustice_tension=max(setup.scores.injustice_tension, 9.0),
-                    cliffhanger_strength=max(climax.scores.cliffhanger_strength, 8.5),
-                    standalone_clarity=9.0,  # Explicitly high clarity because setup gives context
-                    payoff_withheld=max(climax.scores.payoff_withheld, 9.0),
+                    hook_strength=setup.scores.hook_strength,
+                    injustice_tension=setup.scores.injustice_tension,
+                    cliffhanger_strength=climax.scores.cliffhanger_strength,
+                    standalone_clarity=min(setup.scores.standalone_clarity, climax.scores.standalone_clarity),
+                    payoff_withheld=climax.scores.payoff_withheld,
                 )
 
                 h_w = self.taxonomy.get_hook_weight(setup.hook.type)
@@ -161,10 +167,12 @@ class CompositePromoBuilder:
                     hook=setup.hook,
                     cliffhanger=climax.cliffhanger,
                     why_it_works=(
-                        f"Cross-episode setup + climax: Establishes early character injustice in Ep {setup.episodes[0]} "
-                        f"and bridges directly into the unresolved high-stakes confrontation in Ep {climax.episodes[0]}."
+                        f"EXPERIMENTAL pairing (no narrative matching): Ep {setup.episodes[0]} setup spliced with "
+                        f"Ep {climax.episodes[0]} climax. The auditor decides whether the join makes sense."
                     ),
                     scores=scores,
+                    engine=setup.engine,
+                    model=setup.model,
                 )
                 composites.append(comp)
                 used_pairs.add(pair_key)
