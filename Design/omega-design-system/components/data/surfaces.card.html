@@ -1,0 +1,32 @@
+<!-- @dsCard group="Lists and surfaces" viewport="700x629" name="Surfaces" subtitle="Flat, tonal, editorial, raised and overlay roles; tappable and pressed; hairline; two-pane stacked" -->
+<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../../styles.css">
+<style>body{padding:20px}.cols{display:flex;gap:20px;align-items:flex-start}.col{flex:1;min-width:0}.lbl{font:var(--text-caption);color:var(--ink-3);margin:0 0 8px}.lbl:not(:first-child){margin-top:20px}.stack{display:flex;flex-direction:column;gap:12px}.wrap{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.x-tertiary{display:inline-flex;align-items:center;gap:8px;min-height:48px;padding:12px;border-radius:var(--radius-md);font:var(--text-body-strong);color:var(--accent-text);--icon-size:18px} .t{font:var(--text-body-strong);color:var(--ink)}.s{font:var(--text-subhead);color:var(--ink-2);margin-top:2px}</style>
+</head><body>
+<div class="cols">
+  <div class="col">
+    <p class="lbl">Flat: a list group, a form group, a metric</p>
+    <div class="om-surface"><p class="t">Attendance this term</p><p class="s">94% present, 3 days absent</p></div>
+    <p class="lbl">Tonal: grouped content on the sunken fill, radius md</p>
+    <div class="om-surface om-surface--tonal"><p class="t">Bring to class</p><p class="s">Geometry box and graph paper</p></div>
+    <p class="lbl">Editorial: a media or feature block</p>
+    <div class="om-surface"><p class="t">Chapter 4, Light</p><p class="s">Reflection, refraction and lenses</p></div>
+    <p class="lbl">Raised: a deck card</p>
+    <div class="om-surface"><p class="t">PTM shifted to Saturday</p><p class="s">From the Principal</p></div>
+    <p class="lbl">Overlay: a transient layer drawn in flow</p>
+    <div class="om-surface"><p class="t">Saved on this phone</p><p class="s">It will send when you are back online</p></div>
+  </div>
+  <div class="col">
+    <p class="lbl">Tappable: one target, 48 minimum</p>
+    <div class="om-surface om-surface--tappable"><p class="t">Homework</p><p class="s">3 pending</p></div>
+    <p class="lbl">Pressed: ink ripple and 0.98 scale</p>
+    <div class="om-surface om-surface--tappable is-pressed"><p class="t">Homework</p><p class="s">3 pending</p></div>
+    <p class="lbl">Flush (content padding 0) with a hairline</p>
+    <div class="om-surface om-surface--flush"><p class="t" style="padding:12px 16px">Class 8B</p><hr class="om-hairline"><p class="t" style="padding:12px 16px">Class 9A</p></div>
+    <p class="lbl">Two-pane, stacked below 720 px: main, then supporting</p>
+    <div class="om-two-pane">
+      <div class="om-two-pane__main"><div class="om-surface"><p class="t">Today</p><p class="s">Six periods, one free</p></div></div>
+      <div class="om-two-pane__supporting"><div class="om-surface"><p class="t">This week</p><p class="s">Unit test on Thursday</p></div></div>
+    </div>
+  </div>
+</div>
+</body></html>

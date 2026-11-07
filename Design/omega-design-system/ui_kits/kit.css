@@ -1,0 +1,9 @@
+/* Shared frame for the app screen kits. One screen per file: a 360 x 780 phone on paper. */
+body{padding:20px;background:var(--sunken)}
+.kit-phone{position:relative;width:360px;height:780px;overflow:hidden;background:var(--paper);border-radius:28px;
+  --page-margin:var(--s-20);--status-bar-inset:0px;display:flex;flex-direction:column}
+.kit-status{flex:none;height:24px;padding:0 var(--s-20);display:flex;align-items:center;justify-content:space-between;
+  font:var(--text-caption);font-feature-settings:"tnum";color:var(--ink)}
+.kit-body{flex:1;min-height:0;overflow:hidden;position:relative}
+.kit-row{display:flex;gap:20px;align-items:flex-start}
+.kit-note{font:var(--text-caption);color:var(--ink-2);margin:0 0 8px}

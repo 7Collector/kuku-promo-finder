@@ -1,0 +1,51 @@
+<!-- @dsCard group="Patterns" viewport="700x434" name="Grounds and stage glass" subtitle="The paper ground, the AI ground, surfaces drawn on the board" -->
+<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../../styles.css">
+<style>
+body{padding:20px}
+.x-stack{display:flex;flex-direction:column;gap:var(--surface-gap)}
+.x-cols{display:flex;gap:var(--surface-gap)}
+.x-cols>*{flex:1;min-width:0}
+.x-ground{position:relative;height:150px;border:1px solid var(--hairline);border-radius:var(--radius-lg);overflow:hidden}
+.x-ground>.om-aurora,.x-ground>.om-ground-bloom{position:absolute;inset:0}
+.x-on{position:absolute;left:var(--s-16);right:var(--s-16);top:var(--s-16);padding:var(--surface-padding);border-radius:var(--radius-lg);background:var(--surface)}
+.x-t{font:var(--text-body-strong);letter-spacing:var(--track-body-strong);color:var(--ink)}
+.x-s{font:var(--text-subhead);letter-spacing:var(--track-subhead);color:var(--ink-2)}
+.x-note{font:var(--text-caption);letter-spacing:var(--track-caption);color:var(--ink-3);margin-top:var(--s-8)}
+.x-board{padding:var(--s-20);border-radius:var(--radius-xl);background:var(--board);color:var(--on-board)}
+.x-board-head{display:flex;align-items:center;gap:var(--s-12);margin-bottom:var(--s-16)}
+.x-board-title{flex:1;font:var(--text-title-medium);letter-spacing:var(--track-title-medium)}
+.x-pill{display:inline-flex;align-items:center;min-height:28px;padding:var(--s-4) var(--s-12);border-radius:var(--radius-full);font:var(--text-caption);letter-spacing:var(--track-caption)}
+.x-tiles{display:flex;gap:var(--s-12)}
+.x-tile{flex:1;padding:var(--s-12);border-radius:var(--radius-md)}
+.x-tile-v{font:var(--text-title-medium);letter-spacing:var(--track-title-medium);color:var(--on-board)}
+.x-tile-k{font:var(--text-caption);letter-spacing:var(--track-caption);color:var(--on-board-2)}
+.x-time{flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;width:72px;border-radius:var(--radius-md)}
+.x-disc{flex:none;display:grid;place-items:center;width:48px;height:48px;border-radius:var(--radius-full);--icon-size:20px;align-self:center}
+</style>
+</head><body>
+<div class="x-stack">
+  <div class="x-cols">
+    <div>
+      <div class="x-ground"><div class="om-ground-bloom" aria-hidden="true"></div><div class="x-on"><p class="x-t">Today</p><p class="x-s">A surface on the paper ground</p></div></div>
+      <p class="x-note">GroundBloomBackground: the app's ground. Flat paper, no blooms.</p>
+    </div>
+    <div>
+      <div class="x-ground"><div class="om-aurora" aria-hidden="true"></div><div class="x-on"><p class="x-t">Ask Omega</p><p class="x-s">The AI screens use the same ground</p></div></div>
+      <p class="x-note">AuroraBackground: plain paper too. No gradient, nothing drifts.</p>
+    </div>
+  </div>
+  <div>
+    <div class="x-board">
+      <div class="x-board-head"><p class="x-board-title">Class 8-B, Mathematics</p><span class="om-on-stage-glass x-pill">Class teacher</span></div>
+      <div class="x-tiles">
+        <div class="om-on-stage-glass x-time"><span class="x-tile-v om-num">10:20</span><span class="x-tile-k">45 min</span></div>
+        <div class="om-on-stage-glass x-tile"><p class="x-tile-v om-num">38</p><p class="x-tile-k">Students</p></div>
+        <div class="om-on-stage-glass x-tile"><p class="x-tile-v om-num">94%</p><p class="x-tile-k">Present today</p></div>
+        <div class="om-on-stage-glass x-tile"><p class="x-tile-v om-num">11 of 15</p><p class="x-tile-k">Chapters covered</p></div>
+        <span class="om-on-stage-glass x-disc"><i class="om-icon om-icon-clipboard"></i></span>
+      </div>
+    </div>
+    <p class="x-note">onStageGlass on a pill, a time box, stat tiles and a disc: the raised board fill with a 1 px board rule. Text on it is on-board, then on-board-2.</p>
+  </div>
+</div>
+</body></html>

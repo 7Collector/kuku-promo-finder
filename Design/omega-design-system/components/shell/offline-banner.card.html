@@ -1,0 +1,30 @@
+<!-- @dsCard group="Overlays and feedback" viewport="780x485" name="Offline banner" subtitle="Neutral callout with the cloud glyph: in place on a screen, default and custom text" -->
+<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../../styles.css">
+<style>
+body{padding:20px}
+.x-row{display:flex;gap:20px;align-items:flex-end}
+.x-row+.x-row{margin-top:20px}
+.x-col{display:flex;flex-direction:column;gap:8px;min-width:0}
+.x-label{font:var(--text-caption);color:var(--ink-3)}
+.x-frame{position:relative;overflow:hidden;border-radius:24px;background:var(--paper);outline:1px solid var(--hairline);--status-bar-inset:24px}
+.x-phone{width:360px;--page-margin:var(--s-20)}
+.x-frame .om-scrim{z-index:2}
+.x-frame .om-action-sheet,.x-frame .om-bottom-sheet,.x-frame .om-dialog-host,.x-frame .om-feedback-area{z-index:3}
+.x-status{position:absolute;top:0;left:0;right:0;z-index:1;display:flex;align-items:center;height:24px;padding:0 20px;font:var(--text-caption);color:var(--ink-2);font-feature-settings:"tnum"}
+.x-group{background:var(--surface);border-radius:var(--radius-lg);overflow:hidden}
+.x-group--plain{background:none;border-radius:0}
+.x-item{display:flex;align-items:center;gap:12px;min-height:56px;padding:12px 16px}
+.x-group--plain .x-item{padding-left:0;padding-right:0}
+.x-item+.x-item{border-top:1px solid var(--hairline)}
+.x-item div{min-width:0}
+.x-item b{display:block;font:var(--text-body-strong);color:var(--ink)}
+.x-item span{display:block;font:var(--text-subhead);color:var(--ink-2)}
+.x-item .m{margin-left:auto;flex:none;font:var(--text-caption);color:var(--ink-3);font-feature-settings:"tnum"}
+.x-gap{height:var(--header-to-content)}
+.x-gap-section{height:var(--section-gap)}
+.x-para{font:var(--text-body);color:var(--ink-2)}
+.x-row{align-items:flex-start}
+</style>
+</head><body>
+<div class="x-row"><div class="x-col" style="width:360px;flex:none"><div class="x-label">On a screen: neutral grey above the last saved copy</div><div class="x-frame x-phone" style="height:420px"><div class="x-status">9:41</div><div class="om-adaptive-shell om-adaptive-shell--bottom-bar"><div class="om-adaptive-shell-main"><div class="om-screen"><header class="om-screen-bar"></header><div class="om-screen-body"><div class="om-screen-content om-screen-content--tab-root"><div class="om-offline-banner" role="status"><i class="om-icon om-icon-cloud-off"></i><div class="om-state-body"><div class="om-state-text">Offline — showing saved data</div></div></div><div class="x-gap"></div><div class="om-display">Today</div><div class="x-gap-section"></div><div class="x-group"><div class="x-item"><div><b>Mathematics</b><span>Period 1 · Room 12</span></div><span class="m">8:10</span></div><div class="x-item"><div><b>Physics</b><span>Period 2 · Lab 2</span></div><span class="m">9:00</span></div><div class="x-item"><div><b>English</b><span>Period 3 · Room 12</span></div><span class="m">9:50</span></div><div class="x-item"><div><b>Geography</b><span>Period 4 · Room 7</span></div><span class="m">11:00</span></div><div class="x-item"><div><b>Chemistry</b><span>Period 5 · Lab 1</span></div><span class="m">11:50</span></div></div></div></div></div><div class="om-adaptive-shell-bottom"><nav class="om-bottom-nav"><div class="om-pill-tab is-selected" role="tab"><span class="om-pill-tab-indicator"></span><span class="om-pill-tab-icon"><i class="om-icon om-icon-home"></i></span><span class="om-pill-tab-label">Home</span></div><div class="om-pill-tab" role="tab"><span class="om-pill-tab-indicator"></span><span class="om-pill-tab-icon"><i class="om-icon om-icon-calendar"></i></span><span class="om-pill-tab-label">Routine</span></div><div class="om-pill-tab om-pill-tab--ai" role="tab"><span class="om-pill-tab-indicator"></span><span class="om-pill-tab-icon"><i class="om-icon om-icon-sparkle"></i></span><span class="om-pill-tab-label">AI</span></div><div class="om-pill-tab" role="tab"><span class="om-pill-tab-indicator"></span><span class="om-pill-tab-icon"><i class="om-icon om-icon-book"></i></span><span class="om-pill-tab-label">Syllabus</span></div></nav></div></div></div></div></div><div class="x-col" style="width:360px;gap:12px"><div class="x-label">Default text</div><div class="om-offline-banner" role="status"><i class="om-icon om-icon-cloud-off"></i><div class="om-state-body"><div class="om-state-text">Offline — showing saved data</div></div></div><div class="x-label" style="margin-top:12px">Caller's text, wrapping</div><div class="om-offline-banner" role="status"><i class="om-icon om-icon-cloud-off"></i><div class="om-state-body"><div class="om-state-text">Offline — showing the timetable saved at 8:10 this morning</div></div></div></div></div>
+</body></html>

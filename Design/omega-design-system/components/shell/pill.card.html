@@ -1,0 +1,17 @@
+<!-- @dsCard group="Navigation and shell" viewport="700x88" name="Pill label" subtitle="Small caption pill with caller colours, with and without a leading dot, on paper and on the board" -->
+<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../../styles.css">
+<style>
+body{padding:20px}
+.x-row{display:flex;gap:20px;align-items:flex-end}
+.x-row+.x-row{margin-top:20px}
+.x-col{display:flex;flex-direction:column;gap:8px;min-width:0}
+.x-label{font:var(--text-caption);color:var(--ink-3)}
+.x-frame{position:relative;overflow:hidden;border-radius:24px;background:var(--paper);outline:1px solid var(--hairline);--status-bar-inset:24px}
+.x-phone{width:360px;--page-margin:var(--s-20)}
+.x-frame .om-scrim{z-index:2}
+.x-frame .om-action-sheet,.x-frame .om-bottom-sheet,.x-frame .om-dialog-host,.x-frame .om-feedback-area{z-index:3}
+.x-status{position:absolute;top:0;left:0;right:0;z-index:1;display:flex;align-items:center;height:24px;padding:0 20px;font:var(--text-caption);color:var(--ink-2);font-feature-settings:"tnum"}
+</style>
+</head><body>
+<div class="x-row" style="align-items:center;gap:12px"><span class="om-pill" style="--pill-bg:var(--accent-container);--pill-fg:var(--on-accent-container);--pill-dot:var(--accent-mark)"><span class="om-pill-dot"></span>Now</span><span class="om-pill" style="--pill-bg:var(--sunken);--pill-fg:var(--ink)">Ch. 7 · Trigonometry</span><span class="om-pill" style="--pill-bg:var(--tip-container);--pill-fg:var(--tip-on-container)">78 credits left</span><span class="om-pill" style="--pill-bg:var(--warning-container);--pill-fg:var(--warning-on-container)">Late</span><span style="display:inline-flex;padding:12px 16px;border-radius:var(--radius-md);background:var(--board)"><span class="om-pill" style="--pill-bg:var(--board-raised);--pill-fg:var(--on-board);--pill-dot:var(--accent-mark-on-board)"><span class="om-pill-dot"></span>Live</span></span></div>
+</body></html>

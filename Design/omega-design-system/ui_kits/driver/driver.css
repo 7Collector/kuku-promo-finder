@@ -1,0 +1,56 @@
+/* Omega driver app: what the app draws privately between design-system components.
+   Translated from omega-driver-app shared/.../driver/ui (DriverShell.kt, TodayScreen.kt, ActiveTripScreen.kt,
+   TripSummaryScreen.kt). Layout and token variables only; no om- class is restyled here. */
+
+/* The kit frame already draws the status strip above the body, so the scaffold's bar owns no inset. */
+.dk-screen{--status-bar-inset:0px}
+
+/* Column(verticalArrangement = spacedBy(surfaceGap)): the body of Today, the trip head and the summary. */
+.dk-stack{display:flex;flex-direction:column;gap:var(--surface-gap);width:100%}
+.dk-stack>*{flex-shrink:0}
+
+/* "Pickup · Bus 1 · Route 1 · Civil Lines": the line under the bar of the running trip and the summary. */
+.dk-route-line{font:var(--text-subhead);letter-spacing:var(--track-subhead);color:var(--ink-2)}
+
+/* TripCard (TodayScreen.kt): an OmegaSurface whose lines sit directly under one another. */
+.dk-trip-card__meta{display:flex;align-items:center;gap:var(--inline-gap)}
+.dk-trip-card__when{flex:1;min-width:0;font:var(--text-subhead);letter-spacing:var(--track-subhead);color:var(--ink-2)}
+.dk-trip-card__route{font:var(--text-title-medium);letter-spacing:var(--track-title-medium);color:var(--ink)}
+.dk-trip-card__detail{font:var(--text-body);letter-spacing:var(--track-body);color:var(--ink-2)}
+.dk-trip-card__spare{font:var(--text-body-strong);letter-spacing:var(--track-body-strong);color:var(--ink)}
+.dk-trip-card__blocked{font:var(--text-caption);letter-spacing:var(--track-caption);color:var(--ink-2)}
+/* A button that hugs its label keeps to the start of the card. */
+.dk-trip-card>.om-button:not(.om-button--full){align-self:flex-start}
+
+/* Sign out and Switch login under the day, 24 below the last card. */
+.dk-account{display:flex;flex-direction:column;align-items:flex-start;padding-top:var(--s-24)}
+
+/* The stop the bus is heading for (ActiveTripScreen.kt): progress, the stop's name in display, when and who. */
+.dk-stop-head__progress{font:var(--text-subhead);letter-spacing:var(--track-subhead);color:var(--ink-2)}
+.dk-stop-head__name{font:var(--text-display);letter-spacing:var(--track-display);color:var(--ink)}
+.dk-stop-head__due{font:var(--text-body-strong);letter-spacing:var(--track-body-strong);color:var(--ink-2)}
+
+/* The sharing line with the notifications callout 8 under it. */
+.dk-sharing{display:flex;flex-direction:column;gap:var(--s-8)}
+
+/* RosterHeading: a section heading as a list item, a surface gap above and below. */
+.dk-roster-heading{padding:var(--surface-gap) 0}
+
+/* ChildRow: name and boarding badge, tags, the waiting or refused line, then the mark and "Not at stop". */
+.dk-child__top{display:flex;align-items:center;gap:var(--inline-gap)}
+.dk-child__name{flex:1;min-width:0;font:var(--text-title-medium);letter-spacing:var(--track-title-medium);color:var(--ink)}
+.dk-child__tags{display:flex;gap:var(--inline-gap)}
+.dk-child__note{font:var(--text-caption);letter-spacing:var(--track-caption);color:var(--ink-2)}
+.dk-child__actions{display:flex;align-items:center;gap:var(--inline-gap)}
+
+/* Modifier.weight(1f) on a button in a row. */
+.dk-weight{flex:1 1 0;min-width:0;width:auto}
+
+/* The running trip's list keeps 96 clear under its last row for the pinned actions, which sit over it. */
+.dk-trip-list{padding-bottom:calc(var(--s-48) + var(--s-48))}
+.dk-pinned-actions{position:absolute;left:0;right:0;bottom:0}
+
+/* Launch screens: one thing, centred in the window. */
+.dk-centre{display:flex;align-items:center;justify-content:center;width:100%;height:100%}
+.dk-centre--margin{padding:0 var(--page-margin)}
+.dk-opening-text{font:var(--text-body);letter-spacing:var(--track-body);color:var(--ink-2)}
