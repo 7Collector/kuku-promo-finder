@@ -1,0 +1,6 @@
+/* Omega elevation. In-flow surfaces cast no shadow: separation is paper versus surface, and hairlines. */
+:root{
+  --elev-none: none; /* cards, tiles, the board */
+  --elev-sheet: 0 -8px 40px rgba(23,25,27,0.18), 0 -2px 8px rgba(23,25,27,0.08); /* a bottom sheet over content; the shadow is ink */
+  --ring-focus: 0 0 0 2px var(--surface), 0 0 0 4px var(--accent-mark);
+}

@@ -1,0 +1,17 @@
+<!-- @dsCard group="Forms" viewport="700x302" name="Slider row" subtitle="Label, printed value and track: continuous, stepped, at the ends, disabled" -->
+<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../../styles.css">
+<style>body{padding:20px}.lab{font:var(--text-caption);color:var(--ink-2);margin:0 0 8px}.lab:not(:first-child){margin-top:20px}.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.cols{display:grid;grid-template-columns:1fr 1fr;gap:20px 16px;align-items:start}.surf{background:var(--surface);border-radius:var(--radius-lg);padding:16px}.board{background:var(--board);border-radius:var(--radius-xl);padding:20px}.surf{display:grid;grid-template-columns:1fr 1fr;gap:16px 24px}</style>
+</head><body>
+<div class="surf">
+  <div class="om-slider-row"><div class="om-slider-row__head"><span class="om-slider-row__label">Amplitude</span><span class="om-slider-row__value">1.5</span></div>
+    <div class="om-slider" role="slider" aria-label="Amplitude" aria-valuetext="1.5" style="--om-slider-value:.5"><span class="om-slider__active"></span><span class="om-slider__thumb"></span><span class="om-slider__inactive"></span></div></div>
+  <div class="om-slider-row"><div class="om-slider-row__head"><span class="om-slider-row__label">Pass mark, in steps of 5</span><span class="om-slider-row__value">35</span></div>
+    <div class="om-slider om-slider--stepped" role="slider" aria-label="Pass mark" aria-valuetext="35" style="--om-slider-value:.35"><span class="om-slider__active"></span><span class="om-slider__thumb"></span><span class="om-slider__inactive"></span></div></div>
+  <div class="om-slider-row"><div class="om-slider-row__head"><span class="om-slider-row__label">Slope</span><span class="om-slider-row__value">−4</span></div>
+    <div class="om-slider" role="slider" aria-label="Slope" aria-valuetext="-4" style="--om-slider-value:0"><span class="om-slider__active"></span><span class="om-slider__thumb"></span><span class="om-slider__inactive"></span></div></div>
+  <div class="om-slider-row"><div class="om-slider-row__head"><span class="om-slider-row__label">Questions in the quiz</span><span class="om-slider-row__value">20</span></div>
+    <div class="om-slider om-slider--stepped" role="slider" aria-label="Questions in the quiz" aria-valuetext="20" style="--om-slider-value:1"><span class="om-slider__active"></span><span class="om-slider__thumb"></span><span class="om-slider__inactive"></span></div></div>
+  <div class="om-slider-row is-disabled"><div class="om-slider-row__head"><span class="om-slider-row__label">Frequency (disabled)</span><span class="om-slider-row__value">0.75</span></div>
+    <div class="om-slider" role="slider" aria-label="Frequency" aria-valuetext="0.75" aria-disabled="true" style="--om-slider-value:.6"><span class="om-slider__active"></span><span class="om-slider__thumb"></span><span class="om-slider__inactive"></span></div></div>
+</div>
+</body></html>

@@ -1,0 +1,36 @@
+<!-- @dsCard group="Actions" viewport="700x388" name="Choice and toggle chips" subtitle="Single choice, several of many, the scrolling row, toggle on, off and disabled" -->
+<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../../styles.css">
+<style>body{padding:20px}.lab{font:var(--text-caption);color:var(--ink-2);margin:0 0 8px}.lab:not(:first-child){margin-top:20px}.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.cols{display:grid;grid-template-columns:1fr 1fr;gap:20px 16px;align-items:start}.surf{background:var(--surface);border-radius:var(--radius-lg);padding:16px}.board{background:var(--board);border-radius:var(--radius-xl);padding:20px}.om-chips{margin:0 -20px;padding:0 20px}</style>
+</head><body>
+<p class="lab">Choice chips, one of many: the chosen chip takes the accent container and a tick</p>
+<div class="row">
+  <button class="om-chip is-selected" role="radio" aria-checked="true"><i class="om-icon om-icon-check"></i>Today 6 PM</button>
+  <button class="om-chip" role="radio" aria-checked="false">Tomorrow</button>
+  <button class="om-chip" role="radio" aria-checked="false">This weekend</button>
+  <button class="om-chip is-pressed" role="radio" aria-checked="false">Pressed</button>
+</div>
+<p class="lab">Several of many: classes that take one item of homework</p>
+<div class="row">
+  <button class="om-chip" role="checkbox" aria-checked="false">8A</button>
+  <button class="om-chip is-selected" role="checkbox" aria-checked="true"><i class="om-icon om-icon-check"></i>8B</button>
+  <button class="om-chip is-selected" role="checkbox" aria-checked="true"><i class="om-icon om-icon-check"></i>9A</button>
+  <button class="om-chip" role="checkbox" aria-checked="false">9B</button>
+</div>
+<p class="lab">The scrolling row: starts on the page keyline and runs off the trailing edge</p>
+<div class="om-chips" role="radiogroup">
+  <button class="om-chip is-selected" role="radio" aria-checked="true"><i class="om-icon om-icon-check"></i>All</button>
+  <button class="om-chip" role="radio">Mathematics</button>
+  <button class="om-chip" role="radio">Science</button>
+  <button class="om-chip" role="radio">English</button>
+  <button class="om-chip" role="radio">Hindi</button>
+  <button class="om-chip" role="radio">Social science</button>
+  <button class="om-chip" role="radio">Computer science</button>
+</div>
+<p class="lab">Toggle chips: an independent switch, off, on, and disabled while its value is being written</p>
+<div class="row">
+  <button class="om-chip" role="switch" aria-checked="false">Anonymous</button>
+  <button class="om-chip is-selected" role="switch" aria-checked="true"><i class="om-icon om-icon-check"></i>Needs a guardian's signature</button>
+  <button class="om-chip is-disabled" role="switch" aria-checked="false" disabled>Notify parents</button>
+  <button class="om-chip is-disabled" role="switch" aria-checked="true" disabled><i class="om-icon om-icon-check"></i>Late work</button>
+</div>
+</body></html>

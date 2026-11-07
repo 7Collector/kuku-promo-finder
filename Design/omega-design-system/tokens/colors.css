@@ -1,0 +1,59 @@
+/* Omega colour tokens. Generated from omega-kmp ui/designsystem/OmegaColor.kt (default brand). */
+:root{
+  --paper: #F2F3F0; /* Canvas, screen background */
+  --surface: #FFFFFF; /* Grouped lists, sheets, tiles */
+  --sunken: #E8E9E5; /* Tracks, skeletons, date leaf */
+  --hairline: #DADCD7; /* Dividers only */
+  --outline: #808480; /* Boundaries of interactive controls */
+  --ink: #17191B; /* Primary text and numbers */
+  --ink-2: #4A4E52; /* Supporting text, default icons */
+  --ink-3: #64686C; /* Meta, placeholders */
+  --accent: #2B4FD8; /* Primary buttons, selection, links, focus */
+  --on-accent: #FFFFFF; /* Text and icons on accent */
+  --accent-text: #2B4FD8; /* Accent-coloured text on paper or surface */
+  --accent-container: #E6EAFA; /* Selected chip or segment, user bubble, avatar */
+  --on-accent-container: #1E3797; /* Text on accent container */
+  --accent-mark: #2B4FD8; /* Progress fill, focus ring, live dot */
+  --accent-mark-on-board: #8095E8; /* The accent as a mark on the board */
+  --info-strong: #1F5FBF;
+  --info-container: #E7EEFA;
+  --info-on-container: #173F80;
+  --help-strong: #0F7472;
+  --help-container: #DFF1F0;
+  --help-on-container: #0B4D4C;
+  --tip-strong: #6A3FC9;
+  --tip-container: #EEE8FB;
+  --tip-on-container: #44278A;
+  --success-strong: #1B7440;
+  --success-container: #E3F2E9;
+  --success-on-container: #145230;
+  --warning-strong: #9A5100;
+  --warning-container: #FBEEDB;
+  --warning-on-container: #6B3900;
+  --danger-strong: #C0302A;
+  --danger-container: #FBE6E4;
+  --danger-on-container: #7C1D18;
+  --neutral-strong: #4A4E52;
+  --neutral-container: #E8E9E5;
+  --neutral-on-container: #17191B;
+  --board: #1C2422; /* The one dark surface per screen */
+  --on-board: #F4F6F5; /* Primary text on the board */
+  --on-board-2: #AEB8B4; /* Secondary text on the board */
+  --board-glow: rgba(255,255,255,0.07); /* Soft highlight on the board */
+  --board-raised: #323937; /* A control's fill on the board */
+  --board-rule: #474E4C; /* A rule or track on the board */
+  --danger-on-board: #D26A66; /* Danger text on the board */
+  --scrim: rgba(23,25,27,0.40); /* Dismiss layer under sheets and dialogs */
+  --subject-1: #5B6CFF;
+  --subject-2: #13A89E;
+  --subject-3: #E0529C;
+  --subject-4: #8C9A1B;
+  --subject-5: #2E9BD6;
+  --subject-6: #E27D3A;
+  --subject-7: #9B5DE5;
+  --subject-8: #A0704A;
+  --ai-1: #7B5CFF;
+  --ai-2: #D64FA8;
+  --ai-3: #F2A65A;
+  --ai-gradient: linear-gradient(135deg, var(--ai-1), var(--ai-2), var(--ai-3)); /* the only gradient: AI marks, never backgrounds or text */
+}

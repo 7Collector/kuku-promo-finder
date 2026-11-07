@@ -1,0 +1,45 @@
+<!-- @dsCard group="Actions" viewport="700x412" name="Segmented control" subtitle="Two to four options, nothing chosen, toned answer, disabled, wrapping labels" -->
+<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../../styles.css">
+<style>body{padding:20px}.lab{font:var(--text-caption);color:var(--ink-2);margin:0 0 8px}.lab:not(:first-child){margin-top:20px}.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.cols{display:grid;grid-template-columns:1fr 1fr;gap:20px 16px;align-items:start}.surf{background:var(--surface);border-radius:var(--radius-lg);padding:16px}.board{background:var(--board);border-radius:var(--radius-xl);padding:20px}.cols{margin-top:20px}.cols .lab{margin-top:0}</style>
+</head><body>
+<p class="lab">Three options, the thumb under the chosen one</p>
+<div class="om-segmented" role="radiogroup" style="--om-segment-count:3;--om-segment-index:1">
+  <button class="om-segmented__option" role="radio" aria-checked="false"><span>Day</span></button>
+  <button class="om-segmented__option is-selected" role="radio" aria-checked="true"><span>Week</span></button>
+  <button class="om-segmented__option" role="radio" aria-checked="false"><span>Month</span></button>
+</div>
+<div class="cols">
+  <div><p class="lab">Two options</p>
+    <div class="om-segmented" role="radiogroup" style="--om-segment-count:2;--om-segment-index:0">
+      <button class="om-segmented__option is-selected" role="radio" aria-checked="true"><span>Form</span></button>
+      <button class="om-segmented__option" role="radio" aria-checked="false"><span>Event</span></button>
+    </div></div>
+  <div><p class="lab">Nothing chosen yet: no thumb</p>
+    <div class="om-segmented is-empty" role="radiogroup" style="--om-segment-count:2">
+      <button class="om-segmented__option" role="radio" aria-checked="false"><span>Going</span></button>
+      <button class="om-segmented__option" role="radio" aria-checked="false"><span>Not going</span></button>
+    </div></div>
+  <div><p class="lab">Chosen answer with a success tone</p>
+    <div class="om-segmented om-segmented--success" role="radiogroup" style="--om-segment-count:2;--om-segment-index:0">
+      <button class="om-segmented__option is-selected" role="radio" aria-checked="true"><span>Going</span></button>
+      <button class="om-segmented__option" role="radio" aria-checked="false"><span>Not going</span></button>
+    </div></div>
+  <div><p class="lab">Chosen answer with a danger tone</p>
+    <div class="om-segmented om-segmented--danger" role="radiogroup" style="--om-segment-count:2;--om-segment-index:1">
+      <button class="om-segmented__option" role="radio" aria-checked="false"><span>Going</span></button>
+      <button class="om-segmented__option is-selected" role="radio" aria-checked="true"><span>Not going</span></button>
+    </div></div>
+  <div><p class="lab">Disabled while the answer is in flight</p>
+    <div class="om-segmented is-disabled" role="radiogroup" aria-disabled="true" style="--om-segment-count:2;--om-segment-index:0">
+      <button class="om-segmented__option is-selected" role="radio" aria-checked="true" disabled><span>Going</span></button>
+      <button class="om-segmented__option" role="radio" aria-checked="false" disabled><span>Not going</span></button>
+    </div></div>
+  <div><p class="lab">Four options, labels wrap to two lines</p>
+    <div class="om-segmented" role="radiogroup" style="--om-segment-count:4;--om-segment-index:2">
+      <button class="om-segmented__option" role="radio"><span>Present</span></button>
+      <button class="om-segmented__option" role="radio"><span>Late</span></button>
+      <button class="om-segmented__option is-selected" role="radio" aria-checked="true"><span>Half day</span></button>
+      <button class="om-segmented__option" role="radio"><span>Approved leave</span></button>
+    </div></div>
+</div>
+</body></html>

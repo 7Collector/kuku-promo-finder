@@ -1,0 +1,28 @@
+{
+  "name": "kuku",
+  "version": "1.0.0",
+  "description": "> Automated scroll-stopping promo discovery for vertical microdramas (Instagram Reels, TikTok, YouTube Shorts).   > Built for the **Kuku AI Generalist Assignment (Problem 1: Find the Promos)**.",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^20.16.11",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "lucide-react": "^1.70.0",
+    "next": "^16.4.5",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "typescript": "^7.0.2",
+    "yaml": "^2.9.1"
+  }
+}

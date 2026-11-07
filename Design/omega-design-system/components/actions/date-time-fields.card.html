@@ -1,0 +1,17 @@
+<!-- @dsCard group="Forms" viewport="700x312" name="Date and time fields" subtitle="Read-only fields that open the pickers: with label, without, disabled, pressed" -->
+<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../../styles.css">
+<style>body{padding:20px}.lab{font:var(--text-caption);color:var(--ink-2);margin:0 0 8px}.lab:not(:first-child){margin-top:20px}.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.cols{display:grid;grid-template-columns:1fr 1fr;gap:20px 16px;align-items:start}.surf{background:var(--surface);border-radius:var(--radius-lg);padding:16px}.board{background:var(--board);border-radius:var(--radius-xl);padding:20px}</style>
+</head><body>
+<div class="surf"><div class="cols">
+  <div class="om-field"><span class="om-field__label">Due date</span>
+    <button class="om-field__box om-field__box--picker" aria-label="Due date, Thu, 24 Sep"><span class="om-field__value">Thu, 24 Sep</span><i class="om-icon om-icon-calendar"></i></button></div>
+  <div class="om-field"><span class="om-field__label">Reminder</span>
+    <button class="om-field__box om-field__box--picker" aria-label="Reminder, 18:00"><span class="om-field__value om-num">18:00</span><i class="om-icon om-icon-clock"></i></button></div>
+  <div class="om-field is-disabled"><span class="om-field__label">Exam date</span>
+    <button class="om-field__box om-field__box--picker" aria-label="Exam date, Mon, 12 Oct" disabled><span class="om-field__value">Mon, 12 Oct</span><i class="om-icon om-icon-calendar"></i></button></div>
+  <div class="om-field is-disabled"><span class="om-field__label">Reporting time</span>
+    <button class="om-field__box om-field__box--picker" aria-label="Reporting time, 07:45" disabled><span class="om-field__value om-num">07:45</span><i class="om-icon om-icon-clock"></i></button></div>
+  <div class="om-field"><button class="om-field__box om-field__box--picker" aria-label="Parent-teacher meeting date, Sat, 26 Sep"><span class="om-field__value">Sat, 26 Sep</span><i class="om-icon om-icon-calendar"></i></button></div>
+  <div class="om-field"><button class="om-field__box om-field__box--picker is-pressed" aria-label="Bus pickup, 07:10"><span class="om-field__value om-num">07:10</span><i class="om-icon om-icon-clock"></i></button></div>
+</div></div>
+</body></html>

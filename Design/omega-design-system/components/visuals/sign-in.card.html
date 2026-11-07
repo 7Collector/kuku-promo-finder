@@ -1,0 +1,145 @@
+<!-- @dsCard group="Patterns" viewport="1180x2040" name="Sign-in" subtitle="Phone entry, code entry and profile chooser, each with its error and waiting states; no profiles" -->
+<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../../styles.css">
+<style>
+body{padding:20px}
+:root{--page-margin:var(--s-20)} /* a 360 wide phone is under the 400 breakpoint */
+.x-row{display:flex;gap:30px}
+.x-row+.x-row{margin-top:var(--s-24)}
+.x-col{width:360px;flex:none}
+.x-label{font:var(--text-caption);letter-spacing:var(--track-caption);color:var(--ink-2);margin-bottom:var(--s-8);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.x-phone{display:flex;flex-direction:column;width:360px;outline:1px solid var(--hairline);border-radius:var(--radius-xl);overflow:hidden;background:var(--paper)}
+.x-phone.is-board{background:var(--board)}
+.x-phone>main{flex:1;min-height:0}
+.x-status{flex:none;height:24px} /* the status-bar strip: paper on the two paper screens, the board on the chooser */
+/* Stand-in for OmegaButton: 48 tall, radius md, 16 by 12 (12 by 12 for text buttons), body-strong label. */
+.x-btn{display:flex;align-items:center;justify-content:center;min-height:var(--min-touch-target);padding:12px 16px;border-radius:var(--radius-md);font:var(--text-body-strong);letter-spacing:var(--track-body-strong)}
+.x-btn-primary{background:var(--accent);color:var(--on-accent)}
+.x-btn-primary.is-inert{background:var(--sunken);color:var(--ink-3)}
+.x-btn-stage{background:var(--on-board);color:var(--ink)}
+.x-btn-text{display:inline-flex;padding:12px;color:var(--accent-text)}
+.x-btn-text.is-stage{color:var(--on-board)}
+/* Stand-in for OmegaSpinner at button scale: 18 across, 2 stroke. */
+.x-spinner{width:18px;height:18px;animation:x-spin 1.2s linear infinite}
+.x-spinner circle{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+@keyframes x-spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.x-spinner{animation:none}}
+/* Stand-in for Callout: the tone's container, radius lg, 16 padding, a 20 px tone icon 12 from the text. */
+.x-callout{display:flex;gap:var(--icon-text);align-self:stretch;padding:var(--surface-padding);border-radius:var(--radius-lg);text-align:start;font:var(--text-subhead);letter-spacing:var(--track-subhead)}
+.x-callout>.om-icon{--icon-size:20px}
+.x-callout.is-info{background:var(--info-container);color:var(--info-on-container)}
+.x-callout.is-info>.om-icon{color:var(--info-strong)}
+.x-callout.is-warning{background:var(--warning-container);color:var(--warning-on-container)}
+.x-callout.is-warning>.om-icon{color:var(--warning-strong)}
+</style>
+</head><body>
+<div class="x-row">
+<div class="x-col"><p class="x-label">Phone entry</p>
+<div class="x-phone" style="height:720px"><div class="x-status"></div>
+<main class="om-signin">
+  <h1 class="om-signin-title">Sign in</h1>
+  <p class="om-signin-body">We'll send a one-time code on WhatsApp. No password needed.</p>
+  <p class="om-signin-field-label" style="margin-top:var(--s-24)">Mobile number</p>
+  <div class="om-signin-phone"><span class="om-signin-phone-prefix">+91</span><span class="om-signin-phone-value om-num">9876543210</span></div>
+  <div style="margin-top:var(--s-24)"><span class="x-btn x-btn-primary" role="button">Send code</span></div>
+</main>
+</div></div>
+<div class="x-col"><p class="x-label">Code entry: four of six digits, resend cooling down</p>
+<div class="x-phone" style="height:720px"><div class="x-status"></div>
+<main class="om-signin">
+  <h1 class="om-signin-title">Enter the code</h1>
+  <p class="om-signin-body">A 6-digit code is on its way on WhatsApp to <b class="om-num">+91 98765 43210</b></p>
+  <div class="om-signin-code" style="margin-top:var(--s-24)" aria-hidden="true"><span class="om-signin-code-cell is-filled">4</span><span class="om-signin-code-cell is-filled">8</span><span class="om-signin-code-cell is-filled">2</span><span class="om-signin-code-cell is-filled">1</span><span class="om-signin-code-cell"></span><span class="om-signin-code-cell"></span></div>
+  <div style="margin-top:var(--s-24)"><span class="x-btn x-btn-primary is-inert" role="button" aria-disabled="true">Verify</span></div>
+  <div style="margin-top:var(--s-16);display:flex;flex-direction:column;align-items:flex-start">
+    <p class="om-signin-resend-wait om-num">Resend in 0:24</p>
+    <span class="x-btn x-btn-text" role="button">Use a different number</span>
+  </div>
+</main>
+</div></div>
+<div class="x-col"><p class="x-label">Profile chooser: first sign-in, one tile last used</p>
+<div class="x-phone is-board" style="height:720px"><div class="x-status"></div>
+<main class="om-signin-board">
+  <p class="om-signin-eyebrow om-num">Omega · +91 98••• ••210</p>
+  <h1 class="om-signin-title">Who's using Omega?</h1>
+  <p class="om-signin-reason">Who is using the app?</p>
+  <div class="om-signin-profiles"><div class="om-signin-profile" role="button"><span class="om-signin-profile-avatar"><span class="om-signin-profile-initials">RS</span></span><span class="om-signin-profile-name">Riya Sharma</span><span class="om-signin-profile-meta">Class 8-B</span><span class="om-signin-profile-last">Last used</span></div><div class="om-signin-profile" role="button"><span class="om-signin-profile-avatar"><span class="om-signin-profile-initials">KS</span></span><span class="om-signin-profile-name">Kabir Sharma</span><span class="om-signin-profile-meta">Class 5-A</span></div><div class="om-signin-profile" role="button"><span class="om-signin-profile-avatar"><span class="om-signin-profile-initials">AS</span></span><span class="om-signin-profile-name">Anita Sharma</span><span class="om-signin-profile-meta">Teacher · 8-B</span></div></div>
+  <div class="om-signin-remember" role="checkbox" aria-checked="false"><span class="om-signin-check"><i class="om-icon om-icon-check"></i></span>Don't ask next time on this phone</div>
+  <span class="x-btn x-btn-text is-stage" role="button">Sign out</span>
+</main>
+</div></div>
+</div>
+<div class="x-row">
+<div class="x-col"><p class="x-label">Phone entry: session ended notice, number not valid</p>
+<div class="x-phone" style="height:720px"><div class="x-status"></div>
+<main class="om-signin">
+  <h1 class="om-signin-title">Sign in</h1>
+  <p class="om-signin-body">We'll send a one-time code on WhatsApp. No password needed.</p>
+  <div class="x-callout is-info" style="margin-top:var(--s-16)"><i class="om-icon om-icon-info-circle"></i><p>Your sign-in was ended by the school. Sign in again.</p></div>
+  <p class="om-signin-field-label" style="margin-top:var(--s-24)">Mobile number</p>
+  <div class="om-signin-phone is-error"><span class="om-signin-phone-prefix">+91</span><span class="om-signin-phone-value om-num">98765<span class="om-signin-phone-error">An Indian mobile number has 10 digits</span></span></div>
+  <div style="margin-top:var(--s-24)"><span class="x-btn x-btn-primary" role="button">Send code</span></div>
+</main>
+</div></div>
+<div class="x-col"><p class="x-label">Code entry: wrong code, attempts left, resend ready</p>
+<div class="x-phone" style="height:720px"><div class="x-status"></div>
+<main class="om-signin">
+  <h1 class="om-signin-title">Enter the code</h1>
+  <p class="om-signin-body">A 6-digit code is on its way on WhatsApp to <b class="om-num">+91 98765 43210</b></p>
+  <div class="om-signin-code is-error" style="margin-top:var(--s-24)" aria-hidden="true"><span class="om-signin-code-cell is-filled">4</span><span class="om-signin-code-cell is-filled">8</span><span class="om-signin-code-cell is-filled">2</span><span class="om-signin-code-cell is-filled">1</span><span class="om-signin-code-cell is-filled">9</span><span class="om-signin-code-cell is-filled">3</span></div>
+  <p class="om-signin-notice">That code is not correct. Check WhatsApp and try again.</p>
+  <p class="om-signin-notice is-warning">4 attempts left</p>
+  <div style="margin-top:var(--s-24)"><span class="x-btn x-btn-primary" role="button">Verify</span></div>
+  <div style="margin-top:var(--s-16);display:flex;flex-direction:column;align-items:flex-start">
+    <span class="x-btn x-btn-text" role="button">Resend code</span>
+    <span class="x-btn x-btn-text" role="button">Use a different number</span>
+  </div>
+</main>
+</div></div>
+<div class="x-col"><p class="x-label">Profile chooser: people changed, tapped tile loading, box ticked</p>
+<div class="x-phone is-board" style="height:720px"><div class="x-status"></div>
+<main class="om-signin-board">
+  <p class="om-signin-eyebrow om-num">Omega · +91 98••• ••210</p>
+  <h1 class="om-signin-title">Who's using Omega?</h1>
+  <div class="x-callout is-warning" style="margin-top:var(--s-12)"><i class="om-icon om-icon-warning"></i><p>This number is now linked to a different set of people. Please choose again.</p></div>
+  <div class="om-signin-profiles"><div class="om-signin-profile is-loading" role="button"><span class="om-signin-profile-avatar"><span class="om-signin-profile-initials">RS</span><svg class="om-signin-profile-spinner" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14.5" pathLength="100" stroke-dasharray="70 100"/></svg></span><span class="om-signin-profile-name">Riya Sharma</span><span class="om-signin-profile-meta">Class 8-B</span></div><div class="om-signin-profile" role="button"><span class="om-signin-profile-avatar"><span class="om-signin-profile-initials">KS</span></span><span class="om-signin-profile-name">Kabir Sharma</span><span class="om-signin-profile-meta">Class 5-A</span></div></div>
+  <div class="om-signin-remember is-checked" role="checkbox" aria-checked="true"><span class="om-signin-check"><i class="om-icon om-icon-check"></i></span>Don't ask next time on this phone</div>
+  <span class="x-btn x-btn-text is-stage" role="button">Sign out</span>
+</main>
+</div></div>
+</div>
+<div class="x-row">
+<div class="x-col"><p class="x-label">Phone entry: request refused, then sending</p>
+<div class="x-phone" style="height:440px"><div class="x-status"></div>
+<main class="om-signin">
+  <h1 class="om-signin-title">Sign in</h1>
+  <p class="om-signin-body">We'll send a one-time code on WhatsApp. No password needed.</p>
+  <p class="om-signin-field-label" style="margin-top:var(--s-24)">Mobile number</p>
+  <div class="om-signin-phone"><span class="om-signin-phone-prefix">+91</span><span class="om-signin-phone-value om-num">9876543210</span></div>
+  <p class="om-signin-notice">Too many attempts from this device. Try again in 2 minutes.</p>
+  <div style="margin-top:var(--s-24)"><span class="x-btn x-btn-primary is-inert" role="button" aria-label="Send code, loading"><svg class="x-spinner" viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="8" pathLength="100" stroke-dasharray="70 100"/></svg></span></div>
+</main>
+</div></div>
+<div class="x-col"><p class="x-label">Code entry: attempts spent, resend withdrawn</p>
+<div class="x-phone" style="height:440px"><div class="x-status"></div>
+<main class="om-signin">
+  <h1 class="om-signin-title">Enter the code</h1>
+  <p class="om-signin-body">A 6-digit code is on its way on WhatsApp to <b class="om-num">+91 98765 43210</b></p>
+  <div class="om-signin-code" style="margin-top:var(--s-24)" aria-hidden="true"><span class="om-signin-code-cell is-filled">4</span><span class="om-signin-code-cell is-filled">8</span><span class="om-signin-code-cell is-filled">2</span><span class="om-signin-code-cell is-filled">1</span><span class="om-signin-code-cell is-filled">9</span><span class="om-signin-code-cell is-filled">3</span></div>
+  <p class="om-signin-notice is-warning">Too many incorrect codes. Start again to get a new one.</p>
+  <div style="margin-top:var(--s-24)"><span class="x-btn x-btn-primary is-inert" role="button" aria-disabled="true">Verify</span></div>
+  <div style="margin-top:var(--s-16);display:flex;flex-direction:column;align-items:flex-start">
+    <span class="x-btn x-btn-text" role="button">Use a different number</span>
+  </div>
+</main>
+</div></div>
+<div class="x-col"><p class="x-label">No profiles: a verified number linked to nobody</p>
+<div class="x-phone is-board" style="height:440px"><div class="x-status"></div>
+<main class="om-signin-board is-top">
+  <h1 class="om-signin-title">Nothing linked yet</h1>
+  <p class="om-signin-reason">This number isn't linked to a student or a teacher on this device yet. Your school office can link it for you.</p>
+  <p class="om-signin-strong om-num">+91 98765 43210</p>
+  <span class="x-btn x-btn-stage" role="button" style="margin-top:var(--s-32);align-self:stretch">Try another number</span>
+</main>
+</div></div>
+</div>
+</body></html>

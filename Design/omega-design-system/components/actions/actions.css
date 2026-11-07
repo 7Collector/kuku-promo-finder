@@ -1,0 +1,279 @@
+/* Omega actions and forms. Translated from omega-kmp :ui designsystem:
+   OmegaButtons.kt, ChoiceChips.kt, SegmentedControl.kt, OmegaTextField.kt, DateTimeFields.kt,
+   OmegaSliderRow.kt, OmegaComposer.kt, OmegaSpinner.kt, OmegaPress.kt, OmegaPickerDialogs.kt, OmegaPrimitives.kt.
+   Literal numbers are the Kotlin's own one-off literals (or Material's fixed picker and slider geometry). */
+
+/* ── Press feedback (OmegaPress.kt) ─────────────────────────────────────────
+   The platform ripple tinted with ink, as a state layer: 8% on hover, 10% while pressed
+   (Material's ripple alphas). Tiles and cards that are one tap target also scale to 98%. */
+.om-pressable,.om-button,.om-chip,.om-segmented__option,.om-field__box--picker,.om-send,.om-composer__action{
+  position:relative;overflow:hidden;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.om-pressable::after,.om-button::after,.om-chip::after,.om-segmented__option::after,.om-field__box--picker::after,
+.om-send::after,.om-composer__action::after{
+  content:"";position:absolute;inset:0;border-radius:inherit;background:var(--ink);opacity:0;pointer-events:none;
+  transition:opacity var(--dur-fast) var(--ease-standard)}
+.om-pressable:hover::after,.om-button:hover::after,.om-chip:hover::after,.om-segmented__option:hover::after,
+.om-field__box--picker:hover::after,.om-send:hover::after,.om-composer__action:hover::after{opacity:.08}
+.om-pressable:active::after,.om-pressable.is-pressed::after,.om-button:active::after,.om-button.is-pressed::after,
+.om-chip:active::after,.om-chip.is-pressed::after,.om-segmented__option:active::after,.om-segmented__option.is-pressed::after,
+.om-field__box--picker:active::after,.om-field__box--picker.is-pressed::after,.om-send:active::after,.om-send.is-pressed::after,
+.om-composer__action:active::after{opacity:.10}
+.om-pressable--scale{transition:transform var(--dur-fast) var(--ease-standard)}
+.om-pressable--scale:active,.om-pressable--scale.is-pressed{transform:scale(.98)}
+@media (prefers-reduced-motion:reduce){.om-pressable--scale:active,.om-pressable--scale.is-pressed{transform:none}}
+/* Inert controls take no ripple. */
+.is-disabled,.is-loading,:disabled{cursor:default}
+.om-button.is-disabled,.om-button.is-loading,.om-button:disabled,.om-chip.is-disabled,.om-chip:disabled,
+.om-segmented.is-disabled .om-segmented__option,.om-field.is-disabled .om-field__box--picker,
+.om-send.is-disabled,.om-send:disabled{pointer-events:none}
+
+/* ── Text and icon helpers (OmegaPrimitives.kt) ─────────────────────────────
+   OmegaText ends in an ellipsis, never a mid-glyph clip, and has no line cap unless one is asked for. */
+.om-text{display:block;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.om-text--lines-1{white-space:nowrap}
+.om-text--lines-2,.om-text--lines-3{display:-webkit-box;-webkit-box-orient:vertical}
+.om-text--lines-2{-webkit-line-clamp:2;line-clamp:2}
+.om-text--lines-3{-webkit-line-clamp:3;line-clamp:3}
+/* OmegaIcon sizes used by the system: 20 is the composable's default, 18 in buttons, 16 the chip tick. */
+.om-icon--s16{--icon-size:16px}
+.om-icon--s18{--icon-size:18px}
+.om-icon--s20{--icon-size:20px}
+
+/* ── Spinner (OmegaSpinner.kt) ──────────────────────────────────────────────
+   <svg class="om-spinner" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8"/></svg>
+   18 px, 2 px stroke, accent mark by default; inside a control it takes the control's content colour. */
+.om-spinner{display:inline-block;flex:none;width:18px;height:18px;color:var(--accent-mark);
+  animation:om-spin 1333ms linear infinite}
+.om-spinner circle{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-dasharray:36 50.27}
+.om-spinner--danger{color:var(--danger-strong)}
+@keyframes om-spin{to{transform:rotate(360deg)}}
+
+/* ── Buttons (OmegaButtons.kt, buttonVisuals) ───────────────────────────────
+   48 px minimum height, radius md, 12 px vertical padding, 16 px horizontal (12 px for text-only).
+   A button that hugs its label uses the 13 px compact label; full-width and text-only use body strong. */
+.om-button{display:inline-flex;align-items:center;justify-content:center;gap:var(--s-8);
+  min-height:var(--min-touch-target);padding:calc(var(--s-12) - 1px) calc(var(--s-16) - 1px);
+  border:1px solid transparent;border-radius:var(--radius-md);
+  background:var(--accent);color:var(--on-accent);
+  font:var(--text-button-compact);letter-spacing:var(--track-button-compact);
+  text-decoration:none;white-space:nowrap;max-width:100%;vertical-align:middle}
+.om-button>.om-button__label{min-width:0;overflow:hidden;text-overflow:ellipsis}
+.om-button--wrap{white-space:normal;text-align:center}
+.om-button .om-icon{--icon-size:18px}
+.om-button .om-spinner{color:inherit}
+.om-button--compact{font:var(--text-button-compact);letter-spacing:var(--track-button-compact)}
+.om-button--full{display:flex;width:100%;font:var(--text-body-strong);letter-spacing:var(--track-body-strong)}
+
+.om-button--primary{background:var(--accent);color:var(--on-accent)}
+.om-button--secondary{background:var(--surface);color:var(--ink);border-color:var(--outline)}
+.om-button--tertiary,.om-button--destructive{background:transparent;
+  padding-left:calc(var(--s-12) - 1px);padding-right:calc(var(--s-12) - 1px);
+  font:var(--text-body-strong);letter-spacing:var(--track-body-strong)}
+.om-button--tertiary{color:var(--accent-text)}
+.om-button--destructive{color:var(--danger-strong)}
+/* The filled danger button: only as the confirm of a destructive confirmation dialog, never in flow. */
+.om-button--danger-fill{background:var(--danger-strong);color:var(--surface);border-color:transparent}
+
+/* On the board: primary inverts, secondary takes a raised fill and a board rule, text-only takes board colours. */
+.om-button--on-board.om-button--primary{background:var(--on-board);color:var(--ink)}
+.om-button--on-board.om-button--secondary{background:var(--board-raised);color:var(--on-board);border-color:var(--board-rule)}
+.om-button--on-board.om-button--tertiary{color:var(--on-board)}
+.om-button--on-board.om-button--destructive{color:var(--danger-on-board)}
+
+/* Disabled and loading share one look; the style stops mattering once nothing can be tapped. */
+.om-button.is-disabled,.om-button.is-loading,.om-button:disabled{background:var(--sunken);color:var(--ink-3);border-color:transparent}
+.om-button--tertiary.is-disabled,.om-button--tertiary.is-loading,.om-button--tertiary:disabled,
+.om-button--destructive.is-disabled,.om-button--destructive.is-loading,.om-button--destructive:disabled{
+  background:transparent;color:var(--ink-3)}
+.om-button--on-board.om-button--tertiary.is-disabled,.om-button--on-board.om-button--tertiary.is-loading,
+.om-button--on-board.om-button--tertiary:disabled,.om-button--on-board.om-button--destructive.is-disabled,
+.om-button--on-board.om-button--destructive.is-loading,.om-button--on-board.om-button--destructive:disabled{
+  color:var(--on-board-2)}
+
+/* ── Choice chips and toggle chips (ChoiceChips.kt, selectionChipVisuals) ───
+   Pill, 48 px minimum height, 16 by 8 padding, subhead at weight 500. Chosen: accent container and a 16 px tick. */
+.om-chip{display:inline-flex;flex:none;align-items:center;justify-content:center;gap:var(--s-4);
+  min-height:var(--min-touch-target);padding:calc(var(--s-8) - 1px) calc(var(--s-16) - 1px);
+  border:1px solid var(--outline);border-radius:var(--radius-full);
+  background:var(--surface);color:var(--ink-2);
+  font:var(--text-subhead);font-weight:500;letter-spacing:var(--track-subhead);white-space:nowrap}
+.om-chip .om-icon{--icon-size:16px}
+.om-chip.is-selected{background:var(--accent-container);color:var(--on-accent-container);border-color:transparent}
+.om-chip.is-disabled,.om-chip:disabled{background:var(--sunken);color:var(--ink-3);border-color:var(--outline)}
+/* ChoiceChips: one scrolling row, page-margin padding so the first chip sits on the keyline. */
+.om-chips{display:flex;gap:var(--inline-gap);padding:0 var(--page-margin);overflow-x:auto;scrollbar-width:none}
+.om-chips::-webkit-scrollbar{display:none}
+
+/* ── Segmented control (SegmentedControl.kt) ────────────────────────────────
+   A sunken pill track with a 2 px inset; a surface thumb slides under the chosen option.
+   Set --om-segment-count and --om-segment-index on the track; add .is-empty when nothing is chosen. */
+.om-segmented{position:relative;display:flex;width:100%;padding:2px;border-radius:var(--radius-full);background:var(--sunken);
+  --om-segment-count:2;--om-segment-index:0;--om-segment-thumb:var(--surface);--om-segment-on-thumb:var(--ink)}
+.om-segmented::before{content:"";position:absolute;top:2px;bottom:2px;left:2px;
+  width:calc((100% - 4px) / var(--om-segment-count));border-radius:var(--radius-full);background:var(--om-segment-thumb);
+  transform:translateX(calc(100% * var(--om-segment-index)));
+  transition:transform var(--dur-standard) var(--ease-standard),background-color var(--dur-standard) var(--ease-standard)}
+.om-segmented.is-empty::before{display:none}
+.om-segmented__option{flex:1 1 0;min-width:0;display:flex;align-items:center;justify-content:center;
+  min-height:var(--min-touch-target);padding:var(--s-8);border-radius:var(--radius-full);
+  font:var(--text-subhead);letter-spacing:var(--track-subhead);color:var(--ink-2);text-align:center}
+.om-segmented__option>span{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden}
+.om-segmented__option.is-selected{font-weight:500;color:var(--om-segment-on-thumb)}
+.om-segmented.is-disabled .om-segmented__option{color:var(--ink-3)}
+/* A status tone for the chosen option only (an RSVP's "Going" is success, "Not going" danger). */
+.om-segmented--info{--om-segment-thumb:var(--info-container);--om-segment-on-thumb:var(--info-on-container)}
+.om-segmented--help{--om-segment-thumb:var(--help-container);--om-segment-on-thumb:var(--help-on-container)}
+.om-segmented--tip{--om-segment-thumb:var(--tip-container);--om-segment-on-thumb:var(--tip-on-container)}
+.om-segmented--success{--om-segment-thumb:var(--success-container);--om-segment-on-thumb:var(--success-on-container)}
+.om-segmented--warning{--om-segment-thumb:var(--warning-container);--om-segment-on-thumb:var(--warning-on-container)}
+.om-segmented--danger{--om-segment-thumb:var(--danger-container);--om-segment-on-thumb:var(--danger-on-container)}
+.om-segmented--neutral{--om-segment-thumb:var(--neutral-container);--om-segment-on-thumb:var(--neutral-on-container)}
+
+/* ── Text field and text area (OmegaTextField.kt, fieldVisuals) ─────────────
+   Label above, never floating. The container is surface with an outline border; the border, not the
+   fill, is what marks it as a field. Focus changes nothing but the caret, as in the source. */
+.om-field{display:flex;flex-direction:column;min-width:0}
+.om-field__label{font:var(--text-subhead);font-weight:500;letter-spacing:var(--track-subhead);color:var(--ink);
+  margin-bottom:var(--s-8)}
+.om-field__box{display:flex;align-items:flex-start;width:100%;min-height:var(--min-touch-target);
+  padding:calc(var(--s-12) - 1px);border:1px solid var(--outline);border-radius:var(--radius-md);
+  background:var(--surface);color:var(--ink);font:var(--text-body);letter-spacing:var(--track-body);text-align:left}
+.om-field__input{display:block;flex:1;min-width:0;width:100%;margin:0;padding:0;border:0;border-radius:0;background:none;
+  outline:none;resize:none;font:inherit;letter-spacing:inherit;color:inherit;text-align:inherit;
+  caret-color:var(--accent-mark);overflow-wrap:anywhere}
+.om-field__input:focus-visible{box-shadow:none}
+.om-field__input::placeholder{color:var(--ink-3);opacity:1}
+.om-field__placeholder{color:var(--ink-3)}
+/* A drawn caret for static mock-ups of the focused state: 2 px, accent mark (danger in error). */
+.om-field__caret{display:inline-block;width:2px;height:20px;margin-left:1px;vertical-align:-4px;background:var(--accent-mark)}
+.om-field__support{font:var(--text-caption);letter-spacing:var(--track-caption);color:var(--ink-3);margin-top:var(--s-4)}
+/* Text area: at least three lines, growing with its text. */
+.om-field--area .om-field__input{min-height:72px}
+.om-field--center .om-field__box{text-align:center}
+/* Error: the message is required whenever the state is on; colour never carries it alone. */
+.om-field.is-error .om-field__box{border-color:var(--danger-strong);color:var(--danger-strong)}
+.om-field.is-error .om-field__input{caret-color:var(--danger-strong)}
+.om-field.is-error .om-field__caret{background:var(--danger-strong)}
+.om-field.is-error .om-field__support{color:var(--danger-strong)}
+/* A value that carries meaning (a score box): outline and ink in the given colour. Ignored when disabled or in error. */
+.om-field--accent:not(.is-error):not(.is-disabled) .om-field__box{
+  border-color:var(--om-field-accent,var(--success-strong));color:var(--om-field-accent,var(--success-strong))}
+.om-field.is-disabled .om-field__box{background:var(--sunken);border-color:var(--hairline);color:var(--ink-3)}
+/* Bare: no container, for a field whose surroundings already are one (the composer). */
+.om-field--bare .om-field__box{min-height:0;padding:0;border:0;border-radius:0;background:none}
+
+/* ── Date and time fields (DateTimeFields.kt, PickerField) ──────────────────
+   The text-field container as a button: the value, then a 20 px calendar or clock glyph in ink 2. */
+.om-field__box--picker{align-items:center;gap:var(--s-8)}
+.om-field__value{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.om-field__box--picker .om-icon{--icon-size:20px;color:var(--ink-2)}
+
+/* ── Slider row (OmegaSliderRow.kt, Material 3 slider in Omega colours) ─────
+   Name left, printed value right, the track underneath. Set --om-slider-value from 0 to 1. */
+.om-slider-row{display:flex;flex-direction:column;width:100%}
+.om-slider-row__head{display:flex;align-items:center;gap:var(--s-12)}
+.om-slider-row__label{flex:1;min-width:0;font:var(--text-subhead);letter-spacing:var(--track-subhead);color:var(--ink);
+  overflow:hidden;text-overflow:ellipsis}
+.om-slider-row__value{font:var(--text-body-strong);letter-spacing:var(--track-body-strong);font-feature-settings:"tnum";
+  color:var(--ink);white-space:nowrap}
+.om-slider{position:relative;display:flex;align-items:center;width:100%;height:44px;color:var(--accent-mark);
+  --om-slider-value:.5}
+.om-slider__active{flex:none;width:calc((100% - 16px) * var(--om-slider-value));height:16px;
+  border-radius:8px 2px 2px 8px;background:currentColor}
+.om-slider__thumb{flex:none;width:4px;height:44px;margin:0 6px;border-radius:var(--radius-full);background:currentColor}
+.om-slider__inactive{position:relative;flex:1;min-width:0;height:16px;border-radius:2px 8px 8px 2px;background:var(--sunken)}
+/* The stop mark at the far end of a continuous slider. A stepped slider's ticks match their track and do not show. */
+.om-slider__inactive::after{content:"";position:absolute;right:6px;top:6px;width:4px;height:4px;border-radius:50%;background:currentColor}
+.om-slider--stepped .om-slider__inactive::after{display:none}
+.om-slider-row.is-disabled .om-slider{color:var(--ink-3)}
+
+/* ── Composer (OmegaComposer.kt) ────────────────────────────────────────────
+   A surface pill with an outline border and 4 px padding, controls bottom-aligned so a long draft grows upward.
+   While focused, a 1.5 px AI gradient ring fades in over the border. */
+.om-composer{position:relative;display:flex;align-items:flex-end;width:100%;padding:var(--om-composer-padding,var(--s-4));
+  border-radius:var(--radius-full);background:var(--surface);box-shadow:inset 0 0 0 1px var(--outline)}
+.om-composer::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1.5px;background:var(--ai-gradient);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);
+  opacity:0;pointer-events:none;transition:opacity var(--dur-standard) linear}
+.om-composer.is-focused::before,.om-composer:focus-within::before{opacity:1}
+/* The bare text field inside: takes the round controls' 48 px height and centres its one line in it. */
+.om-composer__field{flex:1;min-width:0;display:flex;align-items:center;min-height:var(--min-touch-target);max-height:132px;
+  padding:0 var(--s-2)}
+.om-composer__field .om-field__box{align-items:center}
+/* Send: a 40 px circle in a 48 px target. AI gradient with a paper arrow when there is something to send. */
+.om-send{display:inline-flex;flex:none;align-items:center;justify-content:center;width:var(--min-touch-target);
+  height:var(--min-touch-target);border-radius:var(--radius-full)}
+.om-send__circle{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:var(--radius-full);
+  background:var(--ai-gradient);color:var(--paper)}
+.om-send .om-icon{--icon-size:20px}
+.om-send.is-disabled .om-send__circle,.om-send:disabled .om-send__circle{background:var(--sunken);color:var(--ink-3)}
+/* Slot content as the school app's AI composer fills it (attach, stop): a 40 px circle, 18 px glyph. */
+.om-composer__action{display:inline-flex;flex:none;align-items:center;justify-content:center;width:var(--min-touch-target);
+  height:var(--min-touch-target);border-radius:var(--radius-full)}
+.om-composer__action>span{display:flex;align-items:center;justify-content:center;width:40px;height:40px;
+  border-radius:var(--radius-full);background:var(--sunken);color:var(--ink-2)}
+.om-composer__action--stop>span{background:var(--ink);color:var(--paper)}
+.om-composer__action .om-icon{--icon-size:18px}
+
+/* ── Picker dialogs (OmegaPickerDialogs.kt) ─────────────────────────────────
+   A surface card, radius xl, over the window scrim; headline title, Material's picker in Omega colours,
+   then Cancel (secondary) and Done (primary) at the trailing edge. No shadow: dialog elevation resolves to none. */
+.om-picker-scrim{display:flex;justify-content:center;padding:var(--s-24) var(--s-16);background:var(--scrim)}
+.om-picker-dialog{display:flex;flex-direction:column;align-items:center;width:100%;max-width:420px;
+  padding:var(--s-24) var(--om-picker-padding,var(--s-24));border-radius:var(--radius-xl);background:var(--surface);
+  --om-picker-keyline:calc(var(--s-24) - var(--om-picker-padding,var(--s-24)))}
+.om-picker-dialog--date{--om-picker-padding:var(--s-12)}
+.om-picker-dialog__title{align-self:stretch;padding:0 var(--om-picker-keyline);margin-bottom:var(--s-16);
+  font:var(--text-headline);letter-spacing:var(--track-headline);color:var(--ink)}
+.om-picker-dialog__actions{align-self:stretch;display:flex;justify-content:flex-end;align-items:center;gap:var(--inline-gap);
+  padding:0 var(--om-picker-keyline);margin-top:var(--s-8)}
+
+/* Time picker: the field being edited in accent container, the other sunken; a sunken clock face;
+   hand and chosen number in accent. Sizes are Material's fixed clock geometry. */
+.om-time-picker{display:flex;flex-direction:column;align-items:center}
+.om-time-picker__display{display:flex;align-items:center;margin-bottom:36px}
+.om-time-picker__unit{display:flex;align-items:center;justify-content:center;width:96px;height:80px;
+  border-radius:var(--radius-md);background:var(--sunken);color:var(--ink);
+  font:var(--text-display);letter-spacing:var(--track-display);font-feature-settings:"tnum"}
+.om-time-picker__unit.is-selected{background:var(--accent-container);color:var(--on-accent-container)}
+.om-time-picker__separator{width:24px;text-align:center;font:var(--text-display);color:var(--ink)}
+/* 12-hour clocks only: the AM/PM selector beside the time. */
+.om-time-picker__period{display:flex;flex-direction:column;width:52px;height:80px;margin-left:var(--s-12);
+  border:1px solid var(--outline);border-radius:var(--radius-md);overflow:hidden}
+.om-time-picker__period>span{flex:1;display:flex;align-items:center;justify-content:center;
+  font:var(--text-body-strong);letter-spacing:var(--track-body-strong);color:var(--ink-2)}
+.om-time-picker__period>span+span{border-top:1px solid var(--outline)}
+.om-time-picker__period>span.is-selected{background:var(--accent-container);color:var(--on-accent-container)}
+.om-time-picker__dial{position:relative;width:256px;height:256px;border-radius:50%;background:var(--sunken)}
+.om-time-picker__number{position:absolute;left:50%;top:50%;width:48px;height:48px;margin:-24px 0 0 -24px;
+  display:flex;align-items:center;justify-content:center;border-radius:50%;
+  font:var(--text-body);letter-spacing:var(--track-body);font-feature-settings:"tnum";color:var(--ink);
+  transform:rotate(var(--om-dial-angle)) translateY(-101px) rotate(calc(-1 * var(--om-dial-angle)))}
+.om-time-picker__number--inner{font:var(--text-subhead);letter-spacing:var(--track-subhead);
+  transform:rotate(var(--om-dial-angle)) translateY(-69px) rotate(calc(-1 * var(--om-dial-angle)))}
+.om-time-picker__number.is-selected{background:var(--accent);color:var(--on-accent)}
+.om-time-picker__hand{position:absolute;left:50%;bottom:50%;width:2px;height:101px;margin-left:-1px;background:var(--accent);
+  transform-origin:50% 100%;transform:rotate(var(--om-dial-angle))}
+.om-time-picker__hand--inner{height:69px}
+.om-time-picker__hand::after{content:"";position:absolute;left:-3px;bottom:-4px;width:8px;height:8px;border-radius:50%;
+  background:var(--accent)}
+
+/* Date picker: selected day in accent, today ringed in accent mark, 48 px day cells with a 40 px circle. */
+.om-date-picker{align-self:stretch;display:flex;flex-direction:column}
+.om-date-picker__headline{padding:0 var(--s-12) var(--s-12) var(--s-24);
+  font:var(--text-title-large);letter-spacing:var(--track-title-large);color:var(--ink)}
+.om-date-picker__rule{height:1px;background:var(--hairline)}
+.om-date-picker__nav{display:flex;align-items:center;height:48px;padding:0 0 0 var(--s-24);color:var(--ink-2)}
+.om-date-picker__month{display:inline-flex;align-items:center;gap:var(--s-8);margin-right:auto;
+  font:var(--text-body-strong);letter-spacing:var(--track-body-strong);color:var(--ink-2)}
+.om-date-picker__month .om-icon{--icon-size:18px;transform:rotate(90deg)}
+.om-date-picker__arrow{display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;color:var(--ink-2)}
+.om-date-picker__week{display:flex;justify-content:space-evenly;padding:0 var(--s-12)}
+.om-date-picker__weekday,.om-date-picker__day{flex:none;display:flex;align-items:center;justify-content:center;
+  width:48px;height:48px;font:var(--text-body);letter-spacing:var(--track-body);font-feature-settings:"tnum"}
+.om-date-picker__weekday{color:var(--ink-2)}
+.om-date-picker__day{color:var(--ink)}
+.om-date-picker__day>span{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%}
+.om-date-picker__day.is-today>span{border:1px solid var(--accent-mark);color:var(--accent-text)}
+.om-date-picker__day.is-selected>span{border:0;background:var(--accent);color:var(--on-accent)}

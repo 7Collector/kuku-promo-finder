@@ -1,0 +1,26 @@
+<!-- @dsCard group="Overlays and feedback" viewport="700x626" name="Loading, empty and error states" subtitle="Skeleton lines and rows, empty state with and without an action, error callout with title and retry" -->
+<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../../styles.css">
+<style>
+body{padding:20px}
+.x-row{display:flex;gap:20px;align-items:flex-end}
+.x-row+.x-row{margin-top:20px}
+.x-col{display:flex;flex-direction:column;gap:8px;min-width:0}
+.x-label{font:var(--text-caption);color:var(--ink-3)}
+.x-frame{position:relative;overflow:hidden;border-radius:24px;background:var(--paper);outline:1px solid var(--hairline);--status-bar-inset:24px}
+.x-phone{width:360px;--page-margin:var(--s-20)}
+.x-frame .om-scrim{z-index:2}
+.x-frame .om-action-sheet,.x-frame .om-bottom-sheet,.x-frame .om-dialog-host,.x-frame .om-feedback-area{z-index:3}
+.x-status{position:absolute;top:0;left:0;right:0;z-index:1;display:flex;align-items:center;height:24px;padding:0 20px;font:var(--text-caption);color:var(--ink-2);font-feature-settings:"tnum"}
+.x-btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 16px;border-radius:var(--radius-md);font:var(--text-button-compact);white-space:nowrap}
+.x-btn--primary{background:var(--accent);color:var(--on-accent)}
+.x-btn--secondary{background:var(--surface);color:var(--ink);border:1px solid var(--outline)}
+.x-btn--tertiary{padding:12px;color:var(--accent-text);font:var(--text-body-strong)}
+.x-btn--danger{background:var(--danger-strong);color:var(--surface)}
+.x-btn--full{width:100%;font:var(--text-body-strong)}
+.x-btn--inherit{color:inherit}
+.x-iconbtn{display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:var(--radius-full);color:var(--ink-2)}
+.x-row{align-items:flex-start}
+</style>
+</head><body>
+<div class="x-row"><div class="x-col" style="width:320px;gap:12px"><div class="x-label">Skeleton: text lines, 16 tall</div><div class="om-skeleton"></div><div class="om-skeleton" style="width:70%"></div><div class="om-skeleton" style="width:45%"></div><div class="x-label" style="margin-top:12px">Skeleton: rows, 56 tall</div><div class="om-skeleton" style="--skeleton-height:56px"></div><div class="om-skeleton" style="--skeleton-height:56px"></div><div class="om-skeleton" style="--skeleton-height:56px"></div><div class="x-label" style="margin-top:12px">Empty state: one line</div><div class="om-empty-state"><div class="om-empty-state-text">No notices this week</div></div><div class="x-label">Empty state with a tertiary action</div><div class="om-empty-state"><div class="om-empty-state-text">No homework yet</div><button class="x-btn x-btn--tertiary">Add task</button></div></div><div class="x-col" style="width:320px;gap:12px"><div class="x-label">Error state: message only</div><div class="om-error-state" role="alert"><i class="om-icon om-icon-octagon-alert"></i><div class="om-state-body"><div class="om-state-text">Couldn't load the timetable.</div></div></div><div class="x-label" style="margin-top:12px">Error state with retry</div><div class="om-error-state" role="alert"><i class="om-icon om-icon-octagon-alert"></i><div class="om-state-body"><div class="om-state-text">Couldn't load results. Your saved copy is below.</div><button class="x-btn x-btn--tertiary x-btn--inherit">Retry</button></div></div><div class="x-label" style="margin-top:12px">Error state with a title and retry</div><div class="om-error-state" role="alert"><i class="om-icon om-icon-octagon-alert"></i><div class="om-state-body"><div class="om-state-title">Attendance not sent</div><div class="om-state-text">Three marks are still on this phone. Check your connection and try again.</div><button class="x-btn x-btn--tertiary x-btn--inherit">Retry</button></div></div></div></div>
+</body></html>

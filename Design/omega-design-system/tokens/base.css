@@ -1,0 +1,9 @@
+/* Omega base: paper ground, ink text, Inter. The app is light regardless of system night mode. */
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font:var(--text-body);letter-spacing:var(--track-body);
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+p,h1,h2,h3,h4,figure{margin:0}
+button,input,textarea,select{font:inherit;color:inherit;letter-spacing:inherit}
+button{background:none;border:0;padding:0;cursor:pointer}
+:focus-visible{outline:none;box-shadow:var(--ring-focus)}

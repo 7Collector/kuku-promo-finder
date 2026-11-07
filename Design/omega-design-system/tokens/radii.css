@@ -1,0 +1,8 @@
+/* Omega corner radii by component class. Nested radius = outer minus inset. */
+:root{
+  --radius-xs: 6px; /* status badges */
+  --radius-md: 12px; /* buttons, inputs, tiles, date leaf, calendar cells */
+  --radius-lg: 16px; /* grouped lists, cards, callouts */
+  --radius-xl: 24px; /* the board, sheet top corners */
+  --radius-full: 9999px; /* avatars, choice chips, segmented thumb, composer */
+}

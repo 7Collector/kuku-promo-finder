@@ -1,0 +1,42 @@
+<!-- @dsCard group="Status" viewport="700x426" name="Status badges, pills and subject tags" subtitle="Seven tones; badge with and without icon; pill with dot or icon; subject tags" -->
+<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../../styles.css">
+<style>body{padding:20px}.cols{display:flex;gap:20px;align-items:flex-start}.col{flex:1;min-width:0}.lbl{font:var(--text-caption);color:var(--ink-3);margin:0 0 8px}.lbl:not(:first-child){margin-top:20px}.stack{display:flex;flex-direction:column;gap:12px}.wrap{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.x-tertiary{display:inline-flex;align-items:center;gap:8px;min-height:48px;padding:12px;border-radius:var(--radius-md);font:var(--text-body-strong);color:var(--accent-text);--icon-size:18px}</style>
+</head><body>
+<p class="lbl">Status badge</p><div class="wrap">
+<span class="om-status-badge om-status-badge--info">New</span>
+<span class="om-status-badge om-status-badge--help">Needs reply</span>
+<span class="om-status-badge om-status-badge--tip">Revision</span>
+<span class="om-status-badge om-status-badge--success">Submitted</span>
+<span class="om-status-badge om-status-badge--warning">Due today</span>
+<span class="om-status-badge om-status-badge--danger">Overdue</span>
+<span class="om-status-badge om-status-badge--neutral">On leave</span>
+</div><p class="lbl">Status badge with the tone icon</p><div class="wrap">
+<span class="om-status-badge om-status-badge--info"><i class="om-icon om-icon-info-circle"></i>New</span>
+<span class="om-status-badge om-status-badge--help"><i class="om-icon om-icon-help"></i>Needs reply</span>
+<span class="om-status-badge om-status-badge--tip"><i class="om-icon om-icon-lightbulb"></i>Revision</span>
+<span class="om-status-badge om-status-badge--success"><i class="om-icon om-icon-check-circle"></i>Submitted</span>
+<span class="om-status-badge om-status-badge--warning"><i class="om-icon om-icon-warning"></i>Due today</span>
+<span class="om-status-badge om-status-badge--danger"><i class="om-icon om-icon-octagon-alert"></i>Overdue</span>
+<span class="om-status-badge om-status-badge--neutral"><i class="om-icon om-icon-info-circle"></i>On leave</span>
+</div><p class="lbl">Status pill: dot, icon, plain</p><div class="wrap">
+<span class="om-status-pill om-status-pill--success"><span class="om-status-pill__dot"></span>Live</span>
+<span class="om-status-pill om-status-pill--warning"><span class="om-status-pill__dot"></span>Last updated 23 seconds ago</span>
+<span class="om-status-pill om-status-pill--danger"><i class="om-icon om-icon-octagon-alert"></i>Bus stopped</span>
+<span class="om-status-pill om-status-pill--info"><i class="om-icon om-icon-info-circle"></i>Class in progress</span>
+<span class="om-status-pill om-status-pill--help">Reply needed</span>
+<span class="om-status-pill om-status-pill--tip">Revision week</span>
+<span class="om-status-pill om-status-pill--neutral">Not started</span>
+</div>
+<p class="lbl">Status pill wrapping a long age to two lines</p>
+<div style="width:190px;display:flex"><span class="om-status-pill om-status-pill--warning"><span class="om-status-pill__dot"></span>Last updated 4 minutes and 12 seconds ago</span></div>
+<p class="lbl">Subject tag: the dot is a key, the name is the meaning</p><div class="wrap" style="gap:8px 20px">
+<span class="om-subject-tag om-subject-tag--1"><span class="om-subject-tag__dot"></span>Mathematics</span>
+<span class="om-subject-tag om-subject-tag--2"><span class="om-subject-tag__dot"></span>Physics</span>
+<span class="om-subject-tag om-subject-tag--3"><span class="om-subject-tag__dot"></span>Chemistry</span>
+<span class="om-subject-tag om-subject-tag--4"><span class="om-subject-tag__dot"></span>Biology</span>
+<span class="om-subject-tag om-subject-tag--5"><span class="om-subject-tag__dot"></span>English</span>
+<span class="om-subject-tag om-subject-tag--6"><span class="om-subject-tag__dot"></span>Hindi</span>
+<span class="om-subject-tag om-subject-tag--7"><span class="om-subject-tag__dot"></span>History</span>
+<span class="om-subject-tag om-subject-tag--8"><span class="om-subject-tag__dot"></span>Geography</span>
+</div>
+</body></html>

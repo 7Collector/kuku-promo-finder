@@ -1,0 +1,44 @@
+<!-- @dsCard group="Forms" viewport="700x1048" name="Text field and text area" subtitle="Empty, filled, focused, error, disabled, supporting text, value accent, text area, bare" -->
+<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../../styles.css">
+<style>body{padding:20px}.lab{font:var(--text-caption);color:var(--ink-2);margin:0 0 8px}.lab:not(:first-child){margin-top:20px}.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.cols{display:grid;grid-template-columns:1fr 1fr;gap:20px 16px;align-items:start}.surf{background:var(--surface);border-radius:var(--radius-lg);padding:16px}.board{background:var(--board);border-radius:var(--radius-xl);padding:20px}</style>
+</head><body>
+<div class="surf"><div class="cols">
+  <div class="om-field"><label class="om-field__label">Homework title</label>
+    <div class="om-field__box"><input class="om-field__input" placeholder="Chapter 4 worksheet" aria-label="Homework title"></div>
+    <p class="om-field__support">Shown to every section you pick below</p></div>
+  <div class="om-field"><label class="om-field__label">Homework title</label>
+    <div class="om-field__box"><input class="om-field__input" value="Chapter 4 worksheet" aria-label="Homework title"></div></div>
+  <div class="om-field"><label class="om-field__label">Focused: only the caret changes</label>
+    <div class="om-field__box"><div class="om-field__input">Revise trigonometry<span class="om-field__caret"></span></div></div></div>
+  <div class="om-field is-error"><label class="om-field__label">Mobile number</label>
+    <div class="om-field__box"><input class="om-field__input" value="98765" aria-label="Mobile number" aria-invalid="true"></div>
+    <p class="om-field__support">Enter a 10-digit number</p></div>
+  <div class="om-field is-disabled"><label class="om-field__label">Class teacher</label>
+    <div class="om-field__box"><input class="om-field__input" value="Mrs Anjali Raghavan" aria-label="Class teacher" disabled></div>
+    <p class="om-field__support">Set by the school office</p></div>
+  <div class="om-field"><div class="om-field__box"><input class="om-field__input" placeholder="No label: search students" aria-label="Search students"></div></div>
+</div></div>
+<p class="lab">A value that carries meaning: the grading sheet's score box, tinted by where the mark falls</p>
+<div class="surf"><div class="row" style="gap:12px">
+  <div class="om-field om-field--accent om-field--center" style="width:72px;--om-field-accent:var(--success-strong)"><div class="om-field__box"><input class="om-field__input om-num" value="42" aria-label="Marks for Aarav Sharma"></div></div>
+  <div class="om-field om-field--accent om-field--center" style="width:72px;--om-field-accent:var(--warning-strong)"><div class="om-field__box"><input class="om-field__input om-num" value="17" aria-label="Marks for Diya Patel"></div></div>
+  <div class="om-field om-field--center" style="width:72px"><div class="om-field__box"><input class="om-field__input" placeholder="–" aria-label="Marks for Kabir Singh"></div></div>
+  <p class="om-subhead" style="color:var(--ink-2)">out of 50</p>
+</div></div>
+<p class="lab">Text area: at least three lines, growing with its text</p>
+<div class="surf"><div class="cols">
+  <div class="om-field om-field--area"><label class="om-field__label">Notes</label>
+    <div class="om-field__box"><textarea class="om-field__input" rows="3" placeholder="Anything to bring?" aria-label="Notes"></textarea></div></div>
+  <div class="om-field om-field--area"><label class="om-field__label">Instructions</label>
+    <div class="om-field__box"><div class="om-field__input">Solve questions 1 to 12 from exercise 4.2 in your maths notebook. Show every step, and bring the notebook on Thursday for checking.</div></div>
+    <p class="om-field__support">Students see this with the homework</p></div>
+  <div class="om-field om-field--area is-error"><label class="om-field__label">Reason for leave</label>
+    <div class="om-field__box"><textarea class="om-field__input" rows="3" aria-label="Reason for leave" aria-invalid="true">Sick</textarea></div>
+    <p class="om-field__support">Add a few more words so the class teacher can approve it</p></div>
+  <div class="om-field om-field--area is-disabled"><label class="om-field__label">Teacher's remark</label>
+    <div class="om-field__box"><textarea class="om-field__input" rows="3" aria-label="Teacher's remark" disabled>Neat work. Revise the sine rule before the unit test.</textarea></div></div>
+</div></div>
+<p class="lab">Bare: no container, where the surroundings already are one</p>
+<div class="surf"><div class="row" style="flex-wrap:nowrap;gap:12px"><span class="om-body-strong om-num">+91</span>
+  <div class="om-field om-field--bare" style="flex:1"><div class="om-field__box"><input class="om-field__input" placeholder="Mobile number" aria-label="Mobile number"></div></div></div></div>
+</body></html>

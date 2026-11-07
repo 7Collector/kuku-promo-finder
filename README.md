@@ -1,36 +1,61 @@
 # 🎬 Kuku Promo Finder — AI Microdrama Acquisition Engine
 
 > Automated scroll-stopping promo discovery for vertical microdramas (Instagram Reels, TikTok, YouTube Shorts).  
-> Built for the **Kuku AI Generalist Assignment (Problem 1: Find the Promos)**.
+> Built for the **Kuku AI Generalist Assignment (Problem 1: Find the Promos)**.  
+> Styled with the **Omega Design System** and engineered for instant **Vercel** deployment.
 
 ---
 
-## ⚡ Quickstart
+## 🚀 Vercel & Web Quickstart
 
-### 1. Setup Environment
+This application is built with **Next.js (App Router)** and TypeScript, engineered to deploy directly to Vercel with zero configuration.
+
+### 1. Run Web Application Locally
 ```bash
+npm install
+npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000) to view:
+- **`\` (Ranked Promos):** Featured Hero Board card, archetype filter chips, search, and detail modal.
+- **`\analyze` (Reusable Cut Tool):** Interactive tester to evaluate any custom screenplay cut against the taxonomy, duration bounds, and adversarial auditor.
+- **`\episodes` (Screenplay Inspector):** 50-episode browser with millisecond beat breakdowns.
+
+### 2. Deploy to Vercel
+Simply push to GitHub and import into Vercel:
+```bash
+# Or via Vercel CLI:
+vercel
+```
+Vercel automatically detects Next.js, builds the static pages and serverless API routes (`/api/promos`, `/api/analyze`, `/api/episodes`, `/api/taxonomy`).
+
+---
+
+## 🐍 Python Core Pipeline Quickstart
+
+```bash
+# 1. Setup Python Environment
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
+
+# 2. Run Pipeline (50 Episodes in <2 seconds)
+PYTHONPATH=. python3 run.py
+
+# 3. Run Standard Unit Test Suite
+PYTHONPATH=. python3 -m unittest discover tests
 ```
 
-### 2. Run Pipeline (50 Episodes in <2 seconds)
-```bash
-python run.py
-```
-Outputs are automatically generated in:
-- `outputs/promos.json` — Unedited raw structured data
-- `outputs/PROMOS.md` — Human-readable ranked report with quotes and quality audits
+---
 
-### 3. Run Unit Test Suite
-```bash
-python3 -m unittest discover tests
-```
+## 🏛️ Omega Design System Implementation
 
-### 4. Launch Interactive Streamlit Dashboard
-```bash
-streamlit run app.py
-```
+The web interface is built using the **Omega Design System** (`Design/omega-design-system`):
+- **Quiet Paper & Ink:** Surfaces sit on `--paper` (`#F2F3F0`) with white surface cards (`#FFFFFF`) and hairlines (`#DADCD7`). No harsh drop shadows.
+- **The One Dark Board:** The #1 ranked promo is presented on the focal dark surface (`--board: #1C2422`) with glowing accent mark.
+- **Ballpoint Accent:** `--accent: #2B4FD8` for interactive controls, tabs, and focus states.
+- **Tabular Figures:** Numbers (times, scores, counts, percentages) use `.om-num` (`font-feature-settings: "tnum"`).
+- **The AI Gradient:** `--ai-gradient` is used strictly as a mark/sparkle for AI-derived dramatic scores and audits.
+- **Sentence Case:** Consistent sentence case everywhere (no all-caps).
 
 ---
 
@@ -45,29 +70,27 @@ The pipeline implements the **Provider Strategy Pattern** (`src/providers/`):
 To run with a live provider:
 ```bash
 export GEMINI_API_KEY="your-gemini-key"
-python run.py --provider gemini
+python3 run.py --provider gemini
 
 # Or with OpenAI:
 export OPENAI_API_KEY="your-openai-key"
-python run.py --provider openai
+python3 run.py --provider openai
 
 # Or with Claude:
 export ANTHROPIC_API_KEY="your-anthropic-key"
-python run.py --provider anthropic
+python3 run.py --provider anthropic
 ```
 
 ---
 
-## 🎯 Strategic Framing & Approach 3 Architecture
-
-Microdramas thrive on high emotional asymmetry—specifically, **unearned injustice without immediate payoff ("blood boils")** paired with **withheld catharsis** (cutting right before comeuppance).
+## 🎯 Architecture & Pipeline Stages
 
 ```
 [Screenplays (.txt)]
         │
         ▼
 [Stage 1: Deterministic Screenplay Parser (src/parser.py)]
-   • Extracts 3,727 beats across 50 episodes with sub-second timestamps
+   • Extracts 3,727 beats across 50 episodes with millisecond timestamps
         │
         ▼
 [Stage 2: Candidate Discovery & Taxonomy Tagging (src/extractor.py)]
@@ -85,7 +108,7 @@ Microdramas thrive on high emotional asymmetry—specifically, **unearned injust
    • Flags resolution leaks, context deficits, and visual dependencies
         │
         ▼
-[Outputs: outputs/promos.json & outputs/PROMOS.md & Streamlit UI]
+[Deliverables: Next.js Web App / Vercel + outputs/promos.json + outputs/PROMOS.md]
 ```
 
 ---
@@ -93,6 +116,21 @@ Microdramas thrive on high emotional asymmetry—specifically, **unearned injust
 ## 📁 Repository Structure
 
 ```
+├── app/                      # Next.js App Router (Vercel-ready)
+│   ├── globals.css           # Omega Design System token imports & layout
+│   ├── layout.tsx            # Root scaffold with Omega navigation header
+│   ├── page.tsx              # Main dashboard (Hero Board, Filter Bar, Cards/Table view)
+│   ├── analyze/page.tsx      # Reusable interactive promo cut tool
+│   ├── episodes/page.tsx     # 50-episode screenplay browser
+│   └── api/                  # Serverless API routes
+│       ├── promos/route.ts   # Filterable promos endpoint
+│       ├── analyze/route.ts  # Dynamic cut evaluation endpoint
+│       ├── episodes/route.ts # Screenplay beat fetcher
+│       └── taxonomy/route.ts # Taxonomy definitions endpoint
+├── Design/
+│   └── omega-design-system/  # Complete Omega tokens, CSS, components & guidelines
+├── public/
+│   └── fonts/                # Vendored Inter font families
 ├── config/
 │   ├── taxonomy.yaml         # Hook & cliffhanger taxonomy
 │   └── show_context.yaml      # Show profile & characters
@@ -123,8 +161,9 @@ Microdramas thrive on high emotional asymmetry—specifically, **unearned injust
 │   ├── test_taxonomy.py       # Word boundary & collision tests
 │   ├── test_ranker.py         # Timing constraint & MMR tests
 │   └── test_auditor.py        # Resolution leak & risk audit tests
-├── app.py                     # Interactive Streamlit dashboard
-├── run.py                     # CLI pipeline runner
-├── requirements.txt           # Dependencies
+├── package.json               # Next.js & React dependencies
+├── tsconfig.json              # TypeScript configuration
+├── next.config.mjs            # Next.js configuration
+├── SOLUTION_DOC.md            # Official 2-page submission solution document
 └── AGENTS.md                  # AI collaboration & failure analysis
 ```

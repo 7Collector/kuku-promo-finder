@@ -1,0 +1,92 @@
+<!-- @dsCard group="Patterns" viewport="700x1361" name="Map" subtitle="Mini map drawn, loading and offline; pins and route; the full-screen map live and offline" -->
+<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../../styles.css">
+<style>
+body{padding:20px}
+.x-stack{display:flex;flex-direction:column;gap:var(--s-16)}
+.x-cols{display:flex;gap:var(--surface-gap);align-items:flex-start}
+.x-cols>*{flex:1;min-width:0}
+.x-surface{background:var(--surface);border-radius:var(--radius-lg);padding:var(--surface-padding)}
+.x-h{font:var(--text-body-strong);letter-spacing:var(--track-body-strong);color:var(--ink)}
+.x-s{font:var(--text-subhead);letter-spacing:var(--track-subhead);color:var(--ink-2);margin-bottom:var(--s-12)}
+.x-note{font:var(--text-caption);letter-spacing:var(--track-caption);color:var(--ink-3);margin-top:var(--s-8)}
+.x-cells{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-12)}
+.x-pin{display:block;width:100%;aspect-ratio:96/80;border-radius:var(--radius-md);border:1px solid var(--hairline)}
+.x-n{font:var(--text-caption);letter-spacing:var(--track-caption);color:var(--ink-2);margin-top:var(--s-4)}
+.x-v{font:var(--text-caption);letter-spacing:var(--track-caption);color:var(--ink-3)}
+.x-phone{height:520px;border:1px solid var(--hairline);border-radius:var(--radius-xl)}
+.x-eta{font:var(--text-body-strong);letter-spacing:var(--track-body-strong);color:var(--ink)}
+.x-eta-s{font:var(--text-subhead);letter-spacing:var(--track-subhead);color:var(--ink-2)}
+/* Stand-in for OmegaButton, secondary, full width: surface, 1 px outline, 48 tall, radius md. */
+.x-btn{display:flex;align-items:center;justify-content:center;min-height:var(--min-touch-target);padding:12px 16px;border:1px solid var(--outline);border-radius:var(--radius-md);background:var(--surface);font:var(--text-body-strong);letter-spacing:var(--track-body-strong);color:var(--ink)}
+</style>
+</head><body>
+<div class="x-stack">
+  <div class="x-cols">
+    <div>
+      <div class="x-surface">
+        <p class="x-h">Bus 4 is on its way</p><p class="x-s">About 6 minutes from your stop</p>
+        <div class="om-map">
+          <a class="om-map-frame" role="button" aria-label="Map of Temple corner, with the bus"><svg class="om-map-canvas" viewBox="0 0 290 146" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect class="om-map-ground" width="290" height="146"/><path class="om-map-street" stroke-width="12" d="M-10 118H300"/><path class="om-map-street" stroke-width="12" d="M-10 58H300"/><path class="om-map-street" stroke-width="12" d="M74 -10V160"/><path class="om-map-street" stroke-width="12" d="M186 -10V160"/><path class="om-map-street" stroke-width="6" d="M-10 20H300"/><path class="om-map-street" stroke-width="6" d="M136 -10V58"/><path class="om-map-street" stroke-width="12" d="M186 100H300"/><path class="om-map-street" stroke-width="6" d="M244 58V160"/><path class="om-map-street" stroke-width="6" d="M28 58V118"/><path class="om-map-route-casing" d="M16 118H74V58H186V100H270"/><path class="om-map-route is-driven" d="M16 118H74V58H136"/><path class="om-map-route" d="M136 58H186V100H270"/><circle class="om-map-landmark" cx="270" cy="100" r="5"/><text class="om-map-label is-landmark" x="270" y="122.6">School</text><g class="om-map-pin" transform="translate(200 62)"><path class="om-map-pin-body" d="M14 37C8 28 2 21 2 14A12 12 0 1 1 26 14C26 21 20 28 14 37Z"/><circle class="om-map-pin-glass" cx="14" cy="14" r="5"/></g><text class="om-map-label" x="214" y="116">Your stop</text><circle class="om-map-halo" cx="136" cy="58" r="22"/><g class="om-map-pin" transform="translate(136 58) rotate(90) translate(-12 -20)"><rect class="om-map-pin-mirror" x="1" y="9" width="3.5" height="3" rx="1"/><rect class="om-map-pin-mirror" x="19.5" y="9" width="3.5" height="3" rx="1"/><rect class="om-map-pin-body" x="3.5" y="2" width="17" height="36" rx="4"/><rect class="om-map-pin-glass" x="6" y="5.5" width="12" height="6" rx="1.5"/><rect class="om-map-pin-glass" x="7" y="33" width="10" height="2" rx="0.8"/><rect class="om-map-pin-roof" x="8" y="16" width="8" height="4" rx="1"/><rect class="om-map-pin-roof" x="8" y="24" width="8" height="4" rx="1"/></g></svg></a>
+          <p class="om-map-attribution">OpenFreeMap © OpenMapTiles Data from OpenStreetMap</p>
+        </div>
+      </div>
+      <p class="x-note">OmegaMiniMap, drawn: a picture in a card with no gestures. The whole box is one target that opens the full-screen map. The driven part of the route is muted.</p>
+    </div>
+    <div>
+      <div class="x-surface">
+        <p class="x-h">Bus 4 has not started</p><p class="x-s">Leaves the school at 3:10 pm</p>
+        <div class="om-map">
+          <a class="om-map-frame" role="button" aria-label="Map of Temple corner">
+            <span class="om-map-placeholder"><i class="om-icon om-icon-map-pin"></i><span>Temple corner</span></span>
+          </a>
+          <p class="om-map-attribution">OpenFreeMap © OpenMapTiles Data from OpenStreetMap</p>
+        </div>
+      </div>
+      <p class="x-note">The placeholder covers the map until it has finished loading, so a half-drawn tile grid is never shown.</p>
+    </div>
+  </div>
+  <div class="x-cols">
+    <div>
+      <div class="x-surface">
+        <p class="x-h">Bus 4 is on its way</p><p class="x-s">Last seen 4 minutes ago</p>
+        <div class="om-map">
+          <a class="om-map-frame" role="button" aria-label="Map of Temple corner. You are offline. The map will load when you are back online.">
+            <span class="om-map-placeholder"><i class="om-icon om-icon-map-pin"></i><span>Temple corner</span><span class="om-map-placeholder-note">You are offline. The map will load when you are back online.</span></span>
+          </a>
+          <p class="om-map-attribution">OpenFreeMap © OpenMapTiles Data from OpenStreetMap</p>
+        </div>
+      </div>
+      <p class="x-note">Offline: the placeholder stays, with the caller's note under the place, and no map view is made.</p>
+    </div>
+    <div>
+      <div class="x-surface">
+        <p class="x-h">Pins</p><p class="x-s">OmegaMapPin: kind, dimmed, label, heading</p>
+        <div class="x-cells"><div class="x-cell"><svg class="x-pin" viewBox="0 0 96 80" aria-hidden="true"><rect class="om-map-ground" width="96" height="80"/><path class="om-map-street" stroke-width="12" d="M-10 48H106"/><path class="om-map-street" stroke-width="8" d="M48 -10V90"/><g class="om-map-pin" transform="translate(34 10)"><path class="om-map-pin-body" d="M14 37C8 28 2 21 2 14A12 12 0 1 1 26 14C26 21 20 28 14 37Z"/><circle class="om-map-pin-glass" cx="14" cy="14" r="5"/></g><text class="om-map-label" x="48" y="64">Your stop</text></svg><p class="x-n">Place</p><p class="x-v">accent pin, bold label</p></div><div class="x-cell"><svg class="x-pin" viewBox="0 0 96 80" aria-hidden="true"><rect class="om-map-ground" width="96" height="80"/><path class="om-map-street" stroke-width="12" d="M-10 48H106"/><path class="om-map-street" stroke-width="8" d="M48 -10V90"/><g class="om-map-pin is-dimmed" transform="translate(34 10)"><path class="om-map-pin-body" d="M14 37C8 28 2 21 2 14A12 12 0 1 1 26 14C26 21 20 28 14 37Z"/><circle class="om-map-pin-glass" cx="14" cy="14" r="5"/></g></svg><p class="x-n">Place, dimmed</p><p class="x-v">known, no longer fresh</p></div><div class="x-cell"><svg class="x-pin" viewBox="0 0 96 80" aria-hidden="true"><rect class="om-map-ground" width="96" height="80"/><path class="om-map-street" stroke-width="12" d="M-10 48H106"/><path class="om-map-street" stroke-width="8" d="M48 -10V90"/><circle class="om-map-landmark" cx="48" cy="48" r="5"/><text class="om-map-label is-landmark" x="48" y="70.6">School</text></svg><p class="x-n">Landmark</p><p class="x-v">ink-2 dot, regular label</p></div><div class="x-cell"><svg class="x-pin" viewBox="0 0 96 80" aria-hidden="true"><rect class="om-map-ground" width="96" height="80"/><path class="om-map-street" stroke-width="12" d="M-10 48H106"/><path class="om-map-street" stroke-width="8" d="M48 -10V90"/><circle class="om-map-halo" cx="48" cy="48" r="22"/><g class="om-map-pin" transform="translate(48 48) rotate(60) translate(-12 -20)"><rect class="om-map-pin-mirror" x="1" y="9" width="3.5" height="3" rx="1"/><rect class="om-map-pin-mirror" x="19.5" y="9" width="3.5" height="3" rx="1"/><rect class="om-map-pin-body" x="3.5" y="2" width="17" height="36" rx="4"/><rect class="om-map-pin-glass" x="6" y="5.5" width="12" height="6" rx="1.5"/><rect class="om-map-pin-glass" x="7" y="33" width="10" height="2" rx="0.8"/><rect class="om-map-pin-roof" x="8" y="16" width="8" height="4" rx="1"/><rect class="om-map-pin-roof" x="8" y="24" width="8" height="4" rx="1"/></g></svg><p class="x-n">Vehicle, live</p><p class="x-v">turned to its heading, halo</p></div><div class="x-cell"><svg class="x-pin" viewBox="0 0 96 80" aria-hidden="true"><rect class="om-map-ground" width="96" height="80"/><path class="om-map-street" stroke-width="12" d="M-10 48H106"/><path class="om-map-street" stroke-width="8" d="M48 -10V90"/><circle class="om-map-halo" cx="48" cy="48" r="22"/><g class="om-map-pin" transform="translate(34 34)"><circle class="om-map-pin-body" cx="14" cy="14" r="13"/><rect class="om-map-pin-glass" x="8" y="8" width="12" height="7" rx="1.5"/><rect class="om-map-pin-glass" x="8" y="18" width="3" height="2.5" rx="1"/><rect class="om-map-pin-glass" x="17" y="18" width="3" height="2.5" rx="1"/></g></svg><p class="x-n">Vehicle, no heading</p><p class="x-v">a badge with no front</p></div><div class="x-cell"><svg class="x-pin" viewBox="0 0 96 80" aria-hidden="true"><rect class="om-map-ground" width="96" height="80"/><path class="om-map-street" stroke-width="12" d="M-10 48H106"/><path class="om-map-street" stroke-width="8" d="M48 -10V90"/><g class="om-map-pin is-dimmed" transform="translate(48 48) rotate(60) translate(-12 -20)"><rect class="om-map-pin-mirror" x="1" y="9" width="3.5" height="3" rx="1"/><rect class="om-map-pin-mirror" x="19.5" y="9" width="3.5" height="3" rx="1"/><rect class="om-map-pin-body" x="3.5" y="2" width="17" height="36" rx="4"/><rect class="om-map-pin-glass" x="6" y="5.5" width="12" height="6" rx="1.5"/><rect class="om-map-pin-glass" x="7" y="33" width="10" height="2" rx="0.8"/><rect class="om-map-pin-roof" x="8" y="16" width="8" height="4" rx="1"/><rect class="om-map-pin-roof" x="8" y="24" width="8" height="4" rx="1"/></g></svg><p class="x-n">Vehicle, dimmed</p><p class="x-v">half strength, no halo</p></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="x-cols">
+    <div>
+      <div class="om-map-full x-phone">
+        <svg class="om-map-canvas" viewBox="0 0 322 518" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Map of Temple corner, with the bus"><rect class="om-map-ground" width="322" height="518"/><path class="om-map-street" stroke-width="14" d="M-10 150H332"/><path class="om-map-street" stroke-width="14" d="M-10 300H332"/><path class="om-map-street" stroke-width="8" d="M-10 420H332"/><path class="om-map-street" stroke-width="14" d="M70 -10V530"/><path class="om-map-street" stroke-width="14" d="M230 -10V530"/><path class="om-map-street" stroke-width="8" d="M150 150V300"/><path class="om-map-street" stroke-width="8" d="M-10 225H70"/><path class="om-map-street" stroke-width="8" d="M230 360H332"/><path class="om-map-street" stroke-width="8" d="M150 300V530"/><path class="om-map-street" stroke-width="8" d="M-10 90H332"/><path class="om-map-route-casing" d="M70 420V300H230V150H290"/><path class="om-map-route is-driven" d="M70 420V300H150"/><path class="om-map-route" d="M150 300H230V150H290"/><circle class="om-map-landmark" cx="290" cy="150" r="5"/><text class="om-map-label is-landmark" x="290" y="172.6">School</text><g class="om-map-pin" transform="translate(216 172)"><path class="om-map-pin-body" d="M14 37C8 28 2 21 2 14A12 12 0 1 1 26 14C26 21 20 28 14 37Z"/><circle class="om-map-pin-glass" cx="14" cy="14" r="5"/></g><text class="om-map-label" x="230" y="226">Temple corner</text><circle class="om-map-halo" cx="150" cy="300" r="22"/><g class="om-map-pin" transform="translate(150 300) rotate(90) translate(-12 -20)"><rect class="om-map-pin-mirror" x="1" y="9" width="3.5" height="3" rx="1"/><rect class="om-map-pin-mirror" x="19.5" y="9" width="3.5" height="3" rx="1"/><rect class="om-map-pin-body" x="3.5" y="2" width="17" height="36" rx="4"/><rect class="om-map-pin-glass" x="6" y="5.5" width="12" height="6" rx="1.5"/><rect class="om-map-pin-glass" x="7" y="33" width="10" height="2" rx="0.8"/><rect class="om-map-pin-roof" x="8" y="16" width="8" height="4" rx="1"/><rect class="om-map-pin-roof" x="8" y="24" width="8" height="4" rx="1"/></g></svg>
+        <div class="om-map-full-bar"><span class="om-map-full-close" role="button" aria-label="Close the map"><i class="om-icon om-icon-close"></i></span><h2 class="om-map-full-title">Bus 4 to Temple corner</h2></div>
+        <div class="om-map-full-bottom">
+          <span class="om-map-recentre" role="button"><i class="om-icon om-icon-compass"></i>Re-centre</span>
+          <div class="om-map-full-sheet"><div><p class="x-eta">About 6 minutes away</p><p class="x-eta-s">Live, updated just now</p></div><span class="x-btn">Call the school office</span></div>
+        </div>
+      </div>
+      <p class="x-note">OmegaFullScreenMap: a close button and the title on a surface bar, the actions in a surface sheet. Re-centre appears once the parent has moved the camera.</p>
+    </div>
+    <div>
+      <div class="om-map-full x-phone">
+        <div class="om-map-placeholder"><i class="om-icon om-icon-map-pin"></i><span>Temple corner</span><span class="om-map-placeholder-note">You are offline. The map will load when you are back online.</span></div>
+        <div class="om-map-full-bar"><span class="om-map-full-close" role="button" aria-label="Close the map"><i class="om-icon om-icon-close"></i></span><h2 class="om-map-full-title">Bus 4 to Temple corner</h2></div>
+        <div class="om-map-full-bottom">
+          <div class="om-map-full-sheet"><div><p class="x-eta">Last seen 4 minutes ago</p><p class="x-eta-s">Near Civil Lines crossing</p></div><span class="x-btn">Call the school office</span></div>
+        </div>
+      </div>
+      <p class="x-note">Full screen and offline: the placeholder fills the screen under the same bar and sheet. No Re-centre.</p>
+    </div>
+  </div>
+</div>
+</body></html>

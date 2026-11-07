@@ -1,0 +1,22 @@
+<!-- @dsCard group="Actions" viewport="700x358" name="Text and icon" subtitle="Text at a type token with an ellipsis, line caps, icon sizes and tints" -->
+<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../../styles.css">
+<style>body{padding:20px}.lab{font:var(--text-caption);color:var(--ink-2);margin:0 0 8px}.lab:not(:first-child){margin-top:20px}.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.cols{display:grid;grid-template-columns:1fr 1fr;gap:20px 16px;align-items:start}.surf{background:var(--surface);border-radius:var(--radius-lg);padding:16px}.board{background:var(--board);border-radius:var(--radius-xl);padding:20px}.box{width:300px}.it{display:flex;flex-direction:column;align-items:center;gap:8px;font:var(--text-caption);color:var(--ink-2);min-width:64px}</style>
+</head><body>
+<p class="lab">One line, ending in an ellipsis rather than a clipped glyph</p>
+<div class="surf box"><span class="om-text om-text--lines-1 om-body-strong">Mathematics with Mrs Anjali Raghavan, Class 8 B, Room 14</span></div>
+<p class="lab">Two lines, then the ellipsis; with no cap, text wraps as far as it needs</p>
+<div class="row" style="align-items:flex-start;gap:12px">
+  <div class="surf box"><span class="om-text om-text--lines-2 om-subhead" style="color:var(--ink-2)">Solve questions 1 to 12 from exercise 4.2 in your maths notebook, show every step, and bring the notebook on Thursday for checking.</span></div>
+  <div class="surf box"><span class="om-text om-subhead" style="color:var(--ink-2)">The parent-teacher meeting is now on Saturday at 10:00 in the main hall. Please bring the signed report card.</span></div>
+</div>
+<p class="lab">Icons: 20 px by default, 18 in buttons, 16 for the chip tick; the tint is always given</p>
+<div class="row" style="gap:20px;align-items:flex-end">
+  <div class="it"><i class="om-icon om-icon--s16 om-icon-check" style="color:var(--on-accent-container)"></i>16</div>
+  <div class="it"><i class="om-icon om-icon--s18 om-icon-plus" style="color:var(--accent-text)"></i>18</div>
+  <div class="it"><i class="om-icon om-icon--s20 om-icon-calendar" style="color:var(--ink-2)"></i>20, ink 2</div>
+  <div class="it"><i class="om-icon om-icon--s20 om-icon-clock" style="color:var(--ink)"></i>20, ink</div>
+  <div class="it"><i class="om-icon om-icon--s20 om-icon-warning" style="color:var(--danger-strong)"></i>Danger</div>
+  <div class="it"><i class="om-icon om-icon--s20 om-icon-check-circle" style="color:var(--success-strong)"></i>Success</div>
+  <div class="it" style="background:var(--board);color:var(--on-board-2);padding:8px 12px;border-radius:var(--radius-md)"><i class="om-icon om-icon--s20 om-icon-bell" style="color:var(--on-board)"></i>On board</div>
+</div>
+</body></html>

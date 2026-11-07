@@ -1,0 +1,137 @@
+/* Omega parent app kit: the patterns the parent app owns itself. Everything else on these screens is an
+   om- class from the design system. Token variables only; dp map 1:1 to px. */
+
+/* The kit phone draws its own 24 status strip, so the screen bar does not reserve it a second time. */
+.pk-app{--status-bar-inset:0px}
+
+/* Compose Spacer heights between blocks. */
+.pk-sp-4{height:var(--s-4)}.pk-sp-8{height:var(--s-8)}.pk-sp-12{height:var(--s-12)}.pk-sp-16{height:var(--s-16)}
+.pk-sp-20{height:var(--s-20)}.pk-sp-24{height:var(--s-24)}.pk-sp-32{height:var(--section-gap)}
+[class^="pk-sp-"]{flex:none}
+
+/* Ink steps for loose text lines set with an om- type class. */
+.pk-ink{color:var(--ink)}.pk-ink-2{color:var(--ink-2)}.pk-ink-3{color:var(--ink-3)}
+.pk-accent{color:var(--accent-text)}
+.pk-danger{color:var(--danger-strong)}.pk-warning{color:var(--warning-strong)}
+.pk-info{color:var(--info-strong)}
+
+/* A scrolling row that runs to the screen edges: the row keeps its own page-margin padding. */
+.pk-bleed{width:auto;margin-left:calc(var(--page-margin) * -1);margin-right:calc(var(--page-margin) * -1);overflow:hidden}
+
+/* Section header followed by its content: header-to-content beneath. */
+.pk-head{margin-bottom:var(--header-to-content)}
+
+/* ChildChip (ChildChip.kt): whose data this is. A pill with a tinted initials disc; a chevron when
+   there are siblings to switch to. */
+.pk-child-chip{display:inline-flex;align-items:center;gap:10px;min-height:var(--min-touch-target);align-self:flex-start;
+  padding:6px var(--s-16) 6px 6px;border:1px solid var(--hairline);border-radius:var(--radius-full);background:var(--surface)}
+.pk-child-chip--siblings{padding-right:var(--s-12)}
+.pk-child-chip__text{display:flex;flex-direction:column;min-width:0}
+.pk-child-chip__name{font:var(--text-caption);letter-spacing:var(--track-caption);color:var(--ink);white-space:nowrap}
+.pk-child-chip__class{font:var(--text-caption);letter-spacing:var(--track-caption);color:var(--ink-2);white-space:nowrap}
+.pk-child-chip>.om-icon{--icon-size:16px;color:var(--ink-3)}
+
+/* The initials disc: 32 in the chip, 40 in a list row, 56 on Me. The tint is per child. */
+.pk-initials{flex:none;display:inline-grid;place-items:center;width:var(--pk-disc,32px);height:var(--pk-disc,32px);
+  border-radius:var(--radius-full);background:var(--accent-container);
+  font:var(--text-caption);letter-spacing:var(--track-caption);color:var(--ink)}
+.pk-initials--2{background:color-mix(in srgb,var(--subject-2) 16%,var(--surface))}
+.pk-initials--40{--pk-disc:40px}
+.pk-initials--56{--pk-disc:56px;font:var(--text-body-strong);letter-spacing:var(--track-body-strong)}
+
+/* GreetingBoard (HomeHero.kt): date line, greeting, child chip. */
+.pk-greeting{display:flex;flex-direction:column;align-items:flex-start}
+.pk-greeting__date{font:var(--text-subhead);letter-spacing:var(--track-subhead);color:var(--ink-2);font-feature-settings:"tnum"}
+.pk-greeting__hello{font:var(--text-display);letter-spacing:var(--track-display);color:var(--ink);margin-bottom:var(--s-12)}
+
+/* TabHeader (TabHeaders.kt): the pinned header of Learning and Updates. Title and chip on one row,
+   then the section chips bled to the screen edges. */
+.pk-tab-header{display:flex;flex-direction:column;gap:var(--s-8);padding:var(--s-12) 0}
+.pk-tab-header__row{display:flex;align-items:center;justify-content:space-between;gap:var(--s-12)}
+.pk-tab-header .om-chip{flex:none}
+
+/* BusTodayCard (TodayBus.kt): one surface holding the status row and the mini map. */
+.pk-bus-card{display:flex;flex-direction:column;border-radius:var(--radius-lg);background:var(--surface);overflow:hidden}
+.pk-bus-card__row{display:flex;align-items:center;gap:var(--icon-text);padding:var(--surface-padding)}
+.pk-bus-card__text{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:var(--s-4)}
+.pk-bus-card__head{display:flex;align-items:center;flex-wrap:wrap;gap:var(--s-8)}
+.pk-bus-card__map{padding:0 var(--surface-padding) var(--surface-padding)}
+
+/* A row inside a list entry: text column and a trailing control or value. */
+.pk-entry-row{display:flex;align-items:center;gap:var(--icon-text);width:100%}
+.pk-entry-row--top{align-items:flex-start}
+.pk-entry-col{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:var(--s-4)}
+.pk-entry-col--tight{gap:var(--s-2)}
+.pk-trailing{flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:var(--s-2);text-align:right}
+.pk-inline{display:flex;align-items:center;flex-wrap:wrap;gap:var(--s-8)}
+.pk-inline--between{justify-content:space-between;width:100%;flex-wrap:nowrap}
+.pk-inline--between>:first-child{flex:1;min-width:0}
+.pk-trailing>*{white-space:nowrap}
+
+/* The accent "view all" line that closes a list group. */
+.pk-link-row{display:flex;align-items:center;justify-content:space-between;min-height:var(--min-touch-target);
+  padding:0 var(--s-16);font:var(--text-body-strong);letter-spacing:var(--track-body-strong);color:var(--accent-text)}
+.pk-link-row .om-icon{--icon-size:20px}
+
+/* Attendance summary (AttendanceScreen.kt): ring beside the verdict, then the tally with tone dots. */
+.pk-summary{display:flex;align-items:center;gap:var(--s-16)}
+.pk-summary__text{flex:1;min-width:0;display:flex;flex-direction:column;gap:var(--s-4)}
+.pk-tally{display:flex;flex-wrap:wrap;gap:var(--s-8) var(--s-16);padding-top:var(--s-16)}
+.pk-tally__item{display:inline-flex;align-items:center;gap:var(--s-8);
+  font:var(--text-subhead);letter-spacing:var(--track-subhead);color:var(--ink-2);font-feature-settings:"tnum"}
+.pk-tally__dot{width:8px;height:8px;border-radius:var(--radius-full);background:var(--neutral-strong)}
+.pk-tally__dot--success{background:var(--success-strong)}.pk-tally__dot--warning{background:var(--warning-strong)}
+.pk-tally__dot--info{background:var(--info-strong)}.pk-tally__dot--danger{background:var(--danger-strong)}
+
+/* Facts on the dark results board: label left, figure right. */
+.pk-board-facts{display:flex;flex-direction:column;gap:var(--s-8);padding-top:var(--s-16)}
+.pk-board-facts__row{display:flex;align-items:baseline;justify-content:space-between;gap:var(--s-12)}
+.pk-board-facts__label{font:var(--text-subhead);letter-spacing:var(--track-subhead);color:var(--on-board-2)}
+.pk-board-facts__value{font:var(--text-body-strong);letter-spacing:var(--track-body-strong);color:var(--on-board);font-feature-settings:"tnum"}
+
+/* Balance figure on the fees card. */
+.pk-figure{font:var(--text-display);letter-spacing:var(--track-display);font-feature-settings:"tnum"}
+
+/* Event date leaf (EventsScreen.kt): day over month on a sunken tile. */
+.pk-date-leaf{flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;width:56px;min-height:64px;
+  border-radius:var(--radius-md);background:var(--sunken)}
+.pk-date-leaf__day{font:var(--text-title-medium);letter-spacing:var(--track-title-medium);font-feature-settings:"tnum";color:var(--ink)}
+.pk-date-leaf__month{font:var(--text-caption);letter-spacing:var(--track-caption);color:var(--ink-2)}
+
+/* Leave form (LeaveScreen.kt): the two date fields side by side. */
+.pk-form{gap:var(--s-16)}
+.pk-field-pair{display:flex;gap:var(--s-12)}
+.pk-field-pair>.om-field{flex:1;min-width:0}
+
+/* Me (MeScreen.kt): the signed-in parent. */
+.pk-identity{display:flex;align-items:center;gap:var(--s-16)}
+.pk-identity__text{display:flex;flex-direction:column;gap:var(--s-2);min-width:0}
+
+/* SOTA (SotaPlanScreen.kt): what the plan gives, the Lab launch card, the details disclosure. */
+.pk-benefits{display:flex;flex-direction:column;gap:var(--s-12)}
+.pk-benefits__item{display:flex;align-items:flex-start;gap:var(--icon-text);
+  font:var(--text-body);letter-spacing:var(--track-body);color:var(--ink)}
+.pk-benefits__item>.om-icon{--icon-size:20px;color:var(--accent-text);flex:none}
+.pk-lab-card{display:flex;flex-direction:column;padding:var(--s-12);border-radius:var(--radius-lg);background:var(--surface)}
+.pk-lab-card__stage{position:relative;height:96px;border-radius:var(--radius-md);background:var(--sunken);overflow:hidden}
+.pk-lab-card__stage svg{position:absolute;inset:0;width:100%;height:100%}
+.pk-lab-card__ground{stroke:var(--outline);stroke-width:1;fill:none}
+.pk-lab-card__path{stroke:var(--accent-mark);stroke-width:2;fill:none;stroke-dasharray:4 4;stroke-linecap:round}
+.pk-lab-card__ball{fill:var(--accent-mark)}
+.pk-lab-card__foot{display:flex;align-items:center;gap:var(--s-12);padding:var(--s-12) var(--s-4) 0}
+.pk-lab-card__play{flex:none;display:inline-flex;align-items:center;gap:var(--s-8);min-height:40px;padding:0 var(--s-16);
+  border-radius:var(--radius-full);background:var(--accent);color:var(--on-accent);
+  font:var(--text-body-strong);letter-spacing:var(--track-body-strong);--icon-size:16px}
+.pk-disclosure{display:flex;align-items:center;justify-content:space-between;min-height:var(--min-touch-target);
+  font:var(--text-body-strong);letter-spacing:var(--track-body-strong);color:var(--ink)}
+.pk-disclosure .om-icon{--icon-size:20px;color:var(--ink-3)}
+
+/* The buy bar's second line: the reassurance under summary and button. */
+.pk-buy-bar{flex-wrap:wrap}
+.pk-buy-bar__note{flex:0 0 100%;font:var(--text-caption);letter-spacing:var(--track-caption);color:var(--ink-3)}
+
+/* Full-screen bus map: the map fills the phone under the bar. */
+.pk-map-full{width:100%;height:100%}
+.pk-map-full .om-map-canvas{top:56px;height:calc(100% - 56px)}
+.pk-map-full .om-map-full-bar{min-height:56px}
+.pk-map-sheet__head{display:flex;align-items:center;gap:var(--s-8)}

@@ -1,0 +1,35 @@
+/* Omega type scale. Generated from OmegaTypography.kt: eight roles, three weights. sp maps to px. */
+:root{
+  --text-display: 600 32px/38px var(--font-sans); /* Greeting, focal numbers */
+  --track-display: -0.4px;
+  --text-title-large: 600 26px/32px var(--font-sans); /* Screen titles */
+  --track-title-large: -0.3px;
+  --text-title-medium: 600 20px/26px var(--font-sans); /* Board subject, detail headers */
+  --track-title-medium: -0.2px;
+  --text-headline: 600 17px/24px var(--font-sans); /* Section headers */
+  --track-headline: 0px;
+  --text-body-strong: 500 16px/22px var(--font-sans); /* Row titles, button labels */
+  --track-body-strong: 0px;
+  --text-body: 400 16px/24px var(--font-sans); /* Paragraphs, answers */
+  --track-body: 0px;
+  --text-subhead: 400 14px/20px var(--font-sans); /* Supporting lines */
+  --track-subhead: 0px;
+  --text-caption: 500 12px/16px var(--font-sans); /* Meta, badges */
+  --track-caption: 0px;
+  --text-formula: italic 400 15.5px/22px var(--font-formula); /* Display maths on the formula plate */
+  --track-formula: 0px;
+  --text-button-compact: 500 13px/18px var(--font-sans); /* a compact button's label */
+  --track-button-compact: 0px;
+}
+.om-display{font:var(--text-display);letter-spacing:var(--track-display)}
+.om-title-large{font:var(--text-title-large);letter-spacing:var(--track-title-large)}
+.om-title-medium{font:var(--text-title-medium);letter-spacing:var(--track-title-medium)}
+.om-headline{font:var(--text-headline);letter-spacing:var(--track-headline)}
+.om-body-strong{font:var(--text-body-strong);letter-spacing:var(--track-body-strong)}
+.om-body{font:var(--text-body);letter-spacing:var(--track-body)}
+.om-subhead{font:var(--text-subhead);letter-spacing:var(--track-subhead)}
+.om-caption{font:var(--text-caption);letter-spacing:var(--track-caption)}
+.om-formula{font:var(--text-formula);letter-spacing:var(--track-formula)}
+.om-button-compact{font:var(--text-button-compact);letter-spacing:var(--track-button-compact)}
+/* Numbers (times, scores, counts, percentages) switch on tabular figures. */
+.om-num{font-feature-settings:"tnum"}

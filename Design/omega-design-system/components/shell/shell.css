@@ -1,0 +1,271 @@
+/* Omega shell, overlays, feedback and calendar. Translated from omega-kmp :ui designsystem:
+   ScreenScaffold.kt, OmegaBottomNav.kt, OmegaAdaptiveShell.kt, OmegaListDetail.kt, OmegaWindow.kt,
+   OmegaActionBar.kt, OmegaActionSheet.kt, OmegaBottomSheet.kt, OmegaDialog.kt, OmegaFeedback.kt,
+   OmegaStates.kt, Calendar.kt, DayStrip.kt. dp and sp map 1:1 to px.
+
+   Two environment values stand in for the system insets, which a web page does not have:
+   --status-bar-inset (owned by the screen bar) and --nav-bar-inset (owned by exactly one bottom
+   element per screen). Both default to 0. */
+
+/* ---------- ScreenScaffold: pinned bar on paper, body held to a measure ---------- */
+.om-screen{--screen-measure:var(--max-content-width);position:relative;display:flex;flex-direction:column;
+  width:100%;height:100%;min-width:0;background:var(--paper);color:var(--ink)}
+/* The bar is always drawn, at least as a paper strip the height of the status bar. */
+.om-screen-bar{flex:none;display:flex;flex-direction:column;align-items:center;width:100%;
+  padding-top:var(--status-bar-inset,0px);background-color:var(--paper);
+  background-image:linear-gradient(var(--hairline),var(--hairline));background-repeat:no-repeat;
+  background-position:left bottom;background-size:100% 0}
+/* The hairline appears once the body has left the top, or the large title has collapsed. */
+.om-screen-bar.is-scrolled,.om-screen-bar.is-collapsed{background-size:100% 1px}
+/* The 56 row: only while a header has claimed it, or reserved empty for a sub-screen.
+   Its side padding puts the chevron's 24 glyph (centred in a 48 target) on the page margin. */
+.om-screen-bar-row{display:flex;align-items:center;width:100%;max-width:var(--screen-measure);min-height:56px;
+  padding:0 calc(var(--page-margin) - 12px)}
+.om-back-button{flex:none;display:inline-flex;align-items:center;justify-content:center;
+  width:var(--min-touch-target);height:var(--min-touch-target);border-radius:var(--radius-full);
+  color:var(--ink);--icon-size:24px}
+/* A title with no back beside it keeps the page's text keyline. */
+.om-screen-bar-keyline{flex:none;width:12px}
+.om-screen-bar-title-slot{flex:1;min-width:0;padding:0 var(--s-4)}
+.om-screen-bar-title{font:var(--text-headline);letter-spacing:var(--track-headline);color:var(--ink);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* The copy of a large title: invisible until that title has scrolled under the bar. */
+.om-screen-bar-title--copy{opacity:0;transition:opacity var(--dur-standard) var(--ease-standard)}
+.om-screen-bar.is-collapsed .om-screen-bar-title--copy{opacity:1}
+/* Under a pinned title only. Wraps in full, never truncated; the bar grows with it. */
+.om-screen-bar-subtitle{font:var(--text-caption);letter-spacing:var(--track-caption);color:var(--ink-2)}
+.om-screen-bar-actions{flex:none;display:flex;align-items:center;justify-content:flex-end}
+
+/* A tab root's own header, pinned under the bar; while it shows, the scrolled hairline is at its foot. */
+.om-screen-pinned-header{flex:none;display:flex;justify-content:center;width:100%;background-color:var(--paper);
+  background-image:linear-gradient(var(--hairline),var(--hairline));background-repeat:no-repeat;
+  background-position:left bottom;background-size:100% 0}
+.om-screen-pinned-header.is-scrolled{background-size:100% 1px}
+.om-screen-pinned-header-inner{width:100%;max-width:var(--screen-measure);padding:0 var(--page-margin)}
+
+.om-screen-body{flex:1;min-height:0;display:flex;justify-content:center;overflow:hidden}
+/* The host's column: page margin, 8 under the bar row, 20 above the bottom. */
+.om-screen-content{display:flex;flex-direction:column;width:100%;max-width:var(--screen-measure);min-width:0;
+  padding:var(--s-8) var(--page-margin) var(--s-20)}
+/* The body scrolls as a whole: its children keep their height and are clipped by the viewport. */
+.om-screen-content>*{flex-shrink:0}
+/* Under the bare status-bar strip of a tab root the first line sits 24 down. */
+.om-screen-content--tab-root{padding-top:var(--s-24)}
+/* A body whose first child is a full-bleed header. */
+.om-screen-content--flush-top{padding-top:0}
+
+/* ScreenHeader: the content part. The bar part is .om-screen-bar-row above. */
+.om-screen-header{display:flex;flex-direction:column;width:100%}
+.om-screen-header-context{padding-bottom:var(--s-4);font:var(--text-subhead);letter-spacing:var(--track-subhead);
+  color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.om-screen-header-title{font:var(--text-title-large);letter-spacing:var(--track-title-large);color:var(--ink)}
+/* The same controls drawn inline, when no scaffold bar is available (a detail pane beside its list). */
+.om-screen-header-row{display:flex;align-items:center;width:100%;min-height:56px}
+.om-screen-header-row>.om-back-button{position:relative;left:-12px}
+.om-screen-header-row>.om-screen-bar-title-slot{padding:0}
+
+/* OmegaDetailPage: a full-screen page outside the tabs. Bar row always reserved, single measure. */
+.om-detail-page{--screen-measure:var(--max-content-width)}
+.om-detail-page--wide{--screen-measure:var(--wide-content-width)}
+.om-detail-page>.om-screen-body{padding-bottom:var(--nav-bar-inset,0px)}
+
+/* ---------- PillTab, OmegaBottomNav, OmegaNavigationRail ---------- */
+.om-pill-tab{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:var(--s-4);
+  min-width:var(--min-touch-target);min-height:var(--min-touch-target);padding:var(--s-4);
+  color:var(--ink-3);transition:color var(--dur-standard) var(--ease-standard);--icon-size:24px}
+.om-pill-tab-indicator{flex:none;width:16px;height:3px;border-radius:var(--radius-full);background:transparent}
+.om-pill-tab-icon{position:relative;display:flex;flex:none}
+.om-pill-tab-label{font:var(--text-caption);font-weight:400;letter-spacing:var(--track-caption);white-space:nowrap}
+.om-pill-tab.is-selected{color:var(--ink)}
+.om-pill-tab.is-selected .om-pill-tab-indicator{background:var(--accent-mark)}
+.om-pill-tab.is-selected .om-pill-tab-label{font-weight:500}
+/* The one place a tab wears the AI gradient: the AI tab, selected. Kept to the glyph only. */
+.om-pill-tab--ai.is-selected .om-icon{background:var(--ai-gradient)}
+/* The count hangs over the icon's top end corner, outside the tab's own measure. */
+.om-tab-badge{position:absolute;left:calc(100% - 10px);top:-4px;display:flex;align-items:center;justify-content:center;
+  min-width:16px;min-height:16px;max-width:30px;max-height:20px;padding:0 4px;border-radius:var(--radius-full);
+  background:var(--ink);color:var(--paper);font:var(--text-caption);line-height:1.2;letter-spacing:var(--track-caption);
+  white-space:nowrap}
+
+/* Paper, a hairline on the top edge, no shadow, 64 of tabs above the navigation-bar inset it owns. */
+.om-bottom-nav{display:flex;align-items:center;width:100%;min-height:calc(var(--bottom-nav-height) + var(--nav-bar-inset,0px));
+  padding:0 var(--s-8) var(--nav-bar-inset,0px);background-color:var(--paper);
+  background-image:linear-gradient(var(--hairline),var(--hairline));background-repeat:no-repeat;
+  background-position:left top;background-size:100% 1px}
+.om-bottom-nav>.om-pill-tab{flex:1 1 0}
+
+/* The same tabs stood along the start edge; the hairline is on the end edge, which meets the content. */
+.om-nav-rail{flex:none;display:flex;flex-direction:column;align-items:center;gap:var(--s-8);width:96px;height:100%;
+  padding:calc(var(--status-bar-inset,0px) + var(--s-24)) var(--s-8) var(--nav-bar-inset,0px);background-color:var(--paper);
+  background-image:linear-gradient(var(--hairline),var(--hairline));background-repeat:no-repeat;
+  background-position:right top;background-size:1px 100%}
+.om-nav-rail>.om-pill-tab{width:100%}
+
+/* OmegaPill: a small label. Fill and text colour are the caller's, through --pill-bg and --pill-fg. */
+.om-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:var(--radius-full);
+  background:var(--pill-bg,var(--sunken));color:var(--pill-fg,var(--ink));
+  font:var(--text-caption);letter-spacing:var(--track-caption);white-space:nowrap}
+.om-pill-dot{flex:none;width:5px;height:5px;border-radius:var(--radius-full);background:var(--pill-dot,currentColor)}
+
+/* ---------- OmegaAdaptiveShell: rail or bottom plate by window class ---------- */
+.om-adaptive-shell{--shell-nav-reserve:0px;--shell-action-reserve:0px;position:relative;display:flex;
+  width:100%;height:100%;background:var(--paper)}
+.om-adaptive-shell-main{position:relative;flex:1;min-width:0;height:100%}
+/* Expanded and up, for a body that asked for two panes. */
+.om-adaptive-shell--wide .om-screen{--screen-measure:var(--wide-content-width)}
+/* Compact: the plate floats over the bottom of the body, and the body reserves its height. */
+.om-adaptive-shell--bottom-bar{--shell-nav-reserve:calc(var(--bottom-nav-height) + var(--nav-bar-inset,0px))}
+/* A sticky action bar: the body reserves its height too (8 + a 48 control + 10). */
+.om-adaptive-shell--action-bar{--shell-action-reserve:66px}
+.om-adaptive-shell .om-screen-body{padding-bottom:calc(var(--shell-nav-reserve) + var(--shell-action-reserve))}
+/* Under the plate the last card clears it by a section gap; beside a rail it is the ordinary 20. */
+.om-adaptive-shell--bottom-bar .om-screen-content{padding-bottom:var(--section-gap)}
+.om-adaptive-shell-bottom{position:absolute;left:0;right:0;bottom:0;display:flex;flex-direction:column;align-items:center}
+.om-adaptive-shell-bottom>.om-action-bar{max-width:var(--max-content-width)}
+.om-adaptive-shell--wide .om-adaptive-shell-bottom>.om-action-bar{max-width:var(--wide-content-width)}
+
+/* ---------- OmegaListDetail ---------- */
+/* Two panes, 2:3, a pane gutter apart, top aligned. Only on a two-pane window with a slot of 720 or more. */
+.om-list-detail{display:flex;align-items:flex-start;gap:var(--pane-spacing);width:100%}
+.om-list-detail-list{flex:2 1 0;min-width:0;display:flex;flex-direction:column}
+.om-list-detail-detail{flex:3 1 0;min-width:0;display:flex;flex-direction:column}
+/* One pane: the open item alone when there is one, otherwise the list alone. */
+.om-list-detail--single{flex-direction:column;align-items:stretch;gap:0}
+/* What the detail pane says while nothing is open. Never drawn on a phone. */
+.om-detail-placeholder{width:100%;padding:24px;border-radius:var(--radius-md);background:var(--sunken)}
+.om-detail-placeholder-message{display:flex;align-items:center;justify-content:center;min-height:200px;padding:0 12px;
+  font:var(--text-body);letter-spacing:var(--track-body);color:var(--ink-2);text-align:center}
+
+/* ---------- OmegaActionBar ---------- */
+/* Opaque paper with a drawn 1 px outline edge on top: never translucent, never a tint step. */
+.om-action-bar{display:flex;align-items:center;gap:10px;width:100%;
+  padding:8px var(--s-20) calc(10px + var(--nav-bar-inset,0px));background-color:var(--paper);
+  background-image:linear-gradient(var(--outline),var(--outline));background-repeat:no-repeat;
+  background-position:left top;background-size:100% 1px}
+/* Give the informational part the remaining width; the commit action comes last and keeps its size. */
+.om-action-bar-info{flex:1;min-width:0;font:var(--text-subhead);letter-spacing:var(--track-subhead);color:var(--ink-2)}
+
+/* ---------- OmegaActionSheet and OmegaBottomSheet (the same sheet) ---------- */
+/* The scrim is a sibling behind the sheet or dialog, never its parent. */
+.om-scrim{position:absolute;inset:0;background:var(--scrim)}
+.om-action-sheet,.om-bottom-sheet{position:absolute;left:0;right:0;bottom:0;display:flex;flex-direction:column;
+  max-height:88%;padding-bottom:var(--nav-bar-inset,0px);overflow:hidden;background:var(--surface);
+  border-radius:var(--radius-xl) var(--radius-xl) 0 0;box-shadow:var(--elev-sheet)}
+/* Decorative handle: drag to dismiss is not built. */
+.om-sheet-handle{flex:none;display:flex;justify-content:center;padding:var(--s-8) 0 var(--s-4)}
+.om-sheet-handle::before{content:"";width:36px;height:4px;border-radius:var(--radius-full);background:var(--outline)}
+.om-sheet-title-row{flex:none;display:flex;align-items:center;padding:0 var(--s-8) 0 var(--s-20)}
+.om-sheet-title{flex:1;min-width:0;font:var(--text-title-medium);letter-spacing:var(--track-title-medium);color:var(--ink)}
+.om-sheet-close{flex:none;display:inline-flex;align-items:center;justify-content:center;
+  width:var(--min-touch-target);height:var(--min-touch-target);border-radius:var(--radius-full);
+  color:var(--ink-2);--icon-size:20px}
+/* The content scrolls in whatever height remains. */
+.om-sheet-content{flex:0 1 auto;min-height:0;display:flex;flex-direction:column;overflow-y:auto;
+  padding:var(--s-8) var(--s-20) var(--s-20)}
+.om-sheet-content>*{flex-shrink:0}
+/* With a sticky action bar under it the content ends 16 above the hairline. */
+.om-sheet-content:has(+ .om-sheet-actions){padding-bottom:var(--s-16)}
+.om-sheet-actions{flex:none;display:flex;flex-direction:column;padding:var(--s-12) var(--s-20) var(--s-16);
+  background-image:linear-gradient(var(--hairline),var(--hairline));background-repeat:no-repeat;
+  background-position:left top;background-size:100% 1px}
+
+/* ---------- OmegaDialog and OmegaConfirmDialog ---------- */
+/* Centres the card in what the insets leave, 24 clear above and below. */
+.om-dialog-host{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  padding:calc(var(--status-bar-inset,0px) + var(--s-24)) 0 calc(var(--nav-bar-inset,0px) + var(--s-24))}
+/* Capped at 420 including its 24 side gaps. Surface, radius xl, no shadow: the scrim separates it. */
+.om-dialog{display:flex;flex-direction:column;width:calc(100% - 2 * var(--s-24));max-width:calc(420px - 2 * var(--s-24));
+  max-height:100%;overflow-y:auto;padding:var(--s-24);border-radius:var(--radius-xl);background:var(--surface)}
+.om-dialog-title{padding-bottom:var(--s-12);font:var(--text-title-medium);letter-spacing:var(--track-title-medium);color:var(--ink)}
+.om-dialog-message{font:var(--text-body);letter-spacing:var(--track-body);color:var(--ink-2)}
+.om-dialog-actions{display:flex;justify-content:flex-end;gap:var(--s-8);padding-top:var(--s-20)}
+
+/* ---------- OmegaFeedbackArea: the one transient confirmation ---------- */
+/* A sibling over the shell. It clears the keyboard, the navigation bar and the shell's bottom layer
+   (set --feedback-clearance to that layer's height), then a 16 gap. */
+.om-feedback-area{position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:center;pointer-events:none;
+  padding-bottom:calc(max(var(--feedback-clearance,0px),var(--nav-bar-inset,0px)) + var(--s-16))}
+/* A brief dark plate: the board with on-board text, never the accent. Two lines at most. */
+.om-feedback-toast{width:100%;margin:0 var(--s-24);padding:var(--s-12) var(--s-16);border-radius:var(--radius-md);
+  background:var(--board);color:var(--on-board);font:var(--text-subhead);letter-spacing:var(--track-subhead);
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+
+/* ---------- Skeleton, EmptyState, ErrorState, OfflineBanner ---------- */
+/* A static sunken block the shape of what is coming. No shimmer. A text line is 16, a row about 56. */
+.om-skeleton{height:var(--skeleton-height,16px);border-radius:var(--radius-xs);background:var(--sunken)}
+/* One ink-3 line, centred, and an optional tertiary action under it. */
+.om-empty-state{display:flex;flex-direction:column;align-items:center;gap:var(--s-8);width:100%;padding:var(--s-24) 0}
+.om-empty-state-text{font:var(--text-subhead);letter-spacing:var(--track-subhead);color:var(--ink-3);text-align:center}
+/* Both are callouts: tone container, radius lg, a 20 icon in the tone's strong colour, on-container text. */
+.om-error-state,.om-offline-banner{display:flex;align-items:flex-start;gap:var(--icon-text);width:100%;
+  padding:var(--surface-padding);border-radius:var(--radius-lg);--icon-size:20px}
+.om-error-state{background:var(--danger-container);color:var(--danger-on-container)}
+.om-error-state>.om-icon{color:var(--danger-strong)}
+/* Neutral, never a warning: grey means offline, and nothing is wrong with the saved data. */
+.om-offline-banner{background:var(--neutral-container);color:var(--neutral-on-container)}
+.om-offline-banner>.om-icon{color:var(--neutral-strong)}
+.om-state-body{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:var(--s-4)}
+.om-state-title{font:var(--text-body-strong);letter-spacing:var(--track-body-strong)}
+.om-state-text{font:var(--text-subhead);letter-spacing:var(--track-subhead)}
+
+/* ---------- CalendarMonth, CalendarDay, Legend ---------- */
+.om-calendar-month{display:flex;flex-direction:column;gap:var(--s-4);width:100%}
+.om-calendar-weekdays{display:grid;grid-template-columns:repeat(7,minmax(0,1fr))}
+.om-calendar-weekdays>*{font:var(--text-caption);letter-spacing:var(--track-caption);color:var(--ink-3);
+  text-align:center;white-space:nowrap;overflow:hidden}
+/* Weeks of seven, 4 apart. Leading days are empty cells; the last week is left short. */
+.om-calendar-days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:var(--s-4)}
+/* Unmarked: a plain ink-3 number, no fill. 40 tall read-only, 48 when tappable. */
+.om-calendar-day{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-height:40px;border-radius:var(--radius-md);color:var(--day-fg,var(--ink-3));
+  font:var(--text-body-strong);letter-spacing:var(--track-body-strong);font-feature-settings:"tnum";white-space:nowrap}
+.om-calendar-day--tappable{min-height:var(--min-touch-target);cursor:pointer}
+/* An optional short second line under the number; the cell grows to fit it. */
+.om-calendar-day-caption{font:var(--text-caption);letter-spacing:var(--track-caption);font-feature-settings:"tnum";
+  color:var(--day-fg,var(--ink-2));text-align:center}
+/* Today: a 1.5 ink ring, and ink text when the day carries no tone. */
+.om-calendar-day.is-today{color:var(--day-fg,var(--ink))}
+.om-calendar-day.is-today::before{content:"";position:absolute;inset:0;border:1.5px solid var(--ink);border-radius:inherit}
+/* Selected: a 2 accent ring, drawn inside today's ring so a selected today shows both. */
+.om-calendar-day.is-selected::after{content:"";position:absolute;inset:0;border:2px solid var(--accent-mark);border-radius:inherit}
+.om-calendar-day.is-today.is-selected::after{inset:1.5px}
+/* Marked: the tone's container with on-container text. The meaning is also in the cell's spoken name. */
+.om-calendar-day--info{background:var(--info-container);--day-fg:var(--info-on-container)}
+.om-calendar-day--help{background:var(--help-container);--day-fg:var(--help-on-container)}
+.om-calendar-day--tip{background:var(--tip-container);--day-fg:var(--tip-on-container)}
+.om-calendar-day--success{background:var(--success-container);--day-fg:var(--success-on-container)}
+.om-calendar-day--warning{background:var(--warning-container);--day-fg:var(--warning-on-container)}
+.om-calendar-day--danger{background:var(--danger-container);--day-fg:var(--danger-on-container)}
+.om-calendar-day--neutral{background:var(--neutral-container);--day-fg:var(--neutral-on-container)}
+
+/* A 12 swatch in each tone's container, edged in its strong colour, with the label beside it. Wraps. */
+.om-legend{display:flex;flex-wrap:wrap;gap:var(--s-8) var(--s-16);width:100%}
+.om-legend-item{display:inline-flex;align-items:center;gap:var(--s-8);font:var(--text-caption);
+  letter-spacing:var(--track-caption);color:var(--ink-2)}
+.om-legend-swatch{flex:none;width:12px;height:12px;border-radius:var(--radius-full);border:1px solid var(--neutral-strong);
+  background:var(--neutral-container)}
+.om-legend-swatch--info{background:var(--info-container);border-color:var(--info-strong)}
+.om-legend-swatch--help{background:var(--help-container);border-color:var(--help-strong)}
+.om-legend-swatch--tip{background:var(--tip-container);border-color:var(--tip-strong)}
+.om-legend-swatch--success{background:var(--success-container);border-color:var(--success-strong)}
+.om-legend-swatch--warning{background:var(--warning-container);border-color:var(--warning-strong)}
+.om-legend-swatch--danger{background:var(--danger-container);border-color:var(--danger-strong)}
+.om-legend-swatch--neutral{background:var(--neutral-container);border-color:var(--neutral-strong)}
+
+/* ---------- DayStrip ---------- */
+/* A horizontally scrolling row of 48 by 64 cells, 8 apart, with the page margin as content padding. */
+.om-day-strip{display:flex;gap:var(--inline-gap);width:100%;padding:0 var(--page-margin);overflow-x:auto;scrollbar-width:none}
+.om-day-strip::-webkit-scrollbar{display:none}
+.om-day-strip-day{position:relative;flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--s-2);
+  min-width:48px;min-height:64px;padding:var(--s-8) var(--s-4);border-radius:var(--radius-md);color:var(--ink);cursor:pointer}
+.om-day-strip-weekday{font:var(--text-caption);letter-spacing:var(--track-caption);color:var(--ink-3);white-space:nowrap}
+.om-day-strip-date{font:var(--text-body-strong);letter-spacing:var(--track-body-strong);font-feature-settings:"tnum";white-space:nowrap}
+/* The dot's 4 is always reserved; it is filled only on a marked day. */
+.om-day-strip-dot{flex:none;width:4px;height:4px;border-radius:var(--radius-full)}
+.om-day-strip-day.is-marked .om-day-strip-dot{background:var(--ink-3)}
+/* Selected: ink fill, paper text. */
+.om-day-strip-day.is-selected{background:var(--ink);color:var(--paper)}
+.om-day-strip-day.is-selected .om-day-strip-weekday{color:var(--paper)}
+.om-day-strip-day.is-selected.is-marked .om-day-strip-dot{background:var(--paper)}
+/* Today, when it is not the selected day: a 1 outline ring. */
+.om-day-strip-day.is-today:not(.is-selected)::before{content:"";position:absolute;inset:0;border:1px solid var(--outline);border-radius:inherit}

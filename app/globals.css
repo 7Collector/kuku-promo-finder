@@ -1,0 +1,135 @@
+/* Omega Design System Global Entry Point */
+@import "../Design/omega-design-system/tokens/colors.css";
+@import "../Design/omega-design-system/tokens/typography.css";
+@import "../Design/omega-design-system/tokens/spacing.css";
+@import "../Design/omega-design-system/tokens/radii.css";
+@import "../Design/omega-design-system/tokens/elevation.css";
+@import "../Design/omega-design-system/tokens/motion.css";
+@import "../Design/omega-design-system/tokens/icons.css";
+@import "../Design/omega-design-system/tokens/base.css";
+@import "../Design/omega-design-system/components/actions/actions.css";
+@import "../Design/omega-design-system/components/data/data.css";
+@import "../Design/omega-design-system/components/shell/shell.css";
+@import "../Design/omega-design-system/components/visuals/visuals.css";
+
+@font-face {
+  font-family: "Inter";
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url("/fonts/inter_regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Inter";
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  src: url("/fonts/inter_medium.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Inter";
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+  src: url("/fonts/inter_semibold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Inter";
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  src: url("/fonts/inter_bold.ttf") format("truetype");
+}
+
+/* App Specific Layout Helpers conforming strictly to Omega Tokens */
+:root {
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+  background-color: var(--paper);
+  color: var(--ink);
+  min-height: 100vh;
+}
+
+.kuku-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--s-24) var(--page-margin);
+}
+
+.kuku-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: var(--s-16);
+}
+
+.kuku-board {
+  background-color: var(--board);
+  color: var(--on-board);
+  border-radius: var(--radius-xl);
+  padding: var(--s-32);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+
+.kuku-card {
+  background-color: var(--surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--hairline);
+  padding: var(--s-20);
+  transition: transform var(--dur-fast) var(--ease-standard), border-color var(--dur-fast);
+  display: flex;
+  flex-direction: column;
+}
+
+.kuku-card:hover {
+  border-color: var(--outline);
+}
+
+.kuku-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-4);
+  padding: var(--s-4) var(--s-8);
+  border-radius: var(--radius-xs);
+  font: var(--text-caption);
+  letter-spacing: var(--track-caption);
+  text-transform: none;
+}
+
+.kuku-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-6);
+  padding: var(--s-6) var(--s-12);
+  border-radius: var(--radius-full);
+  font: var(--text-button-compact);
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: all var(--dur-fast);
+}
+
+.kuku-chip:hover {
+  background: var(--sunken);
+  color: var(--ink);
+}
+
+.kuku-chip.active {
+  background: var(--accent-container);
+  color: var(--on-accent-container);
+  border-color: transparent;
+  font-weight: 600;
+}
+
+.kuku-ai-sparkle {
+  background: var(--ai-gradient);
+  -webkit-mask: var(--icon-sparkle) center/contain no-repeat;
+  mask: var(--icon-sparkle) center/contain no-repeat;
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+}

@@ -1,0 +1,16 @@
+<!-- @dsCard group="Actions" viewport="700x168" name="Spinner" subtitle="Inline 18 px wait: accent mark, danger tint, inside a button, beside a row label" -->
+<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../../styles.css">
+<style>body{padding:20px}.lab{font:var(--text-caption);color:var(--ink-2);margin:0 0 8px}.lab:not(:first-child){margin-top:20px}.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.cols{display:grid;grid-template-columns:1fr 1fr;gap:20px 16px;align-items:start}.surf{background:var(--surface);border-radius:var(--radius-lg);padding:16px}.board{background:var(--board);border-radius:var(--radius-xl);padding:20px}.row{gap:24px}.it{display:flex;align-items:center;gap:12px;font:var(--text-subhead);color:var(--ink-2)}</style>
+</head><body>
+<div class="row">
+  <div class="it"><svg class="om-spinner" viewBox="0 0 18 18" role="img" aria-label="Loading"><circle cx="9" cy="9" r="8"/></svg>Accent mark, the default</div>
+  <div class="it"><svg class="om-spinner om-spinner--danger" viewBox="0 0 18 18" role="img" aria-label="Loading"><circle cx="9" cy="9" r="8"/></svg>Danger tint</div>
+  <div class="it"><svg class="om-spinner" viewBox="0 0 18 18" role="img" aria-label="Downloading report card"><circle cx="9" cy="9" r="8"/></svg>Downloading report card</div>
+</div>
+<p class="lab">Inside a button it takes the label's place and colour</p>
+<div class="row" style="gap:8px">
+  <button class="om-button om-button--primary om-button--compact is-loading" aria-label="Submit, loading"><svg class="om-spinner" viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="8"/></svg></button>
+  <button class="om-button om-button--tertiary is-loading" aria-label="Retry, loading"><svg class="om-spinner" viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="8"/></svg></button>
+  <div class="board" style="padding:8px 12px;border-radius:var(--radius-lg)"><button class="om-button om-button--tertiary om-button--on-board is-loading" aria-label="Skip, loading"><svg class="om-spinner" viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="8"/></svg></button></div>
+</div>
+</body></html>

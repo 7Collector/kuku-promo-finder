@@ -1,0 +1,11 @@
+/* Omega motion: short, physical, never looping. Generated from OmegaMotion.kt. */
+:root{
+  --dur-fast: 100ms; /* press feedback */
+  --dur-standard: 180ms; /* state changes, segment slide, crossfades, screen enter */
+  --dur-emphasized: 280ms; /* sheets, expanding content, item entrance */
+  --ease-standard: cubic-bezier(0.2,0,0,1);
+  --ease-exit: cubic-bezier(0.3,0,1,1);
+  --enter-rise: 8px; /* how far an entering item rises */
+  --enter-stagger: 40ms; /* gap between staggered entrances, capped at five */
+}
+@media (prefers-reduced-motion:reduce){:root{--dur-fast:0ms;--dur-standard:0ms;--dur-emphasized:0ms;--enter-stagger:0ms}}

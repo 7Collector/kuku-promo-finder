@@ -1,0 +1,363 @@
+/* Omega data components: surfaces, lists, status, cards, tiles, timeline, tables, the deck.
+   Translated from omega-kmp :ui designsystem (OmegaSurface, OmegaList, OmegaStatus, BentoTile, BoardCard,
+   TimelineRow, SubtopicRow, OmegaFigureStrip, OmegaDataTable, TileGrid, StackedCardDeck, AttachmentThumbnail).
+   dp and sp map 1:1 to px. Literal sizes below are the private constants of the Kotlin file named beside them. */
+
+/* ── Shared: tone slots and press feedback ─────────────────────────────────────────────────────────── */
+
+/* A tone modifier fills three slots; the component decides which slot paints what. */
+.om-status-badge--info,.om-status-pill--info,.om-callout--info,.om-figure-cell--info{--_strong:var(--info-strong);--_container:var(--info-container);--_on:var(--info-on-container)}
+.om-status-badge--help,.om-status-pill--help,.om-callout--help,.om-figure-cell--help{--_strong:var(--help-strong);--_container:var(--help-container);--_on:var(--help-on-container)}
+.om-status-badge--tip,.om-status-pill--tip,.om-callout--tip,.om-figure-cell--tip{--_strong:var(--tip-strong);--_container:var(--tip-container);--_on:var(--tip-on-container)}
+.om-status-badge--success,.om-status-pill--success,.om-callout--success,.om-figure-cell--success{--_strong:var(--success-strong);--_container:var(--success-container);--_on:var(--success-on-container)}
+.om-status-badge--warning,.om-status-pill--warning,.om-callout--warning,.om-figure-cell--warning{--_strong:var(--warning-strong);--_container:var(--warning-container);--_on:var(--warning-on-container)}
+.om-status-badge--danger,.om-status-pill--danger,.om-callout--danger,.om-figure-cell--danger{--_strong:var(--danger-strong);--_container:var(--danger-container);--_on:var(--danger-on-container)}
+.om-status-badge--neutral,.om-status-pill--neutral,.om-callout--neutral,.om-figure-cell--neutral{--_strong:var(--neutral-strong);--_container:var(--neutral-container);--_on:var(--neutral-on-container)}
+
+/* Press (OmegaPress.kt): an ink ripple at the ripple's own low alpha on every target; a card or tile that is
+   one target also scales to 0.98. Rows take the ripple alone. `.is-pressed` shows the state statically. */
+.om-surface--tappable,.om-card--tappable,.om-board-card--tappable,.om-module-tile,.om-list-row--tappable,
+.om-choice-row,.om-timeline-row--tappable,.om-figure-cell--tappable,.om-avatar--tappable,.om-deck-card--front{
+  position:relative;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.om-surface--tappable::before,.om-card--tappable::before,.om-board-card--tappable::before,.om-module-tile::before,
+.om-list-row--tappable::before,.om-choice-row::before,.om-timeline-row--tappable::before,
+.om-figure-cell--tappable::before,.om-avatar--tappable::before,.om-deck-card--front::before{
+  content:"";position:absolute;inset:0;border-radius:inherit;background:var(--ink);opacity:0;pointer-events:none;
+  transition:opacity var(--dur-fast) var(--ease-standard)}
+:is(.om-surface--tappable,.om-card--tappable,.om-board-card--tappable,.om-module-tile,.om-list-row--tappable,
+.om-choice-row,.om-timeline-row--tappable,.om-figure-cell--tappable,.om-avatar--tappable,.om-deck-card--front):is(:active,.is-pressed)::before{opacity:.1}
+.om-surface--tappable,.om-card--tappable,.om-board-card--tappable,.om-module-tile{
+  transition:transform var(--dur-fast) var(--ease-standard)}
+:is(.om-surface--tappable,.om-card--tappable,.om-board-card--tappable,.om-module-tile):is(:active,.is-pressed){transform:scale(.98)}
+@media (prefers-reduced-motion:reduce){
+  :is(.om-surface--tappable,.om-card--tappable,.om-board-card--tappable,.om-module-tile):is(:active,.is-pressed){transform:none}}
+
+/* ── OmegaSurface.kt: OmegaSurface, OmegaHairline, OmegaTwoPane ────────────────────────────────────── */
+
+/* Flat, Editorial, Raised and Overlay draw identically: surface, radius lg. Only Tonal differs. */
+.om-surface{display:flex;flex-direction:column;background:var(--surface);border-radius:var(--radius-lg);
+  padding:var(--surface-padding);overflow:hidden}
+.om-surface--tonal{background:var(--sunken);border-radius:var(--radius-md)}
+.om-surface--flush{padding:0}
+.om-surface--tappable{min-height:var(--min-touch-target)}
+
+.om-hairline{height:1px;background:var(--hairline);border:0;margin:0;flex:none}
+
+/* Stacked unless the window splits and the slot is at least 720 px wide; then 3:2. */
+.om-two-pane{display:flex;flex-direction:column;gap:var(--s-20)}
+.om-two-pane__main,.om-two-pane__supporting{min-width:0;display:flex;flex-direction:column}
+.om-two-pane--split{flex-direction:row;align-items:flex-start;gap:var(--pane-spacing)}
+.om-two-pane--split>.om-two-pane__main{flex:3 1 0}
+.om-two-pane--split>.om-two-pane__supporting{flex:2 1 0}
+
+/* ── OmegaList.kt: SectionHeader ───────────────────────────────────────────────────────────────────── */
+
+.om-section-header{display:flex;align-items:center;justify-content:space-between}
+.om-section-header__title{flex:1;min-width:0;font:var(--text-headline);letter-spacing:var(--track-headline);color:var(--ink);
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+.om-section-header__count{margin-left:var(--s-12);font:var(--text-caption);letter-spacing:var(--track-caption);
+  font-feature-settings:"tnum";color:var(--ink-3);white-space:nowrap}
+.om-section-header__trailing{margin-left:var(--s-12);flex:none}
+.om-section-header__action{margin-left:var(--s-8);flex:none}
+
+/* ── OmegaSurface.kt + OmegaList.kt: OmegaListGroup / GroupedList, OmegaListGroupItem ──────────────── */
+
+.om-list-group{display:flex;flex-direction:column;background:var(--surface);border-radius:var(--radius-lg);overflow:hidden}
+/* One row's share of a group whose rows are separate lazy items: square between, radius lg at the ends. */
+.om-list-group-item{display:flex;flex-direction:column;background:var(--surface);overflow:hidden}
+.om-list-group-item--first{border-top-left-radius:var(--radius-lg);border-top-right-radius:var(--radius-lg)}
+.om-list-group-item--last{border-bottom-left-radius:var(--radius-lg);border-bottom-right-radius:var(--radius-lg)}
+
+/* ── OmegaListEntry, ListRow, OmegaListRow ─────────────────────────────────────────────────────────── */
+
+/* The entry: 12/16 padding, 48 minimum, a 1 px hairline beneath it starting at the text keyline.
+   --_rule is the hairline's height; the last row sets it to 0. */
+.om-list-row{--_rule:1px;--_inset:var(--s-16);position:relative;display:flex;flex-direction:column;justify-content:flex-start;
+  min-height:calc(var(--min-touch-target) + var(--_rule));padding:var(--s-12) var(--s-16) calc(var(--s-12) + var(--_rule))}
+.om-list-row::after{content:"";position:absolute;left:var(--_inset);right:0;bottom:0;height:var(--_rule);background:var(--hairline)}
+.om-list-row--last{--_rule:0px}
+.om-list-row--with-leading{--_inset:68px} /* 16 + the 40 leading slot + 12 */
+.om-list-row--selected{background:linear-gradient(var(--accent-container),var(--accent-container)) top/100% calc(100% - var(--_rule)) no-repeat}
+.om-list-row--tappable::before{bottom:var(--_rule)}
+
+/* ListRow: 56 minimum for one line, 72 with a supporting line, meta or badge. */
+.om-list-row__main{display:flex;gap:var(--icon-text);align-items:center;min-height:calc(var(--row-min-one-line) - var(--s-24))}
+.om-list-row--two-line>.om-list-row__main{align-items:flex-start;min-height:calc(var(--row-min-two-line) - var(--s-24))}
+.om-list-row__leading{flex:none;width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:var(--ink-2)}
+.om-list-row__text{flex:1;min-width:0;display:flex;flex-direction:column;gap:var(--s-2)}
+.om-list-row__meta-row{display:flex;align-items:center;gap:var(--s-8)}
+.om-list-row__meta{font:var(--text-caption);letter-spacing:var(--track-caption);color:var(--ink-3);
+  min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.om-list-row__title-row{display:flex;align-items:flex-start;gap:var(--s-8)}
+.om-list-row__title{flex:1;min-width:0;font:var(--text-body-strong);letter-spacing:var(--track-body-strong);color:var(--ink);
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}
+.om-list-row__supporting{font:var(--text-subhead);letter-spacing:var(--track-subhead);color:var(--ink-2);
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+.om-list-row__supporting--full{display:block;-webkit-line-clamp:unset;overflow:visible}
+.om-list-row__value{flex:none;font:var(--text-body-strong);letter-spacing:var(--track-body-strong);font-feature-settings:"tnum";color:var(--ink)}
+.om-list-row__below{padding-top:var(--s-4)}
+.om-list-chevron{flex:none;--icon-size:20px;color:var(--ink-3)}
+
+/* OmegaListRow, the simple form: 48 minimum, always centred, an unboxed leading slot, title clamps at two. */
+.om-list-row--simple>.om-list-row__main{align-items:center;min-height:0}
+.om-list-row--simple .om-list-row__leading{width:auto;height:auto}
+.om-list-row--simple .om-list-row__title{-webkit-line-clamp:2}
+
+/* ── FactsList ─────────────────────────────────────────────────────────────────────────────────────── */
+
+.om-facts{display:flex;flex-direction:column}
+.om-facts__row{display:flex;align-items:center;gap:var(--s-16);padding-bottom:var(--s-12)}
+.om-facts__row+.om-facts__row{border-top:1px solid var(--hairline);padding-top:var(--s-12)}
+.om-facts__row:last-child{padding-bottom:0}
+.om-facts__label{flex:1;min-width:0;font:var(--text-subhead);letter-spacing:var(--track-subhead);color:var(--ink-2)}
+.om-facts__value{flex:1;min-width:0;text-align:right;font:var(--text-body-strong);letter-spacing:var(--track-body-strong);color:var(--ink)}
+/* Compact mode: each pair stacks, value under label. */
+.om-facts--compact .om-facts__row{flex-direction:column;align-items:stretch;gap:var(--s-2)}
+.om-facts--compact .om-facts__label,.om-facts--compact .om-facts__value{flex:none;text-align:left}
+
+/* ── ChoiceList ────────────────────────────────────────────────────────────────────────────────────── */
+
+.om-choice-list{display:flex;flex-direction:column;background:var(--surface);border-radius:var(--radius-lg);overflow:hidden}
+.om-choice-row{display:flex;align-items:center;gap:var(--icon-text);min-height:var(--row-min-one-line);padding:var(--s-12) var(--s-16)}
+.om-choice-row--two-line{min-height:var(--row-min-two-line)}
+.om-choice-row+.om-choice-row{margin-top:1px}
+.om-choice-row+.om-choice-row::after{content:"";position:absolute;left:50px;right:0;top:-1px;height:1px;background:var(--hairline)} /* 16 + 22 + 12 */
+.om-choice-row__text{flex:1;min-width:0;display:flex;flex-direction:column}
+.om-choice-row__label{font:var(--text-body);letter-spacing:var(--track-body);color:var(--ink)}
+.om-choice-row__supporting{font:var(--text-subhead);letter-spacing:var(--track-subhead);color:var(--ink-2)}
+/* The mark: outline when off, accent mark when on, with a surface dot (radio) or tick (checkbox). */
+.om-choice-mark{flex:none;width:22px;height:22px;border-radius:var(--radius-full);border:2px solid var(--outline);
+  display:flex;align-items:center;justify-content:center;color:var(--surface);--icon-size:14px}
+.om-choice-mark--checkbox{border-radius:var(--radius-xs)}
+.om-choice-mark .om-icon{display:none}
+.is-selected>.om-choice-mark,.om-choice-mark.is-selected{background:var(--accent-mark);border-color:transparent}
+.is-selected>.om-choice-mark:not(.om-choice-mark--checkbox)::after,.om-choice-mark.is-selected:not(.om-choice-mark--checkbox)::after{
+  content:"";width:8px;height:8px;border-radius:var(--radius-full);background:var(--surface)}
+.is-selected>.om-choice-mark--checkbox .om-icon,.om-choice-mark--checkbox.is-selected .om-icon{display:inline-block}
+
+/* ── OmegaStatus.kt: StatusBadge, StatusPill, SubjectTag, Callout, Avatar ──────────────────────────── */
+
+.om-status-badge,.om-status-pill{display:inline-flex;align-items:center;gap:var(--s-4);min-height:24px;
+  padding:var(--s-2) var(--s-8);background:var(--_container,var(--neutral-container));color:var(--_on,var(--neutral-on-container));
+  font:var(--text-caption);letter-spacing:var(--track-caption);--icon-size:14px;flex:none}
+.om-status-badge{border-radius:var(--radius-xs);white-space:nowrap}
+/* The pill wraps to two lines rather than cut a long age. */
+.om-status-pill{border-radius:var(--radius-full);flex:0 1 auto}
+.om-status-pill__dot{flex:none;width:8px;height:8px;border-radius:var(--radius-full);background:var(--_strong,var(--neutral-strong))}
+
+.om-subject-tag{display:inline-flex;align-items:center;gap:var(--s-8);font:var(--text-subhead);letter-spacing:var(--track-subhead);
+  color:var(--ink-2);white-space:nowrap}
+.om-subject-tag__dot{flex:none;width:8px;height:8px;border-radius:var(--radius-full);background:var(--subject-color,var(--subject-1))}
+.om-subject-tag--1{--subject-color:var(--subject-1)}.om-subject-tag--2{--subject-color:var(--subject-2)}
+.om-subject-tag--3{--subject-color:var(--subject-3)}.om-subject-tag--4{--subject-color:var(--subject-4)}
+.om-subject-tag--5{--subject-color:var(--subject-5)}.om-subject-tag--6{--subject-color:var(--subject-6)}
+.om-subject-tag--7{--subject-color:var(--subject-7)}.om-subject-tag--8{--subject-color:var(--subject-8)}
+
+.om-callout{display:flex;align-items:flex-start;gap:var(--icon-text);padding:var(--surface-padding);border-radius:var(--radius-lg);
+  background:var(--_container,var(--neutral-container));color:var(--_on,var(--neutral-on-container))}
+.om-callout__icon{--icon-size:20px;color:var(--_strong,var(--neutral-strong))}
+.om-callout__body{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:var(--s-4)}
+.om-callout__title{font:var(--text-body-strong);letter-spacing:var(--track-body-strong)}
+.om-callout__text{font:var(--text-subhead);letter-spacing:var(--track-subhead)}
+/* The callout's own tertiary action: 48 tall, padded wide, painted onContainer like the text around it. */
+.om-callout__action{display:inline-flex;align-items:center;justify-content:center;min-height:var(--min-touch-target);
+  padding:var(--s-12);border-radius:var(--radius-md);font:var(--text-body-strong);letter-spacing:var(--track-body-strong);color:inherit}
+
+.om-avatar{flex:none;display:inline-flex;align-items:center;justify-content:center;width:var(--avatar-size,40px);height:var(--avatar-size,40px);
+  border-radius:var(--radius-full);background:var(--accent-container);color:var(--on-accent-container);
+  font:var(--text-body-strong);letter-spacing:var(--track-body-strong);white-space:nowrap;overflow:hidden}
+
+/* ── BentoTile.kt: OmegaCard, OmegaProgressBar, BentoHeroTile, PulsingDot ──────────────────────────── */
+
+.om-card{display:flex;flex-direction:column;background:var(--surface);border-radius:var(--radius-lg);padding:var(--surface-padding)}
+.om-card--tappable{min-height:var(--min-touch-target)}
+/* An outline drawn over the fill, for a card that must stand out from identical neighbours. The colour is the
+   caller's (--card-border); 2 px unless the caller says otherwise. */
+.om-card--outlined{outline:var(--card-border-width,2px) solid var(--card-border,var(--outline));outline-offset:calc(var(--card-border-width,2px) * -1)}
+
+.om-progress{height:6px;border-radius:var(--radius-full);background:var(--sunken);overflow:hidden;flex:none}
+.om-progress__fill{height:100%;width:var(--progress,0%);border-radius:var(--radius-full);background:var(--accent-mark)}
+.om-progress--on-board{height:4px;background:var(--board-rule)}
+.om-progress--on-board>.om-progress__fill{background:var(--accent-mark-on-board)}
+
+/* The live indicator: a static 8 px dot. It never pulses. */
+.om-live-dot{flex:none;width:8px;height:8px;border-radius:var(--radius-full);background:var(--accent-mark)}
+.om-board-card .om-live-dot{background:var(--accent-mark-on-board)}
+
+/* BentoHeroTile: the next lecture, laid out on a board card. */
+.om-board-hero__kicker-row{display:flex;align-items:center;gap:var(--s-8)}
+.om-board-hero__kicker{min-width:0;font:var(--text-caption);letter-spacing:var(--track-caption);color:var(--on-board-2);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.om-board-hero__main{display:flex;align-items:flex-end;gap:var(--s-12);padding-top:var(--s-8)}
+.om-board-hero__text{flex:1;min-width:0}
+.om-board-hero__title{font:var(--text-title-medium);letter-spacing:var(--track-title-medium);color:var(--on-board);
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+.om-board-hero__subtitle{padding-top:var(--s-4);font:var(--text-subhead);letter-spacing:var(--track-subhead);color:var(--on-board-2);
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+.om-board-hero__trailing{flex:none;display:flex;flex-direction:column;align-items:flex-end}
+.om-board-hero__figure{font:var(--text-title-medium);letter-spacing:var(--track-title-medium);font-feature-settings:"tnum";
+  color:var(--on-board);white-space:nowrap}
+.om-board-hero__meta{font:var(--text-caption);letter-spacing:var(--track-caption);color:var(--on-board-2);white-space:nowrap}
+.om-board-hero>.om-progress{margin-top:var(--s-16)}
+
+/* ── BoardCard.kt: BoardCard, ScoreDisplay ─────────────────────────────────────────────────────────── */
+
+.om-board-card{display:flex;flex-direction:column;background:var(--board);color:var(--on-board);border-radius:var(--radius-xl);
+  padding:var(--s-20);overflow:hidden}
+/* A soft radial from the top-right corner reaching 0.7 of the board's longer side. */
+.om-board-card--glow{background:radial-gradient(circle farthest-side at 100% 0,var(--board-glow),transparent 70%),var(--board)}
+
+.om-score{display:flex;flex-direction:column;gap:var(--s-8)}
+.om-score__figure{font:var(--text-display);letter-spacing:var(--track-display);font-feature-settings:"tnum";color:var(--on-board);white-space:nowrap}
+.om-score__caption{font:var(--text-caption);letter-spacing:var(--track-caption);color:var(--on-board-2)}
+
+/* ── TimelineRow.kt: TimelineRow, ModuleTile ───────────────────────────────────────────────────────── */
+
+.om-timeline-row{display:flex;align-items:stretch;gap:var(--s-12)}
+.om-timeline-row__time{flex:none;min-width:56px;padding-top:var(--s-2);display:flex;flex-direction:column}
+.om-timeline-row__start{font:var(--text-body-strong);letter-spacing:var(--track-body-strong);font-feature-settings:"tnum";color:var(--ink);white-space:nowrap}
+.om-timeline-row__duration{font:var(--text-caption);letter-spacing:var(--track-caption);font-feature-settings:"tnum";color:var(--ink-3);white-space:nowrap}
+/* The rail: a 1 px line through an 8 px node that sits 6 px down. */
+.om-timeline-row__rail{flex:none;position:relative;width:8px}
+.om-timeline-row__rail::before{content:"";position:absolute;top:0;bottom:0;left:50%;width:1px;margin-left:-.5px;background:var(--hairline)}
+.om-timeline-row__node{position:absolute;top:6px;left:0;width:8px;height:8px;border-radius:var(--radius-full);background:var(--outline)}
+.om-timeline-row__body{flex:1;min-width:0;min-height:var(--min-touch-target);padding-bottom:var(--s-20);display:flex;flex-direction:column;gap:var(--s-2)}
+.om-timeline-row__flags{display:flex;gap:var(--s-8);font:var(--text-caption);letter-spacing:var(--track-caption);white-space:nowrap}
+.om-timeline-row__flag{color:var(--ink-2)}
+.om-timeline-row__kind{color:var(--ink-3)}
+.om-timeline-row__title{font:var(--text-body-strong);letter-spacing:var(--track-body-strong);color:var(--ink)}
+.om-timeline-row__subtitle{font:var(--text-subhead);letter-spacing:var(--track-subhead);color:var(--ink-2)}
+/* Live: the node and this row's rail in the accent mark, "Now" in accent text. */
+.om-timeline-row--live .om-timeline-row__rail::before,.om-timeline-row--live .om-timeline-row__node{background:var(--accent-mark)}
+.om-timeline-row--live .om-timeline-row__flag{color:var(--accent-text)}
+/* Private (the student's own task): a hollow node with a 1.5 px dashed ring, so it is a shape and not a colour. */
+.om-timeline-row--private .om-timeline-row__node{background:var(--paper)}
+.om-timeline-row--private .om-timeline-row__node::before{content:"";position:absolute;inset:0;border-radius:inherit;
+  background:repeating-conic-gradient(var(--ink-2) 0 36deg,transparent 36deg 72deg);
+  -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 1.5px),#000 calc(100% - 1.5px));
+  mask:radial-gradient(farthest-side,transparent calc(100% - 1.5px),#000 calc(100% - 1.5px))}
+
+.om-module-tile{display:flex;flex-direction:column;gap:var(--s-12);min-height:var(--min-touch-target);min-width:0;
+  padding:var(--surface-padding);background:var(--surface);border-radius:var(--radius-lg)}
+.om-module-tile__top{display:flex;align-items:flex-start;justify-content:space-between}
+.om-module-tile__icon{--icon-size:22px;color:var(--ink-2)}
+.om-module-tile__text{display:flex;flex-direction:column;gap:var(--s-2);min-width:0}
+.om-module-tile__name{font:var(--text-body-strong);letter-spacing:var(--track-body-strong);color:var(--ink);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.om-module-tile__meta{font:var(--text-caption);letter-spacing:var(--track-caption);color:var(--ink-3);
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+
+/* ── SubtopicRow.kt: OmegaStatusRing, SubtopicRow, ChapterCard ─────────────────────────────────────── */
+
+/* Three shapes, not three hues: filled with a tick, filled, hollow. */
+.om-status-ring{flex:none;width:18px;height:18px;border-radius:var(--radius-full);border:2px solid var(--outline);
+  display:flex;align-items:center;justify-content:center;--icon-size:10px;color:transparent}
+.om-status-ring .om-icon{display:none}
+.om-status-ring--done{border-color:var(--success-strong);background:var(--success-strong);color:var(--surface)}
+.om-status-ring--done .om-icon{display:inline-block}
+.om-status-ring--started{border-color:var(--accent);background:var(--accent-container)}
+.om-status-ring--not-started{border-color:var(--outline);background:transparent}
+
+.om-subtopic-row{display:flex;align-items:center;gap:var(--s-12)}
+.om-subtopic-row__title{flex:1;min-width:0;font:var(--text-body);letter-spacing:var(--track-body);color:var(--ink-2)}
+.om-subtopic-row__state{flex:none;font:var(--text-caption);letter-spacing:var(--track-caption);color:var(--outline);white-space:nowrap}
+.om-subtopic-row--done .om-subtopic-row__title{color:var(--ink-3)}
+.om-subtopic-row--done .om-subtopic-row__state{color:var(--success-strong)}
+.om-subtopic-row--started .om-subtopic-row__title{color:var(--ink)}
+.om-subtopic-row--started .om-subtopic-row__state{color:var(--accent)}
+.om-subtopic-row--not-started .om-subtopic-row__title{color:var(--ink-2)}
+.om-subtopic-row--not-started .om-subtopic-row__state{color:var(--outline)}
+
+.om-chapter-card__header{display:flex;align-items:center;gap:var(--s-12)}
+.om-chapter-card__number{flex:none;width:32px;height:32px;border-radius:var(--radius-md);background:var(--sunken);color:var(--ink-2);
+  display:flex;align-items:center;justify-content:center;font:var(--text-body-strong);letter-spacing:var(--track-body-strong);
+  font-feature-settings:"tnum";white-space:nowrap}
+.om-chapter-card__heading{flex:1;min-width:0}
+.om-chapter-card__title{font:var(--text-body-strong);letter-spacing:var(--track-body-strong);color:var(--ink)}
+.om-chapter-card__meta{padding-top:var(--s-2);font:var(--text-caption);letter-spacing:var(--track-caption);color:var(--ink-3)}
+.om-chapter-card>.om-progress{margin:var(--s-12) 0}
+.om-chapter-card__subtopics{display:flex;flex-direction:column;gap:var(--s-8)}
+
+/* ── OmegaFigureStrip.kt: OmegaFigureStrip, FigureCell, FigureDivider ──────────────────────────────── */
+
+.om-figure-strip{display:flex;align-items:stretch;min-height:96px;background:var(--surface);border-radius:var(--radius-lg);overflow:hidden}
+.om-figure-cell{flex:1 1 0;min-width:0;display:flex;flex-direction:column;justify-content:space-between;padding:var(--s-12)}
+.om-figure-cell__top{display:flex;align-items:flex-start;justify-content:space-between}
+.om-figure-cell__figure{font:var(--text-title-medium);letter-spacing:var(--track-title-medium);font-feature-settings:"tnum";color:var(--ink)}
+.om-figure-cell__icon{--icon-size:18px;margin-top:var(--s-4);color:var(--ink-2)}
+.om-figure-cell__bottom{padding-top:var(--s-8)}
+.om-figure-cell__label{font:var(--text-subhead);letter-spacing:var(--track-subhead);color:var(--ink)}
+/* Only the qualifier carries the tone, in the tone's strong colour. */
+.om-figure-cell__meta{padding-top:var(--s-2);font:var(--text-caption);letter-spacing:var(--track-caption);color:var(--_strong,var(--neutral-strong))}
+.om-figure-divider{flex:none;width:1px;background:var(--hairline)}
+
+/* ── OmegaDataTable.kt ─────────────────────────────────────────────────────────────────────────────── */
+
+.om-data-table{display:flex;flex-direction:column;gap:var(--s-8)}
+.om-data-table__frame{position:relative;border-radius:var(--radius-md);background:var(--surface);overflow:hidden}
+.om-data-table__frame::after{content:"";position:absolute;inset:0;border:1px solid var(--hairline);border-radius:inherit;pointer-events:none}
+.om-data-table__scroll{overflow-x:auto}
+.om-data-table table{border-collapse:collapse;border-spacing:0;min-width:100%}
+/* A column is as wide as its widest cell, held between 64 and 220 px; a long cell wraps. */
+.om-data-table th,.om-data-table td{box-sizing:border-box;min-width:64px;max-width:220px;padding:var(--s-8) var(--s-12);text-align:left;vertical-align:top;
+  font:var(--text-body);letter-spacing:var(--track-body);color:var(--ink);overflow-wrap:break-word}
+.om-data-table th{background:var(--sunken);font:var(--text-body-strong);letter-spacing:var(--track-body-strong)}
+.om-data-table tr+tr>*,.om-data-table tbody>tr:first-child>*{border-top:1px solid var(--hairline)}
+.om-data-table__caption{font:var(--text-caption);letter-spacing:var(--track-caption);color:var(--ink-2)}
+
+/* ── TileGrid.kt ───────────────────────────────────────────────────────────────────────────────────── */
+
+/* Fixed columns, an 11 px gap both ways, and one height for every tile (the tallest), not one per row. */
+.om-tile-grid{display:grid;grid-template-columns:repeat(var(--columns,2),minmax(0,1fr));grid-auto-rows:1fr;gap:11px}
+.om-tile-grid--1{--columns:1}.om-tile-grid--2{--columns:2}.om-tile-grid--3{--columns:3}
+
+/* ── StackedCardDeck.kt ────────────────────────────────────────────────────────────────────────────── */
+
+/* Up to three cards share one cell, so every card is as tall as the tallest. Depth is offset, scale and
+   opacity together: 6 px, 0.04 and 0.12 per card, shrinking toward the bottom edge. The bottom padding hands
+   the fanned edges' room back to the layout: 12 for three cards, 6 for two, none for one. */
+.om-card-deck{display:grid;padding-bottom:12px}
+.om-card-deck--two{padding-bottom:6px}
+.om-card-deck--one{padding-bottom:0}
+.om-card-deck>*{grid-area:1/1;min-width:0}
+.om-deck-card{display:flex;flex-direction:column;gap:var(--s-4);background:var(--surface);border:1px solid var(--hairline);
+  border-radius:var(--radius-lg);padding:calc(var(--surface-padding) - 1px);transform-origin:50% 100%;
+  transition:transform var(--dur-standard) var(--ease-standard),opacity var(--dur-standard) var(--ease-standard)}
+.om-deck-card--front,.om-card-deck__front{z-index:3}
+.om-deck-card--depth-1{z-index:2;transform:translateY(6px) scale(.96);opacity:.88}
+.om-deck-card--depth-2{z-index:1;transform:translateY(12px) scale(.92);opacity:.76}
+.om-deck-card__meta-row{display:flex;align-items:center;gap:var(--s-8)}
+.om-deck-card__kicker{min-width:0;font:var(--text-caption);letter-spacing:var(--track-caption);color:var(--ink-3);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.om-deck-card__title{font:var(--text-body-strong);letter-spacing:var(--track-body-strong);color:var(--ink);
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}
+/* Spare height sits between the title and the body, so the action lands on one baseline on every card. */
+.om-deck-card__body{margin-top:auto;font:var(--text-subhead);letter-spacing:var(--track-subhead);color:var(--ink-2);
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}
+.om-deck-card__body::before{content:"";display:block;height:var(--s-4)} /* the spacer's second 4 px gap */
+.om-deck-card__body--full{display:block;-webkit-line-clamp:unset;overflow:visible}
+.om-deck-card__cta{margin-top:var(--s-8);font:var(--text-body-strong);letter-spacing:var(--track-body-strong);color:var(--accent-text);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* Swipe: the front card slides over two stamp labels; each fades in with the drag toward its side. */
+.om-card-deck__front{position:relative;display:grid}
+.om-card-deck__front>*{grid-area:1/1;min-width:0}
+.om-card-deck__stamps{display:flex;align-items:center;justify-content:space-between;padding:0 var(--s-24);
+  font:var(--text-caption);letter-spacing:var(--track-caption)}
+.om-card-deck__stamp{opacity:var(--stamp-opacity,0)}
+.om-card-deck__stamp--right{color:var(--success-strong)}
+.om-card-deck__stamp--left{color:var(--ink-3)}
+.om-card-deck__front>.om-deck-card{transform:translateX(var(--drag-x,0px))}
+/* The empty deck keeps the reference footprint so the section stays anchored. */
+.om-card-deck-empty{height:174px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--s-8);
+  background:var(--surface);border-radius:var(--radius-lg);font:var(--text-subhead);letter-spacing:var(--track-subhead);color:var(--ink-2)}
+.om-card-deck-empty>.om-icon{--icon-size:24px;color:var(--success-strong)}
+
+/* ── AttachmentThumbnail.kt ────────────────────────────────────────────────────────────────────────── */
+
+/* The caller sizes and clips it (--thumb-size; chat uses radius md). Loading is a still picture glyph, never
+   a spinner; a picture that will not load is the danger container with a warning glyph. */
+.om-attachment-thumb{flex:none;position:relative;display:flex;align-items:center;justify-content:center;
+  width:var(--thumb-size,72px);height:var(--thumb-size,72px);background:var(--sunken);color:var(--ink-3);overflow:hidden;--icon-size:18px}
+.om-attachment-thumb>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.om-attachment-thumb--contain>img{object-fit:contain}
+.om-attachment-thumb--error{background:var(--danger-container);color:var(--danger-strong)}

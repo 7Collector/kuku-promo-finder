@@ -1,0 +1,64 @@
+<!-- @dsCard group="AI" viewport="700x628" name="AI card" subtitle="Answer, with an action, tappable, waiting, custom padding" -->
+<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../../styles.css">
+<style>
+body{padding:20px}
+.x-stack{display:flex;flex-direction:column;gap:var(--surface-gap)}
+.x-cols{display:flex;gap:var(--surface-gap);align-items:flex-start}
+.x-cols>*{flex:1;min-width:0}
+.x-body{font:var(--text-body);letter-spacing:var(--track-body);color:var(--ink)}
+.x-strong{font:var(--text-body-strong);letter-spacing:var(--track-body-strong);color:var(--ink)}
+.x-sub{font:var(--text-subhead);letter-spacing:var(--track-subhead);color:var(--ink-2)}
+.x-cap{font:var(--text-caption);letter-spacing:var(--track-caption);color:var(--ink-2);margin-top:var(--s-8)}
+/* Stand-in for OmegaButton, primary, not full width: 48 tall, radius md, 16 by 12, the 13 px compact label. */
+.x-btn{align-self:flex-start;display:inline-flex;align-items:center;justify-content:center;min-height:var(--min-touch-target);margin-top:var(--s-12);padding:12px 16px;border-radius:var(--radius-md);background:var(--accent);color:var(--on-accent);font:var(--text-button-compact);letter-spacing:var(--track-button-compact)}
+.x-note{font:var(--text-caption);letter-spacing:var(--track-caption);color:var(--ink-3);margin-top:var(--s-8)}
+</style>
+</head><body>
+<div class="x-stack">
+  <div>
+    <section class="om-ai-card">
+      <p class="om-ai-card-kicker"><i class="om-icon om-icon-sparkle om-gradient-sparkle"></i>Summary written by AI</p>
+      <p class="x-body">Class 8-B is steady in English and Hindi. Maths marks rose six points since the first term, mostly from the algebra unit. Science dipped after the chapter on light: nine students scored under half.</p>
+      <p class="x-cap">Written from this class's marks and attendance. Check before sharing.</p>
+    </section>
+    <p class="x-note">A plain surface, radius lg, 16 padding. The gradient sparkle and the kicker, in words, are what say a model wrote it.</p>
+  </div>
+  <div class="x-cols">
+    <div>
+      <section class="om-ai-card">
+        <p class="om-ai-card-kicker"><i class="om-icon om-icon-sparkle om-gradient-sparkle"></i>Draft a quiz with AI</p>
+        <p class="x-sub">Ten questions from chapter 7, trigonometric identities. You review every question before it is set.</p>
+        <span class="x-btn">Draft questions</span>
+      </section>
+      <p class="x-note">The card's own action is an ordinary primary button. The gradient stays on the mark.</p>
+    </div>
+    <div>
+      <button class="om-ai-card is-clickable" type="button">
+        <span class="om-ai-card-kicker"><i class="om-icon om-icon-sparkle om-gradient-sparkle"></i>3 things AI noticed this week</span>
+        <span class="x-strong">Two students dropped sharply</span>
+        <span class="x-sub" style="margin-top:var(--s-4)">Attendance and homework both fell for Aarav and Meera.</span>
+      </button>
+      <p class="x-note">With onClick the whole card is the target: at least 48 tall, and it scales to 0.98 while pressed.</p>
+    </div>
+  </div>
+  <div class="x-cols">
+    <div>
+      <section class="om-ai-card">
+        <p class="om-ai-card-kicker"><i class="om-icon om-icon-sparkle om-gradient-sparkle"></i>Overview written by AI</p>
+        <div class="om-thinking-skeleton" role="status" aria-label="Reading this term's marks">
+          <div class="om-thinking-label"><i class="om-icon om-icon-sparkle om-gradient-sparkle"></i>Reading this term's marks</div>
+          <div class="om-thinking-bar"></div><div class="om-thinking-bar"></div><div class="om-thinking-bar"></div>
+        </div>
+      </section>
+      <p class="x-note">Waiting: the thinking skeleton as the content. Nothing on the card moves.</p>
+    </div>
+    <div>
+      <section class="om-ai-card" style="padding:var(--s-12)">
+        <p class="om-ai-card-kicker"><i class="om-icon om-icon-sparkle om-gradient-sparkle"></i>Homework suggested by AI</p>
+        <p class="x-body">Exercise 7.2, questions 1 to 8. Ask for the working, not only the answers.</p>
+      </section>
+      <p class="x-note">contentPadding = 12, for a card inside a tighter layout.</p>
+    </div>
+  </div>
+</div>
+</body></html>

@@ -1,0 +1,34 @@
+<!-- @dsCard group="Actions" viewport="700x500" name="Composer" subtitle="Resting, focused with the AI ring, long draft, reply in flight, send enabled and disabled" -->
+<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../../styles.css">
+<style>body{padding:20px}.lab{font:var(--text-caption);color:var(--ink-2);margin:0 0 8px}.lab:not(:first-child){margin-top:20px}.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.cols{display:grid;grid-template-columns:1fr 1fr;gap:20px 16px;align-items:start}.surf{background:var(--surface);border-radius:var(--radius-lg);padding:16px}.board{background:var(--board);border-radius:var(--radius-xl);padding:20px}</style>
+</head><body>
+<p class="lab">Resting and empty: the send control is disabled</p>
+<div class="om-composer">
+  <button class="om-composer__action" aria-label="Attach"><span><i class="om-icon om-icon-plus"></i></span></button>
+  <div class="om-composer__field"><div class="om-field om-field--bare" style="flex:1"><div class="om-field__box"><div class="om-field__input om-field__placeholder">Ask about your homework</div></div></div></div>
+  <button class="om-send is-disabled" aria-label="Send" disabled><span class="om-send__circle"><i class="om-icon om-icon-arrow-up"></i></span></button>
+</div>
+<p class="lab">Focused with a draft: the AI ring is over the border, send takes the AI gradient</p>
+<div class="om-composer is-focused">
+  <button class="om-composer__action" aria-label="Attach"><span><i class="om-icon om-icon-plus"></i></span></button>
+  <div class="om-composer__field"><div class="om-field om-field--bare" style="flex:1"><div class="om-field__box"><div class="om-field__input">Why does sin 30° equal one half?<span class="om-field__caret"></span></div></div></div></div>
+  <button class="om-send" aria-label="Send"><span class="om-send__circle"><i class="om-icon om-icon-arrow-up"></i></span></button>
+</div>
+<p class="lab">A long draft grows upward; the controls stay on the bottom line</p>
+<div class="om-composer is-focused">
+  <button class="om-composer__action" aria-label="Attach"><span><i class="om-icon om-icon-plus"></i></span></button>
+  <div class="om-composer__field"><div class="om-field om-field--bare" style="flex:1"><div class="om-field__box"><div class="om-field__input">I got question 7 of exercise 4.2 wrong in class today. Can you walk me through it step by step, and then give me two more like it so I can practise before the unit test on Thursday?<span class="om-field__caret"></span></div></div></div></div>
+  <button class="om-send" aria-label="Send"><span class="om-send__circle"><i class="om-icon om-icon-arrow-up"></i></span></button>
+</div>
+<p class="lab">Reply in flight (the school app swaps send for stop) and the library pieces alone</p>
+<div class="om-composer">
+  <button class="om-composer__action" aria-label="Attach"><span><i class="om-icon om-icon-plus"></i></span></button>
+  <div class="om-composer__field"><div class="om-field om-field--bare" style="flex:1"><div class="om-field__box"><div class="om-field__input om-field__placeholder">Ask about your homework</div></div></div></div>
+  <button class="om-composer__action om-composer__action--stop" aria-label="Stop"><span><i class="om-icon om-icon-stop"></i></span></button>
+</div>
+<div class="row" style="margin-top:12px;gap:12px">
+  <button class="om-send" aria-label="Send"><span class="om-send__circle"><i class="om-icon om-icon-arrow-up"></i></span></button>
+  <button class="om-send is-disabled" aria-label="Send" disabled><span class="om-send__circle"><i class="om-icon om-icon-arrow-up"></i></span></button>
+  <span class="om-subhead" style="color:var(--ink-2)">Send enabled and disabled: a 40 px circle in a 48 px target</span>
+</div>
+</body></html>

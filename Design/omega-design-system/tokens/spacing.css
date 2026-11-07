@@ -1,0 +1,28 @@
+/* Omega spacing: a 4 px grid, no other values. Generated from OmegaShapes.kt. dp maps to px. */
+:root{
+  --s-2: 2px;
+  --s-4: 4px;
+  --s-8: 8px;
+  --s-12: 12px;
+  --s-16: 16px;
+  --s-20: 20px;
+  --s-24: 24px;
+  --s-32: 32px;
+  --s-40: 40px;
+  --s-48: 48px;
+  --section-gap: var(--s-32); /* between sections on a screen */
+  --header-to-content: var(--s-12);
+  --surface-padding: var(--s-16);
+  --surface-gap: var(--s-12); /* between separate surfaces */
+  --icon-text: var(--s-12);
+  --inline-gap: var(--s-8); /* between chips or segments */
+  --row-min-one-line: 56px;
+  --row-min-two-line: 72px;
+  --page-margin: var(--s-20); /* 24 from a 400 px wide window */
+  --max-content-width: 640px;
+  --wide-content-width: 1080px;
+  --pane-spacing: var(--s-24);
+  --bottom-nav-height: 64px;
+  --min-touch-target: 48px;
+}
+@media (min-width:400px){:root{--page-margin: var(--s-24)}}

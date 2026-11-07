@@ -1,0 +1,55 @@
+<!-- @dsCard group="Actions" viewport="700x780" name="Buttons" subtitle="Primary, secondary, tertiary and destructive; full width and compact; with icon, disabled, loading, on the board, dialog danger" -->
+<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../../styles.css">
+<style>body{padding:20px}.lab{font:var(--text-caption);color:var(--ink-2);margin:0 0 8px}.lab:not(:first-child){margin-top:20px}.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.cols{display:grid;grid-template-columns:1fr 1fr;gap:20px 16px;align-items:start}.surf{background:var(--surface);border-radius:var(--radius-lg);padding:16px}.board{background:var(--board);border-radius:var(--radius-xl);padding:20px}.stack{display:flex;flex-direction:column;gap:8px}.board .lab{color:var(--on-board-2)}</style>
+</head><body>
+<p class="lab">Full width: the one main action, and a secondary beside it</p>
+<div class="stack">
+  <button class="om-button om-button--primary om-button--full"><span class="om-button__label">Submit homework</span></button>
+  <button class="om-button om-button--secondary om-button--full"><span class="om-button__label">Save draft</span></button>
+</div>
+<p class="lab">Compact (hugs its label, 13 px) and text-only</p>
+<div class="row">
+  <button class="om-button om-button--primary om-button--compact"><span class="om-button__label">Going</span></button>
+  <button class="om-button om-button--secondary om-button--compact"><span class="om-button__label">No</span></button>
+  <button class="om-button om-button--secondary om-button--compact"><i class="om-icon om-icon-download"></i><span class="om-button__label">Download report</span></button>
+  <button class="om-button om-button--tertiary"><i class="om-icon om-icon-plus"></i><span class="om-button__label">Add task</span></button>
+  <button class="om-button om-button--tertiary"><span class="om-button__label">Retry</span></button>
+  <button class="om-button om-button--destructive"><span class="om-button__label">Delete</span></button>
+</div>
+<p class="lab">Disabled: filled styles share one look, text-only drops to ink 3</p>
+<div class="row">
+  <button class="om-button om-button--primary om-button--compact is-disabled" disabled><span class="om-button__label">Going</span></button>
+  <button class="om-button om-button--secondary om-button--compact is-disabled" disabled><span class="om-button__label">Save draft</span></button>
+  <button class="om-button om-button--tertiary is-disabled" disabled><i class="om-icon om-icon-plus"></i><span class="om-button__label">Add task</span></button>
+  <button class="om-button om-button--destructive is-disabled" disabled><span class="om-button__label">Delete</span></button>
+</div>
+<p class="lab">Loading: the spinner replaces the label</p>
+<div class="stack">
+  <button class="om-button om-button--primary om-button--full is-loading" aria-label="Submit homework, loading"><svg class="om-spinner" viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="8"/></svg></button>
+  <div class="row">
+    <button class="om-button om-button--primary om-button--compact is-loading" aria-label="Going, loading"><svg class="om-spinner" viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="8"/></svg></button>
+    <button class="om-button om-button--tertiary is-loading" aria-label="Retry, loading"><svg class="om-spinner" viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="8"/></svg></button>
+    <button class="om-button om-button--primary om-button--compact is-pressed"><span class="om-button__label">Pressed</span></button>
+    <button class="om-button om-button--secondary om-button--compact is-pressed"><span class="om-button__label">Pressed</span></button>
+  </div>
+</div>
+<p class="lab">On the board</p>
+<div class="board">
+  <div class="stack">
+    <button class="om-button om-button--primary om-button--full om-button--on-board"><span class="om-button__label">Start attendance</span></button>
+    <div class="row">
+      <button class="om-button om-button--primary om-button--compact om-button--on-board"><span class="om-button__label">Mark all present</span></button>
+      <button class="om-button om-button--secondary om-button--compact om-button--on-board"><span class="om-button__label">View class</span></button>
+      <button class="om-button om-button--tertiary om-button--on-board"><span class="om-button__label">Skip</span></button>
+      <button class="om-button om-button--destructive om-button--on-board"><span class="om-button__label">End period</span></button>
+      <button class="om-button om-button--tertiary om-button--on-board is-disabled" disabled><span class="om-button__label">Skip</span></button>
+      <button class="om-button om-button--secondary om-button--compact om-button--on-board is-disabled" disabled><span class="om-button__label">View class</span></button>
+    </div>
+  </div>
+</div>
+<p class="lab">Inside a destructive confirmation dialog only: the filled danger confirm</p>
+<div class="row" style="justify-content:flex-end">
+  <button class="om-button om-button--secondary om-button--compact"><span class="om-button__label">Keep homework</span></button>
+  <button class="om-button om-button--danger-fill om-button--compact"><span class="om-button__label">Delete homework</span></button>
+</div>
+</body></html>

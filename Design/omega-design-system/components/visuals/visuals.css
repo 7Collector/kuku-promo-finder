@@ -1,0 +1,204 @@
+/* Omega visuals: charts, progress marks, plots, AI surfaces and marks, grounds, the map, sign-in.
+   Translated from omega-kmp :ui designsystem (OmegaCharts, ChartMetrics, DonutProgress, ProgressBarDots,
+   OmegaPlot, AiSurfaces, OmegaAiCard, AiGradientBorder, OnStageGlass, GroundBloom), :ui-map OmegaMap
+   and :signin. dp and sp map 1:1 to px. Literal numbers here are the Kotlin's own private constants. */
+
+/* ---- Series colour: chartSeriesColor(index) = the accent mark, then the eight subject colours, repeating ---- */
+.om-series-1{--om-series:var(--accent-mark)}
+.om-series-2{--om-series:var(--subject-1)}
+.om-series-3{--om-series:var(--subject-2)}
+.om-series-4{--om-series:var(--subject-3)}
+.om-series-5{--om-series:var(--subject-4)}
+.om-series-6{--om-series:var(--subject-5)}
+.om-series-7{--om-series:var(--subject-6)}
+.om-series-8{--om-series:var(--subject-7)}
+.om-series-9{--om-series:var(--subject-8)}
+
+/* ---- ChartFrame: title, value-axis name, drawing, category-axis name, legend; 8 between each ---- */
+.om-chart,.om-chart-frame{display:flex;flex-direction:column;gap:var(--s-8);width:100%;min-width:0}
+.om-chart-title{font:var(--text-body-strong);letter-spacing:var(--track-body-strong);color:var(--ink)}
+.om-chart-axis-name{font:var(--text-caption);letter-spacing:var(--track-caption);color:var(--ink-2)}
+.om-chart-axis-name.is-x{align-self:center}
+.om-chart-empty{font:var(--text-subhead);letter-spacing:var(--track-subhead);color:var(--ink-2)}
+
+/* CartesianCanvas: 160 plot + 1.5 caption lines + 4 = 188 tall. The plot starts half a caption line (8) down;
+   the left gutter is the widest tick label + 8; 4 is kept clear on the right. */
+.om-chart-canvas{display:block;width:100%;height:188px;overflow:visible}
+.om-chart-grid{stroke:var(--hairline);stroke-width:1;fill:none}
+.om-chart-grid.is-zero{stroke:var(--outline)}
+.om-chart-tick,.om-chart-label{font:var(--text-caption);letter-spacing:var(--track-caption);fill:var(--ink-2)}
+.om-chart-tick{text-anchor:end;font-feature-settings:"tnum"}
+.om-chart-label{text-anchor:middle}
+.om-chart-bar{fill:var(--om-series,var(--accent-mark))}
+.om-chart-line{fill:none;stroke:var(--om-series,var(--accent-mark));stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.om-chart-point{fill:var(--om-series,var(--accent-mark))}
+
+/* Legend: a 10 px round mark beside the name. Wrapping row for series, full-width list for a pie. */
+.om-chart-legend{display:flex;flex-wrap:wrap;gap:var(--s-4) var(--s-16)}
+.om-chart-legend.is-list{flex-direction:column;flex-wrap:nowrap;gap:var(--s-4)}
+.om-chart-legend-item{display:flex;align-items:center;gap:var(--s-8);font:var(--text-caption);letter-spacing:var(--track-caption);color:var(--ink)}
+.om-chart-swatch{flex:none;width:10px;height:10px;border-radius:var(--radius-full);background:var(--om-series,var(--accent-mark))}
+.om-chart-legend.is-list .om-chart-legend-name{flex:1;min-width:0}
+.om-chart-legend-figure{color:var(--ink-2);font-feature-settings:"tnum";white-space:nowrap}
+
+/* Pie: 160 across, centred; a 2 px line of the surface from the centre along each slice's start. */
+.om-pie{display:block;width:160px;height:160px;margin:0 auto}
+.om-pie-slice{fill:var(--om-series,var(--accent-mark))}
+.om-pie-gap{stroke:var(--surface);stroke-width:2}
+
+/* ---- Sparkline: 64 x 24, a 1.5 line with round joins and a 2.25 dot on the last value ---- */
+.om-sparkline{display:inline-block;flex:none;width:64px;height:24px;color:var(--accent-mark);vertical-align:middle}
+.om-sparkline-line{fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.om-sparkline-dot{fill:currentColor}
+
+/* ---- DonutProgress: on a 48 box the ring is r 20 with a 6 stroke; both scale with --donut-size ---- */
+.om-donut{position:relative;display:inline-grid;place-items:center;flex:none;width:var(--donut-size,48px);height:var(--donut-size,48px);color:var(--accent-mark)}
+.om-donut-ring{position:absolute;inset:0;width:100%;height:100%}
+.om-donut-track{fill:none;stroke:var(--donut-track,var(--sunken));stroke-width:6}
+.om-donut-arc{fill:none;stroke:currentColor;stroke-width:6;stroke-linecap:round;transition:stroke-dasharray var(--dur-emphasized) var(--ease-standard)}
+.om-donut-figure{position:relative;font:var(--text-caption);letter-spacing:var(--track-caption);font-feature-settings:"tnum";color:var(--ink);white-space:nowrap}
+
+/* ---- ProgressBarDots: 5 tall pills, 5 apart; width says where you are (20 here, 10 passed, 6 ahead) ---- */
+.om-progress-dots{display:inline-flex;align-items:center;gap:5px;--dots-accent:var(--accent-mark);--dots-faint:var(--outline)}
+.om-progress-dot{flex:none;width:6px;height:5px;border-radius:var(--radius-full);background:var(--dots-faint);transition:width var(--dur-standard) var(--ease-standard)}
+.om-progress-dot.is-passed{width:10px;background:var(--dots-accent)}
+.om-progress-dot.is-current{width:20px;background:var(--dots-accent)}
+
+/* ---- OmegaPlot: a chart frame (curves 2 px, clipped to the plot, vertical gridlines too), then a slider row per parameter ---- */
+.om-plot{display:flex;flex-direction:column;gap:var(--s-8);width:100%;min-width:0}
+.om-plot-curve{fill:none;stroke:var(--om-series,var(--accent-mark));stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---- The AI mark: a glyph filled with the AI gradient. One of the few places the gradient is allowed. ---- */
+.om-icon.om-gradient-glyph,.om-icon.om-gradient-sparkle{background:var(--ai-gradient)}
+
+/* SpinningGradientRing at rest: the gradient sparkle (0.46 of the size) on an accent-container disc. */
+.om-ai-ring{display:inline-grid;place-items:center;flex:none;width:var(--ring-size,40px);height:var(--ring-size,40px);border-radius:var(--radius-full);background:var(--accent-container)}
+.om-ai-ring>.om-icon{--icon-size:calc(var(--ring-size,40px) * 0.46)}
+/* Used as a wait indicator (a period under 3 s) it is the system spinner instead: size less 5, stroke 2.5. */
+.om-ai-ring.is-waiting{background:none;color:var(--accent-mark)}
+.om-ai-ring-spinner{width:calc(var(--ring-size,40px) - 5px);height:calc(var(--ring-size,40px) - 5px);animation:om-visuals-spin 1.2s linear infinite}
+.om-ai-ring-spinner circle{fill:none;stroke:currentColor;stroke-linecap:round}
+@keyframes om-visuals-spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.om-ai-ring-spinner{animation:none}}
+
+/* ---- OmegaAiCard: a plain surface, radius lg. No gradient ring, no wash; the sparkle and the kicker mark it. ---- */
+.om-ai-card{display:flex;flex-direction:column;width:100%;padding:var(--surface-padding);border-radius:var(--radius-lg);background:var(--surface);color:var(--ink);text-align:start}
+.om-ai-card-kicker{display:flex;align-items:center;gap:var(--s-8);margin-bottom:var(--s-8);font:var(--text-caption);letter-spacing:var(--track-caption);color:var(--ink-2)}
+.om-ai-card-kicker>.om-icon{--icon-size:16px}
+.om-ai-card.is-clickable{min-height:var(--min-touch-target);cursor:pointer;transition:transform var(--dur-fast) var(--ease-standard)}
+.om-ai-card.is-clickable:active{transform:scale(0.98)}
+
+/* ---- aiGradientBorder: the AI gradient stroked 2 px inside the shape, resting at 25 degrees, over a fill.
+   Only on the composer focus ring, the enabled send button, and a pill that is itself an AI control. ---- */
+.om-ai-border{border:var(--ai-border-width,2px) solid transparent;
+  background:linear-gradient(var(--ai-border-fill,var(--surface)),var(--ai-border-fill,var(--surface))) padding-box,
+    linear-gradient(115deg,var(--ai-1),var(--ai-2),var(--ai-3)) border-box}
+
+/* ---- ThinkingSkeleton: the sparkle and a label, then three still bars at 100, 82 and 58 per cent ---- */
+.om-thinking-skeleton{display:flex;flex-direction:column;gap:var(--s-8)}
+.om-thinking-label{display:flex;align-items:center;gap:var(--s-8);font:var(--text-caption);letter-spacing:var(--track-caption);color:var(--ink-2);white-space:nowrap}
+.om-thinking-label>.om-icon{--icon-size:16px}
+.om-thinking-bar{height:12px;width:100%;border-radius:var(--radius-xs);background:var(--sunken)}
+.om-thinking-bar+.om-thinking-bar{width:82%}
+.om-thinking-bar+.om-thinking-bar+.om-thinking-bar{width:58%}
+
+/* ---- FormulaPlate: display maths on its own sunken plate, radius md, 16 padding ---- */
+.om-formula-plate{display:flex;align-items:center;justify-content:center;width:100%;padding:16px;border-radius:var(--radius-md);background:var(--sunken);color:var(--ink)}
+.om-formula-plate-text{font:var(--text-formula);letter-spacing:var(--track-formula);display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;overflow:hidden}
+
+/* ---- Grounds: both draw flat paper. No blooms, nothing moves. ---- */
+.om-aurora,.om-ground-bloom{width:100%;height:100%;background:var(--paper)}
+
+/* ---- onStageGlass: a surface drawn on the board. Raised board fill, a 1 px board rule; the caller gives the shape. ---- */
+.om-on-stage-glass{background:var(--board-raised);border:1px solid var(--board-rule);color:var(--on-board)}
+
+/* ---- OmegaMiniMap: at least 148 tall, radius md, hairline edge, the licence line 4 under it ---- */
+.om-map{display:flex;flex-direction:column;gap:var(--s-4);width:100%}
+.om-map-frame{position:relative;display:block;width:100%;min-height:148px;border:1px solid var(--hairline);border-radius:var(--radius-md);overflow:hidden;background:var(--sunken)}
+.om-map-canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.om-map-attribution{font:var(--text-caption);letter-spacing:var(--track-caption);color:var(--ink-2)}
+/* The placeholder covers the map until it has loaded, and stays when it cannot load. */
+.om-map-placeholder{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--s-4);width:100%;min-height:148px;padding:var(--s-12);background:var(--sunken);color:var(--ink-2);text-align:center;font:var(--text-subhead);letter-spacing:var(--track-subhead)}
+.om-map-placeholder>.om-icon{--icon-size:20px}
+.om-map-placeholder-note{font:var(--text-caption);letter-spacing:var(--track-caption)}
+
+/* What is drawn on the map. The ground and streets stand in for the tiles. */
+.om-map-ground{fill:var(--sunken)}
+.om-map-street{fill:none;stroke:var(--surface);stroke-linecap:round;stroke-linejoin:round}
+.om-map-block{fill:var(--hairline)}
+.om-map-route-casing{fill:none;stroke:var(--surface);stroke-width:8;stroke-linecap:round;stroke-linejoin:round}
+.om-map-route{fill:none;stroke:var(--accent-mark);stroke-width:5;stroke-linecap:round;stroke-linejoin:round}
+.om-map-route.is-driven{stroke:var(--ink-3);stroke-opacity:0.7}
+.om-map-pin-body{fill:var(--accent-mark);stroke:var(--surface);stroke-width:2;stroke-linejoin:round}
+.om-map-pin-mirror{fill:var(--accent-mark);stroke:var(--surface);stroke-width:1}
+.om-map-pin-glass{fill:var(--surface)}
+.om-map-pin-roof{fill:var(--surface);fill-opacity:0.55}
+.om-map-halo{fill:var(--accent-mark);fill-opacity:0.18}
+.om-map-landmark{fill:var(--ink-2);stroke:var(--surface);stroke-width:2}
+.om-map-label{font:700 13px/1 var(--font-sans);fill:var(--ink);stroke:var(--surface);stroke-width:4px;stroke-linejoin:round;paint-order:stroke;text-anchor:middle}
+.om-map-label.is-landmark{font-weight:400;font-size:11.05px;fill:var(--ink-2)}
+.om-map-pin.is-dimmed{opacity:0.5}
+
+/* ---- OmegaFullScreenMap: paper under the map, a surface bar on top, the actions in a surface sheet at the bottom ---- */
+.om-map-full{position:relative;overflow:hidden;background:var(--paper)}
+.om-map-full-bar{position:absolute;top:0;left:0;right:0;display:flex;align-items:center;gap:var(--s-8);padding:var(--s-4) var(--s-8);background:var(--surface)}
+.om-map-full-close{display:grid;place-items:center;flex:none;width:var(--min-touch-target);height:var(--min-touch-target);border-radius:var(--radius-full);color:var(--ink-2);--icon-size:20px}
+.om-map-full-title{flex:1;min-width:0;font:var(--text-title-medium);letter-spacing:var(--track-title-medium);color:var(--ink);display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+.om-map-full-bottom{position:absolute;left:0;right:0;bottom:0;display:flex;flex-direction:column;align-items:flex-end;gap:var(--s-12)}
+.om-map-recentre{display:inline-flex;align-items:center;gap:var(--s-8);min-height:var(--min-touch-target);margin-right:var(--surface-padding);padding:var(--s-8) var(--s-16);border:1px solid var(--hairline);border-radius:var(--radius-full);background:var(--surface);font:var(--text-subhead);letter-spacing:var(--track-subhead);color:var(--ink);white-space:nowrap}
+.om-map-recentre>.om-icon{--icon-size:20px;color:var(--accent-text)}
+.om-map-full-sheet{align-self:stretch;display:flex;flex-direction:column;gap:var(--s-8);padding:var(--surface-padding);border-radius:var(--radius-xl) var(--radius-xl) 0 0;background:var(--surface)}
+
+/* ---- Sign-in. Phone and code entry sit on paper; the chooser and the no-profiles screen are a full board. ---- */
+.om-signin{display:flex;flex-direction:column;width:100%;min-height:100%;padding:var(--s-24) var(--page-margin);background:var(--paper);color:var(--ink)}
+.om-signin.has-bar{padding-top:var(--s-8)}
+.om-signin-title{font:var(--text-title-large);letter-spacing:var(--track-title-large);color:var(--ink)}
+.om-signin-body{margin-top:var(--s-8);font:var(--text-body);letter-spacing:var(--track-body);color:var(--ink-2)}
+.om-signin-body b{font-weight:inherit;color:var(--ink);display:block}
+.om-signin-field-label{font:var(--text-subhead);letter-spacing:var(--track-subhead);font-weight:500;color:var(--ink);margin-bottom:var(--s-8)}
+/* The +91 and the digits share one box: surface, radius md, a 1 px outline that turns danger while the number is wrong. */
+.om-signin-phone{display:flex;align-items:center;gap:var(--s-8);min-height:var(--min-touch-target);padding:var(--s-12) var(--s-16);border:1px solid var(--outline);border-radius:var(--radius-md);background:var(--surface)}
+.om-signin-phone-prefix{font:var(--text-body-strong);letter-spacing:var(--track-body-strong);color:var(--ink-2)}
+.om-signin-phone-value{flex:1;min-width:0;font:var(--text-body-strong);letter-spacing:var(--track-body-strong);color:var(--ink)}
+.om-signin-phone-error{display:block;margin-top:var(--s-4);font:var(--text-caption);letter-spacing:var(--track-caption);color:var(--danger-strong)}
+.om-signin-phone.is-error{border-color:var(--danger-strong)}
+.om-signin-phone.is-error .om-signin-phone-value{color:var(--danger-strong)}
+/* A message under a field: always words. Danger for a failed request, warning for a dwindling attempts count. */
+.om-signin-notice{margin-top:var(--s-8);font:var(--text-subhead);letter-spacing:var(--track-subhead);color:var(--danger-strong)}
+.om-signin-notice.is-warning{color:var(--warning-strong)}
+/* Six drawn cells, 58 tall, 12 apart. The outline is the accent mark once a cell holds a digit, danger after a failure. */
+.om-signin-code{display:flex;gap:var(--surface-gap)}
+.om-signin-code-cell{flex:1;display:grid;place-items:center;min-height:58px;border:1px solid var(--outline);border-radius:var(--radius-md);background:var(--surface);font:var(--text-headline);letter-spacing:var(--track-headline);color:var(--ink)}
+.om-signin-code-cell.is-filled{border-color:var(--accent-mark)}
+.om-signin-code.is-error .om-signin-code-cell{border-color:var(--danger-strong)}
+.om-signin-resend-wait{display:flex;align-items:center;min-height:var(--min-touch-target);font:var(--text-subhead);letter-spacing:var(--track-subhead);color:var(--ink-3)}
+
+.om-signin-board{display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;min-height:100%;padding:var(--s-32) var(--page-margin);background:var(--board);color:var(--on-board);text-align:center}
+.om-signin-board.is-top{justify-content:flex-start}
+.om-signin-eyebrow{font:var(--text-caption);letter-spacing:var(--track-caption);color:var(--on-board-2);white-space:nowrap}
+.om-signin-board .om-signin-title{margin-top:var(--s-8);color:var(--on-board)}
+.om-signin-board.is-top .om-signin-title{margin-top:0}
+.om-signin-reason{margin-top:var(--s-12);font:var(--text-body);letter-spacing:var(--track-body);color:var(--on-board-2)}
+.om-signin-strong{margin-top:var(--s-12);font:var(--text-body-strong);letter-spacing:var(--track-body-strong);color:var(--on-board)}
+/* Two tiles to a row, 12 apart, equal heights; one to a row under 360 wide. */
+.om-signin-profiles{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-12);align-self:stretch;margin-top:var(--s-32);margin-bottom:var(--s-24)}
+.om-signin-profiles.is-compact{grid-template-columns:1fr}
+.om-signin-profile{display:flex;flex-direction:column;align-items:center;padding:var(--s-20) var(--s-12);border-radius:var(--radius-lg);background:var(--board-raised);cursor:pointer}
+.om-signin-profile-avatar{position:relative;display:grid;place-items:center;width:72px;height:72px;margin-bottom:var(--s-12)}
+.om-signin-profile-initials{display:grid;place-items:center;width:72px;height:72px;border-radius:var(--radius-full);background:var(--accent-container);font:var(--text-body-strong);letter-spacing:var(--track-body-strong);color:var(--on-accent-container)}
+.om-signin-profile-name{font:var(--text-body-strong);letter-spacing:var(--track-body-strong);color:var(--on-board)}
+.om-signin-profile-meta{margin-top:var(--s-2);font:var(--text-subhead);letter-spacing:var(--track-subhead);color:var(--on-board-2)}
+.om-signin-profile-last{display:flex;align-items:center;gap:var(--s-4);margin-top:var(--s-8);font:var(--text-caption);letter-spacing:var(--track-caption);color:var(--on-board-2);white-space:nowrap}
+.om-signin-profile-last::before{content:"";width:6px;height:6px;border-radius:var(--radius-full);background:var(--accent-mark-on-board)}
+/* The tapped tile while the profile opens: the avatar at 0.4 under a 32 spinner with a 3 stroke. */
+.om-signin-profile.is-loading .om-signin-profile-initials{opacity:0.4}
+.om-signin-profile-spinner{position:absolute;width:32px;height:32px;color:var(--accent-mark-on-board);animation:om-visuals-spin 1.2s linear infinite}
+.om-signin-profile-spinner circle{fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round}
+@media (prefers-reduced-motion:reduce){.om-signin-profile-spinner{animation:none}}
+/* "Don't ask next time": a checkbox, because it states a fact about later launches. */
+.om-signin-remember{display:flex;align-items:center;justify-content:center;gap:var(--s-12);align-self:stretch;min-height:var(--min-touch-target);margin-bottom:var(--s-8);padding:var(--s-8) 0;border-radius:var(--radius-md);font:var(--text-subhead);letter-spacing:var(--track-subhead);color:var(--on-board-2);cursor:pointer}
+.om-signin-check{display:grid;place-items:center;flex:none;width:24px;height:24px;border:1.5px solid var(--on-board-2);border-radius:var(--radius-xs);background:var(--board);color:var(--board);--icon-size:16px}
+.om-signin-check>.om-icon{visibility:hidden}
+.om-signin-remember.is-checked .om-signin-check{border-color:var(--accent-mark-on-board);background:var(--accent-mark-on-board)}
+.om-signin-remember.is-checked .om-signin-check>.om-icon{visibility:visible}
+.om-map-full>.om-map-placeholder{position:absolute;inset:0;min-height:0}
