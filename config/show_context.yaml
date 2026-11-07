@@ -1,0 +1,22 @@
+show_id: "broken_soldier_duke"
+show_title: "I Married a Broken Soldier. He was a Duke"
+genre: "Period Romance / Drama / Aristocratic Revenge"
+target_platform: "Instagram Reels / TikTok / YouTube Shorts"
+premise: >
+  Lady Juliana, an earnest and honorable young noblewoman, arrives at the cathedral for her wedding
+  only to be betrayed and publicly cast out by her fiancé Gerald and her cruel sister Clarissa, with her family's blessing.
+  Left with nothing, she is forced to marry the impoverished, crippled 'broken soldier' Alexander, who harbors a secret noble identity.
+protagonist:
+  name: "Lady Juliana"
+  archetype: "Honest, enduring, noble-hearted protagonist"
+  traits: ["Virtuous", "Resilient", "Victim of family greed and sisterly malice"]
+antagonists:
+  - name: "Gerald"
+    role: "Former fiancé who abandons her at the altar for her sister's wealth"
+  - name: "Clarissa"
+    role: "Cruel younger sister who covets everything Juliana has"
+  - name: "Matriarch"
+    role: "Calculating mother/dowager who orchestrates Juliana's humiliation"
+male_lead:
+  name: "Alexander (The Broken Soldier / Duke)"
+  role: "Apparent cripple/soldier who is secretly a legendary Duke of immense power and wealth"

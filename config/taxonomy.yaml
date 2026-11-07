@@ -1,0 +1,71 @@
+hooks:
+  - id: public_humiliation
+    name: "Public Humiliation & Scorn"
+    category: "injustice"
+    psychological_driver: "Outrage at disproportionate cruelty in front of peers"
+    example_cues: ["kneel down", "beg me", "laughing at her", "stripped of dignity", "scoff", "mocking", "ridicule"]
+    weight: 1.0
+
+  - id: physical_aggression
+    name: "Physical Aggression / Shock Violence"
+    category: "visceral"
+    psychological_driver: "Visceral jolt and immediate threat escalation"
+    example_cues: ["slap", "shove", "grabbed by collar", "wine thrown in face", "pushed to ground", "strikes", "thrown out"]
+    weight: 0.95
+
+  - id: intimate_betrayal
+    name: "Intimate Betrayal / Altar Abandonment"
+    category: "injustice"
+    psychological_driver: "Devastation of sacred trust by spouse, lover, or parent at a pivotal moment"
+    example_cues: ["wedding canceled", "holding another's hand", "you mean nothing to me", "divorce", "abandoned at altar", "replace you"]
+    weight: 0.95
+
+  - id: class_status_contempt
+    name: "Class & Status Contempt"
+    category: "injustice"
+    psychological_driver: "Sneering elitism treating the honest protagonist as dirt or servant"
+    example_cues: ["country bumpkin", "servant", "filth", "you're nothing without us", "worthless", "peasant", "lowborn"]
+    weight: 0.90
+
+  - id: hidden_identity_irony
+    name: "Ignorant Disrespect (Dramatic Irony)"
+    category: "irony"
+    psychological_driver: "Antagonist insults or mistreats protagonist, blind to their true royal or billionaire status"
+    example_cues: ["do you know who I am", "you can never afford this", "call security on him", "who do you think you are"]
+    weight: 0.90
+
+  - id: unjust_accusation
+    name: "Unjust Framing / False Blame"
+    category: "injustice"
+    psychological_driver: "Frustration at innocent person framed while villain smirks or takes credit"
+    example_cues: ["thief", "she stole it", "how dare you lie", "take the blame", "it was her fault"]
+    weight: 0.85
+
+cliffhangers:
+  - id: interrupted_retaliation
+    name: "Interrupted Retaliation / Comeuppance Cut"
+    category: "payoff_withheld"
+    psychological_driver: "Protagonist's eyes turn cold / starts to counterattack, cut right before strike"
+    example_cues: ["smiles faintly", "stands up slowly", "you will regret this", "eyes narrow", "steps forward"]
+    weight: 1.0
+
+  - id: unexpected_savior_arrival
+    name: "The Power Arrival"
+    category: "reversal"
+    psychological_driver: "High-status savior, real authority, or mysterious protector arrives just as protagonist is cornered"
+    example_cues: ["doors burst open", "stop right there", "who dares touch her", "motorcade arrives", "halt"]
+    weight: 0.95
+
+  - id: truth_half_revealed
+    name: "The Half-Revealed Truth"
+    category: "revelation"
+    psychological_driver: "Identity document, lineage, or secret token revealed, cut before reaction"
+    example_cues: ["DNA results", "address him as Commander", "that ring belongs to", "the real heir is", "crest"]
+    weight: 0.90
+
+  - id: mortal_ultimatum
+    name: "The Impossible Ultimatum"
+    category: "high_stakes"
+    psychological_driver: "Unreasonable demand with immediate consequences and a ticking clock"
+    example_cues: ["kneel and apologize or your family dies", "sign the papers or leave forever", "you have three seconds"]
+    weight: 0.85
