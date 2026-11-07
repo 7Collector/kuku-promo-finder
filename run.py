@@ -4,7 +4,6 @@ Parses screenplays, generates candidate promos, reranks for diversity, and runs 
 """
 
 import os
-import sys
 import json
 import argparse
 import yaml
@@ -12,12 +11,13 @@ from typing import List, Dict, Any
 
 from src.parser import parse_all_episodes
 from src.taxonomy import Taxonomy
-from src.llm_client import LLMClient
+from src.providers.factory import get_llm_provider
 from src.extractor import PromoExtractor
 from src.composite import CompositePromoBuilder
 from src.ranker import PromoRanker
 from src.auditor import PromoAuditor
 from src.models import PromoCandidate
+from src.utils.logging import setup_logger, logger
 
 
 def load_yaml(path: str) -> Dict[str, Any]:
@@ -32,8 +32,11 @@ def run_pipeline(
     output_json: str,
     output_md: str,
     provider: str = None,
+    model: str = None,
     top_k: int = 15,
+    verbose: bool = False,
 ) -> List[PromoCandidate]:
+    setup_logger(verbose=verbose)
     print("=" * 70)
     print("KUKU PROMO FINDER - MICRODRAMA VIRAL CLIP PIPELINE")
     print("=" * 70)
@@ -55,10 +58,10 @@ def run_pipeline(
 
     # 3. Candidate Extraction
     print(f"\n[3/5] Extracting promo candidates (Single-Episode & Composites)...")
-    llm_client = LLMClient(provider=provider)
-    print(f"  • Active Engine / Provider: {llm_client.provider} (Model: {llm_client.model})")
-    
-    extractor = PromoExtractor(taxonomy=taxonomy, llm_client=llm_client)
+    llm_provider = get_llm_provider(provider_name=provider, model_name=model)
+    print(f"  • Active Engine / Provider: {llm_provider.name} (Model: {llm_provider.model})")
+
+    extractor = PromoExtractor(taxonomy=taxonomy, llm_provider=llm_provider)
     single_candidates: List[PromoCandidate] = []
 
     prev_summary = ""
@@ -74,9 +77,13 @@ def run_pipeline(
 
     print(f"  • Generated {len(single_candidates)} single-episode candidate windows.")
 
-    # Cross-episode composites
+    # Cross-episode composites (dynamic and show-agnostic)
     composite_builder = CompositePromoBuilder(taxonomy=taxonomy)
-    composites = composite_builder.build_cross_episode_composites(episodes, single_candidates)
+    composites = composite_builder.build_cross_episode_composites(
+        episodes=episodes,
+        single_candidates=single_candidates,
+        max_composites=2,
+    )
     print(f"  • Created {len(composites)} cross-episode composite promos.")
 
     all_candidates = single_candidates + composites
@@ -84,14 +91,14 @@ def run_pipeline(
     # 4. Scoring, Constraint Enforcement & Diversity Reranking
     print(f"\n[4/5] Scoring, physical constraint checking, and MMR diversity reranking...")
     ranker = PromoRanker(taxonomy=taxonomy)
-    
+
     valid_candidates = []
     for cand in all_candidates:
         ranker.score_candidate(cand)
         if ranker.validate_constraints(cand):
             valid_candidates.append(cand)
 
-    print(f"  • {len(valid_candidates)} candidates passed physical constraints (20-60s, hook <= 3s).")
+    print(f"  • {len(valid_candidates)} candidates passed physical constraints (20-60s, hook <= 3.5s).")
 
     deduped = ranker.deduplicate(valid_candidates, overlap_threshold=0.35)
     print(f"  • {len(deduped)} candidates remain after deduplication.")
@@ -101,7 +108,7 @@ def run_pipeline(
 
     # 5. Adversarial Quality Auditing
     print(f"\n[5/5] Running adversarial quality checks (Resolution leaks, context deficits, visual dependencies)...")
-    auditor = PromoAuditor(llm_client=llm_client)
+    auditor = PromoAuditor(llm_provider=llm_provider, show_context=show_context)
     for cand in final_ranked:
         cand.quality_audit = auditor.audit_candidate(cand)
 
@@ -125,7 +132,7 @@ def run_pipeline(
     for cand in final_ranked[:5]:
         eps = ", ".join(f"Ep {e}" for e in cand.episodes)
         segs = ", ".join(f"{s.start} -> {s.end}" for s in cand.segments)
-        print(f"Rank {cand.rank} | {cand.hook.type.upper()} ({cand.scores.composite_score} pts) | {eps} | {cand.total_duration:.1f}s [{segs}]")
+        print(f"Rank {cand.rank} | {cand.hook.type.upper()} | Eff Score: {cand.effective_score} (Raw: {cand.scores.composite_score}) | {eps} | {cand.total_duration:.1f}s [{segs}]")
         print(f"  Hook: \"{cand.hook.quote[:75]}\"")
         print(f"  Cliffhanger: \"{cand.cliffhanger.quote[:75]}\"")
         print(f"  Why it works: {cand.why_it_works[:80]}...\n")
@@ -155,7 +162,7 @@ def render_markdown_report(promos: List[PromoCandidate], filepath: str, context:
     for p in promos:
         eps_str = ", ".join(f"Episode {e}" for e in p.episodes)
         segs_str = ", ".join(f"[{s.start} → {s.end}] ({s.duration:.1f}s)" for s in p.segments)
-        
+
         audit_note = ""
         if p.quality_audit:
             risks_str = "; ".join(p.quality_audit.risks) if p.quality_audit.risks else "None detected"
@@ -165,10 +172,13 @@ def render_markdown_report(promos: List[PromoCandidate], filepath: str, context:
                 f"> **Identified Risks / Failure Flags:** {risks_str}\n"
             )
 
+        penalty_note = f" (MMR Penalty Factor: {p.scores.diversity_penalty})" if p.scores.diversity_penalty < 1.0 else ""
+
         md_lines.append(f"### Rank {p.rank}: {p.hook.name} ({p.promo_type.replace('_', ' ').title()})")
         md_lines.append(f"- **Episode(s):** {eps_str}")
         md_lines.append(f"- **Segments:** {segs_str} | **Total Duration:** {p.total_duration:.1f}s")
-        md_lines.append(f"- **Composite Score:** **{p.scores.composite_score} / 10** (Hook: {p.scores.hook_strength}, Injustice: {p.scores.injustice_tension}, Cliffhanger: {p.scores.cliffhanger_strength}, Clarity: {p.scores.standalone_clarity}, Payoff Withheld: {p.scores.payoff_withheld})")
+        md_lines.append(f"- **Effective Rank Score:** **{p.effective_score} / 10** (Raw Composite: {p.scores.composite_score}){penalty_note}")
+        md_lines.append(f"- **Score Breakdown:** Hook: {p.scores.hook_strength}, Injustice: {p.scores.injustice_tension}, Cliffhanger: {p.scores.cliffhanger_strength}, Clarity: {p.scores.standalone_clarity}, Payoff Withheld: {p.scores.payoff_withheld}")
         md_lines.append(f"- **Hook ({p.hook.type}):** `{p.hook.timestamp}` — *\"{p.hook.quote}\"*")
         md_lines.append(f"  - *Driver:* {p.hook.psychological_trigger}")
         md_lines.append(f"- **Cliffhanger ({p.cliffhanger.type}):** `{p.cliffhanger.timestamp}` — *\"{p.cliffhanger.quote}\"*")
@@ -190,7 +200,9 @@ def main():
     parser.add_argument("--output-json", default="outputs/promos.json", help="Path to write JSON output")
     parser.add_argument("--output-md", default="outputs/PROMOS.md", help="Path to write Markdown output")
     parser.add_argument("--provider", default=None, help="LLM provider (gemini, openai, anthropic, heuristic)")
+    parser.add_argument("--model", default=None, help="Explicit model name (e.g. gemini-3.8-flash, gpt-6-luna, claude-sonnet-5-5)")
     parser.add_argument("--top-k", type=int, default=15, help="Number of promos to select")
+    parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose debug logging")
 
     args = parser.parse_args()
     run_pipeline(
@@ -200,7 +212,9 @@ def main():
         output_json=args.output_json,
         output_md=args.output_md,
         provider=args.provider,
+        model=args.model,
         top_k=args.top_k,
+        verbose=args.verbose,
     )
 
 

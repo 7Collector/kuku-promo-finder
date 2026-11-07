@@ -1,58 +1,53 @@
 """
-Adversarial Quality Auditor for Promos.
-Audits candidate clips for failure modes: resolution leaks, context deficit, visual dependencies.
+Show-agnostic adversarial quality auditor for Promos.
+Audits candidate clips for failure modes: resolution leaks, context deficits, visual dependencies.
 """
 
 from typing import List, Dict, Any, Optional
 from src.models import PromoCandidate, QualityAudit
-from src.llm_client import LLMClient
-
-
-AUDIT_PROMPT_TEMPLATE = """You are an adversarial video producer auditing promo candidate clips for TikTok/Reels.
-Your job is to identify FALSE POSITIVES and explain why a proposed promo will fail in the wild.
-
-Proposed Promo:
-- Episode(s): {episodes}
-- Timestamps: {segments_str} (Duration: {total_duration:.1f}s)
-- Hook Tagged: {hook_type} ("{hook_quote}")
-- Cliffhanger Tagged: {cliffhanger_type} ("{cliff_quote}")
-- Why it works: {why_it_works}
-
-Audit against these 5 Failure Modes:
-1. Resolution Leak: Does the clip accidentally resolve the conflict (e.g. protagonist already gets revenge or explains the misunderstanding)?
-2. Context Deficit: Does the dialogue use pronouns or references that make no sense to someone who hasn't seen the show?
-3. Visual Dependency: Does the dramatic weight depend on visual acting/effects that the text describes but might look clumsy or muted on screen?
-4. Slow Burn: Does the true hook happen at second 5-8 instead of within the first 3 seconds?
-5. Sarcasm / False Reading: Is the emotional keyword being used playfully or ironically rather than with genuine high stakes?
-
-Output JSON:
-{{
-  "pass": true,
-  "lethal_flaw": null,
-  "critique": "One to two sentences honestly identifying risks, cold-viewer comprehension limits, or visual dependencies.",
-  "confidence_score": 8.5,
-  "risks": ["Slight visual reliance on cathedral atmosphere"]
-}}
-"""
+from src.providers.base import BaseLLMProvider
+from src.providers.factory import get_llm_provider
+from src.prompts import AUDIT_SYSTEM_PROMPT, AUDIT_USER_PROMPT_TEMPLATE
+from src.utils.logging import logger
 
 
 class PromoAuditor:
-    def __init__(self, llm_client: Optional[LLMClient] = None):
-        self.llm_client = llm_client or LLMClient()
+    def __init__(
+        self,
+        llm_provider: Optional[BaseLLMProvider] = None,
+        show_context: Optional[Dict[str, Any]] = None,
+    ):
+        self.llm_provider = llm_provider or get_llm_provider()
+        self.show_context = show_context or {}
+        self._lore_tokens = self._extract_lore_tokens(self.show_context)
+
+    def _extract_lore_tokens(self, context: Dict[str, Any]) -> List[str]:
+        """Extracts dynamic character names and entities from show context config."""
+        tokens: List[str] = []
+        # Extract antagonist names
+        for ant in context.get("antagonists", []):
+            name = ant.get("name", "")
+            if name:
+                tokens.append(name.lower())
+        # Male lead
+        ml = context.get("male_lead", {}).get("name", "")
+        if ml:
+            tokens.append(ml.lower())
+        return tokens
 
     def audit_candidate(self, candidate: PromoCandidate) -> QualityAudit:
         """Audits a promo candidate, returning QualityAudit with critique and risks."""
-        if self.llm_client.provider != "heuristic":
+        if self.llm_provider.name != "heuristic":
             try:
                 return self._audit_via_llm(candidate)
             except Exception as e:
-                print(f"[Warning] LLM audit failed for {candidate.promo_id}: {e}. Using rule-based auditor.")
+                logger.warning(f"LLM audit failed for {candidate.promo_id}: {e}. Using rule-based auditor.")
 
         return self._audit_via_rules(candidate)
 
     def _audit_via_llm(self, candidate: PromoCandidate) -> QualityAudit:
         segs_str = ", ".join(f"{s.start} -> {s.end}" for s in candidate.segments)
-        user_prompt = AUDIT_PROMPT_TEMPLATE.format(
+        user_prompt = AUDIT_USER_PROMPT_TEMPLATE.format(
             episodes=candidate.episodes,
             segments_str=segs_str,
             total_duration=candidate.total_duration,
@@ -63,10 +58,7 @@ class PromoAuditor:
             why_it_works=candidate.why_it_works,
         )
 
-        resp = self.llm_client.generate_json(
-            "You are an adversarial video marketing auditor. Respond in strict JSON.",
-            user_prompt,
-        )
+        resp = self.llm_provider.generate_json(AUDIT_SYSTEM_PROMPT, user_prompt)
 
         passed = bool(resp.get("pass", True))
         flaw = resp.get("lethal_flaw")
@@ -88,14 +80,18 @@ class PromoAuditor:
         flaw_type: Optional[str] = None
         passed = True
 
-        # Check visual dependency
         text_full = (candidate.hook.quote + " " + candidate.cliffhanger.quote).lower()
-        if any(w in text_full for w in ["gazing down", "framing", "symmetrical", "close-up", "turns away"]):
+
+        # Check visual dependency
+        visual_keywords = ["gazing down", "framing", "symmetrical", "close-up", "turns away", "steps into"]
+        if any(w in text_full for w in visual_keywords):
             risks.append("Relies moderately on visual acting/cinematography described in stage directions.")
 
-        # Check context deficit
-        if any(w in text_full for w in ["house sterling", "alliance", "father thomas", "informant"]):
-            risks.append("Mention of noble house or external lore may require minor viewer inference.")
+        # Dynamic context deficit check based on show context
+        if self._lore_tokens:
+            matched_lore = [tok for tok in self._lore_tokens if tok in text_full]
+            if len(matched_lore) >= 2:
+                risks.append(f"Multiple specific character references ({', '.join(matched_lore)}) may require slight cold-viewer inference.")
 
         # Check resolution leak
         if candidate.scores.payoff_withheld < 7.0:
@@ -104,7 +100,7 @@ class PromoAuditor:
             passed = False
 
         critique = (
-            "Strong injustice tension that hooks scrollers immediately; payoff is firmly withheld. "
+            "Strong injustice tension that hooks scrollers immediately; payoff is firmly withheld."
             + (" " + "; ".join(risks) if risks else "")
         )
 

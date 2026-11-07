@@ -1,6 +1,7 @@
 """
 Deterministic parser for Kuku microdrama screenplays.
 Extracts structured metadata, scenes, dialogue lines, action beats, and camera directions.
+Supports timestamps both with and without parentheses.
 """
 
 import os
@@ -12,14 +13,17 @@ from src.models import (
     BeatType,
     Scene,
     Episode,
+)
+from src.utils.timestamps import (
     parse_timestamp_to_seconds,
     seconds_to_timestamp,
 )
+from src.utils.logging import logger
 
 
 BEAT_PATTERN = re.compile(
     r"\*\*([^*]+)\*\*\s*\n"
-    r"Start:\s*\(([0-9:\.]+)\)\s*\|\s*End:\s*\(([0-9:\.]+)\)\s*\n"
+    r"Start:\s*\(?([0-9:\.]+)\)?\s*\|\s*End:\s*\(?([0-9:\.]+)\)?\s*\n"
     r"(.*?)(?=\n\*\*[^*]+\*\*\s*\nStart:|\nSCENE\s+\d+|\Z)",
     re.DOTALL,
 )
@@ -59,7 +63,6 @@ def parse_header_type(raw_header: str) -> Tuple[BeatType, Optional[str], Optiona
     elif upper in ["SOUND FX", "SOUND", "SFX"]:
         return BeatType.SOUND, None, None
     else:
-        # Dialogue
         speaker = cleaned
         emotion = None
         if "(" in cleaned and ")" in cleaned:
@@ -74,8 +77,7 @@ def parse_screenplay_text(content: str, filename: str = "") -> Episode:
     """Parses raw screenplay text into a structured Episode model."""
     ep_match = EPISODE_NUM_PATTERN.search(content)
     ep_number = int(ep_match.group(1)) if ep_match else 1
-    
-    # Extract episode id from filename or number
+
     if filename:
         ep_id = os.path.splitext(os.path.basename(filename))[0]
     else:
@@ -87,7 +89,6 @@ def parse_screenplay_text(content: str, filename: str = "") -> Episode:
     continuity_match = CONTINUITY_PATTERN.search(content)
     continuity = continuity_match.group(1).strip() if continuity_match else ""
 
-    # Split into scenes
     scene_blocks = SCENE_SPLIT_PATTERN.split(content)
     parsed_scenes: List[Scene] = []
     max_end_time = 0.0
@@ -109,7 +110,6 @@ def parse_screenplay_text(content: str, filename: str = "") -> Episode:
         sc_end_str = end_m.group(1).strip() if end_m else "00:00.00"
         sc_end_sec = parse_timestamp_to_seconds(sc_end_str)
 
-        # Parse beats inside this scene
         beats: List[Beat] = []
         for b_match in BEAT_PATTERN.finditer(block):
             raw_header = b_match.group(1)
@@ -168,6 +168,10 @@ def parse_screenplay_file(file_path: str) -> Episode:
 def parse_all_episodes(directory_path: str) -> List[Episode]:
     """Parses all screenplay files in a directory, sorted by episode number."""
     files = glob.glob(os.path.join(directory_path, "*.txt"))
+    if not files:
+        logger.warning(f"No .txt files found in directory: {directory_path}")
+        return []
+
     episodes = [parse_screenplay_file(f) for f in files]
     episodes.sort(key=lambda ep: ep.episode_number)
     return episodes
@@ -175,8 +179,8 @@ def parse_all_episodes(directory_path: str) -> List[Episode]:
 
 def format_episode_for_analysis(episode: Episode, include_camera: bool = False) -> str:
     """
-    Renders the episode beats into a clean, human & LLM-readable script with timestamps.
-    Focuses on DIALOGUE and ACTION to optimize dramatic context and save tokens.
+    Renders episode beats into clean text with timestamps for LLM dramatic analysis.
+    Focuses on DIALOGUE and ACTION to optimize tokens and clarity.
     """
     lines = [
         f"EPISODE {episode.episode_number}: {episode.logline}",

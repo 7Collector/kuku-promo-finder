@@ -3,28 +3,28 @@ hooks:
     name: "Public Humiliation & Scorn"
     category: "injustice"
     psychological_driver: "Outrage at disproportionate cruelty in front of peers"
-    example_cues: ["kneel down", "beg me", "laughing at her", "stripped of dignity", "scoff", "mocking", "ridicule"]
+    example_cues: ["kneel down", "beg me", "laughing at her", "stripped of dignity", "scoff", "mocking", "ridicule", "crawl"]
     weight: 1.0
 
   - id: physical_aggression
     name: "Physical Aggression / Shock Violence"
     category: "visceral"
     psychological_driver: "Visceral jolt and immediate threat escalation"
-    example_cues: ["slap", "shove", "grabbed by collar", "wine thrown in face", "pushed to ground", "strikes", "thrown out"]
+    example_cues: ["slap", "slaps", "slapped", "shove", "shoves", "shoved", "grabbed by collar", "wine thrown", "pushed to ground", "strikes her", "strikes him", "thrown out", "dragged"]
     weight: 0.95
 
   - id: intimate_betrayal
     name: "Intimate Betrayal / Altar Abandonment"
     category: "injustice"
     psychological_driver: "Devastation of sacred trust by spouse, lover, or parent at a pivotal moment"
-    example_cues: ["wedding canceled", "holding another's hand", "you mean nothing to me", "divorce", "abandoned at altar", "replace you"]
+    example_cues: ["wedding canceled", "holding another's hand", "you mean nothing to me", "divorce", "abandoned at altar", "replace you", "marrying me"]
     weight: 0.95
 
   - id: class_status_contempt
     name: "Class & Status Contempt"
     category: "injustice"
     psychological_driver: "Sneering elitism treating the honest protagonist as dirt or servant"
-    example_cues: ["country bumpkin", "servant", "filth", "you're nothing without us", "worthless", "peasant", "lowborn"]
+    example_cues: ["country bumpkin", "servant", "filth", "you're nothing without us", "worthless", "peasant", "lowborn", "beggar"]
     weight: 0.90
 
   - id: hidden_identity_irony
@@ -46,26 +46,26 @@ cliffhangers:
     name: "Interrupted Retaliation / Comeuppance Cut"
     category: "payoff_withheld"
     psychological_driver: "Protagonist's eyes turn cold / starts to counterattack, cut right before strike"
-    example_cues: ["smiles faintly", "stands up slowly", "you will regret this", "eyes narrow", "steps forward"]
+    example_cues: ["smiles faintly", "stands up slowly", "you will regret this", "eyes narrow", "steps forward", "not anymore"]
     weight: 1.0
 
   - id: unexpected_savior_arrival
     name: "The Power Arrival"
     category: "reversal"
     psychological_driver: "High-status savior, real authority, or mysterious protector arrives just as protagonist is cornered"
-    example_cues: ["doors burst open", "stop right there", "who dares touch her", "motorcade arrives", "halt"]
+    example_cues: ["doors burst open", "stop right there", "who dares touch her", "motorcade arrives", "halt", "steps between"]
     weight: 0.95
 
   - id: truth_half_revealed
     name: "The Half-Revealed Truth"
     category: "revelation"
     psychological_driver: "Identity document, lineage, or secret token revealed, cut before reaction"
-    example_cues: ["DNA results", "address him as Commander", "that ring belongs to", "the real heir is", "crest"]
+    example_cues: ["DNA results", "address him as Commander", "that ring belongs to", "the real heir is", "crest", "poisoned"]
     weight: 0.90
 
   - id: mortal_ultimatum
     name: "The Impossible Ultimatum"
     category: "high_stakes"
     psychological_driver: "Unreasonable demand with immediate consequences and a ticking clock"
-    example_cues: ["kneel and apologize or your family dies", "sign the papers or leave forever", "you have three seconds"]
+    example_cues: ["kneel and apologize or your family dies", "sign the papers or leave forever", "you have three seconds", "or watch him hang"]
     weight: 0.85

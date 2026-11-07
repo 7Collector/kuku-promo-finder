@@ -22,9 +22,38 @@ Outputs are automatically generated in:
 - `outputs/promos.json` — Unedited raw structured data
 - `outputs/PROMOS.md` — Human-readable ranked report with quotes and quality audits
 
-### 3. Launch Interactive Streamlit Dashboard
+### 3. Run Unit Test Suite
+```bash
+python3 -m unittest discover tests
+```
+
+### 4. Launch Interactive Streamlit Dashboard
 ```bash
 streamlit run app.py
+```
+
+---
+
+## 🤖 Supported Frontier Models
+
+The pipeline implements the **Provider Strategy Pattern** (`src/providers/`):
+- **Google Gemini:** `gemini-3.8-flash` (Default for `--provider gemini`)
+- **OpenAI:** `gpt-6-luna` (Default for `--provider openai`)
+- **Anthropic Claude:** `claude-sonnet-5-5` (Default for `--provider anthropic`)
+- **Offline Heuristic Engine:** Runs instantaneously when no API keys are configured.
+
+To run with a live provider:
+```bash
+export GEMINI_API_KEY="your-gemini-key"
+python run.py --provider gemini
+
+# Or with OpenAI:
+export OPENAI_API_KEY="your-openai-key"
+python run.py --provider openai
+
+# Or with Claude:
+export ANTHROPIC_API_KEY="your-anthropic-key"
+python run.py --provider anthropic
 ```
 
 ---
@@ -42,14 +71,14 @@ Microdramas thrive on high emotional asymmetry—specifically, **unearned injust
         │
         ▼
 [Stage 2: Candidate Discovery & Taxonomy Tagging (src/extractor.py)]
-   • Scans 20–60s windows opening on hooks ≤ 3s
+   • Scans 20–60s windows opening on hooks ≤ 3.5s
    • Tags against the "Blood Boils" & "Withheld Payoff" taxonomy
    • Builds Single-Episode clips + Cross-Episode Composites (Setup + Climax)
         │
         ▼
 [Stage 3: Validation, Deduplication & MMR Diversity (src/ranker.py)]
    • Code enforces 20–60s duration and timestamp verification
-   • MMR penalty prevents 10 identical slap scenes
+   • MMR penalty prevents 10 identical slap scenes with monotonic rank tracking
         │
         ▼
 [Stage 4: Adversarial Quality Auditor (src/auditor.py)]
@@ -58,45 +87,6 @@ Microdramas thrive on high emotional asymmetry—specifically, **unearned injust
         ▼
 [Outputs: outputs/promos.json & outputs/PROMOS.md & Streamlit UI]
 ```
-
----
-
-## 🧠 Pluggable Hook & Cliffhanger Taxonomy
-
-All dramatic scoring is driven by [`config/taxonomy.yaml`](config/taxonomy.yaml) rather than hardcoded rules:
-
-### Hook Taxonomy (The "Blood Boils" Family)
-- `public_humiliation` (1.0): Protagonist mocked or belittled in front of peers.
-- `physical_aggression` (0.95): Slap, push, drink thrown, physical violation.
-- `intimate_betrayal` (0.95): Betrayal by fiancé, spouse, or parent at a pivotal moment.
-- `class_status_contempt` (0.90): Sneering disdain treating the protagonist as dirt/servant.
-- `hidden_identity_irony` (0.90): Antagonist insults protagonist, blind to their true royal identity.
-- `unjust_accusation` (0.85): Innocent protagonist framed while villain smirks.
-
-### Cliffhanger Taxonomy (Withheld Payoffs)
-- `interrupted_retaliation` (1.0): Protagonist's eyes turn cold / about to counterattack; cut right before blow.
-- `unexpected_savior_arrival` (0.95): Benefactor / commander arrives just as protagonist is cornered.
-- `truth_half_revealed` (0.90): Identity document or crest revealed; cut before reaction.
-- `mortal_ultimatum` (0.85): Impossible choice with ticking clock.
-
----
-
-## 🔄 Swapping Models or Testing New Shows
-
-To test a new show in your interview:
-1. Place the screenplay `.txt` files in a folder (e.g. `assets/new_show/`).
-2. Update [`config/show_context.yaml`](config/show_context.yaml) with the new premise and characters.
-3. Run:
-```bash
-python run.py --input-dir "assets/new_show"
-```
-
-To enable a live LLM API (Gemini / OpenAI / Anthropic):
-```bash
-export GEMINI_API_KEY="your-api-key"
-python run.py --provider gemini
-```
-*(If no API key is provided, the tool automatically executes via the built-in deterministic heuristic engine with zero failures!)*
 
 ---
 
@@ -110,13 +100,29 @@ python run.py --provider gemini
 │   ├── parser.py              # Screenplay parser (100% deterministic)
 │   ├── models.py              # Pydantic data schemas
 │   ├── extractor.py           # Window discovery & taxonomy tagging
-│   ├── composite.py           # Cross-episode setup/climax stitcher
-│   ├── ranker.py              # Score calculation, deduplication & MMR diversity
+│   ├── composite.py           # Show-agnostic cross-episode composite builder
+│   ├── ranker.py              # Canonical score calculation, deduplication & MMR diversity
 │   ├── auditor.py             # Adversarial quality check & failure detector
-│   └── llm_client.py          # Swappable LLM interface
+│   ├── prompts.py             # Decoupled domain prompts
+│   ├── taxonomy.py            # Word-boundary matcher & false positive filters
+│   ├── utils/
+│   │   ├── timestamps.py      # Timestamp conversion & overlap math
+│   │   └── logging.py         # Structured application logger
+│   └── providers/
+│       ├── base.py            # BaseLLMProvider interface
+│       ├── gemini.py          # Gemini 3.8 Flash adapter
+│       ├── openai.py          # GPT-6 Luna adapter
+│       ├── anthropic.py       # Claude Sonnet 5.5 adapter
+│       ├── heuristic.py       # Offline fallback adapter
+│       └── factory.py         # Provider factory
 ├── outputs/
 │   ├── promos.json            # Unedited raw submission output
 │   └── PROMOS.md              # Formatted report with quality audits
+├── tests/
+│   ├── test_parser.py         # Screenplay parser tests
+│   ├── test_taxonomy.py       # Word boundary & collision tests
+│   ├── test_ranker.py         # Timing constraint & MMR tests
+│   └── test_auditor.py        # Resolution leak & risk audit tests
 ├── app.py                     # Interactive Streamlit dashboard
 ├── run.py                     # CLI pipeline runner
 ├── requirements.txt           # Dependencies

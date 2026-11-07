@@ -1,10 +1,11 @@
 """
-Ranking, physical constraint enforcement, deduplication, and diversity reranking (MMR).
+Ranking, physical constraint enforcement, deduplication, and MMR diversity reranking.
 """
 
-from typing import List, Dict, Any, Optional
-from src.models import PromoCandidate, Segment
+from typing import List, Dict
+from src.models import PromoCandidate
 from src.taxonomy import Taxonomy
+from src.utils.timestamps import calculate_temporal_overlap
 
 
 class PromoRanker:
@@ -12,26 +13,10 @@ class PromoRanker:
         self.taxonomy = taxonomy
 
     def score_candidate(self, candidate: PromoCandidate) -> float:
-        """
-        Computes composite score:
-        Base = 0.30*hook + 0.25*cliffhanger + 0.20*injustice + 0.15*clarity + 0.10*payoff
-        Final = Base * hook_taxonomy_weight * cliffhanger_taxonomy_weight
-        """
-        sc = candidate.scores
-        base_score = (
-            0.30 * sc.hook_strength
-            + 0.25 * sc.cliffhanger_strength
-            + 0.20 * sc.injustice_tension
-            + 0.15 * sc.standalone_clarity
-            + 0.10 * sc.payoff_withheld
-        )
-
+        """Computes composite score using the canonical scoring formula."""
         h_weight = self.taxonomy.get_hook_weight(candidate.hook.type)
         c_weight = self.taxonomy.get_cliffhanger_weight(candidate.cliffhanger.type)
-        
-        final_score = base_score * h_weight * c_weight
-        candidate.scores.composite_score = round(final_score, 2)
-        return candidate.scores.composite_score
+        return candidate.scores.compute_composite_score(h_weight, c_weight)
 
     def validate_constraints(self, candidate: PromoCandidate) -> bool:
         """
@@ -58,35 +43,33 @@ class PromoRanker:
         return True
 
     def deduplicate(
-        self, candidates: List[PromoCandidate], overlap_threshold: float = 0.40
+        self, candidates: List[PromoCandidate], overlap_threshold: float = 0.35
     ) -> List[PromoCandidate]:
         """
-        Removes candidates from the same episode that have > threshold temporal overlap.
-        Keeps higher scoring candidates.
+        Removes candidates from the same episode with > threshold temporal overlap.
+        Keeps higher-scoring candidate.
         """
-        # Sort by composite score descending
         sorted_cands = sorted(candidates, key=lambda c: c.scores.composite_score, reverse=True)
         kept: List[PromoCandidate] = []
 
         for cand in sorted_cands:
             is_duplicate = False
             for existing in kept:
-                # Only check overlap if they share at least one episode
                 shared_eps = set(cand.episodes).intersection(set(existing.episodes))
                 if not shared_eps:
                     continue
 
-                # Check segment overlaps
                 for seg_c in cand.segments:
                     for seg_e in existing.segments:
-                        start_max = max(seg_c.start_seconds, seg_e.start_seconds)
-                        end_min = min(seg_c.end_seconds, seg_e.end_seconds)
-                        if end_min > start_max:
-                            overlap_sec = end_min - start_max
-                            min_dur = min(seg_c.duration, seg_e.duration)
-                            if min_dur > 0 and (overlap_sec / min_dur) > overlap_threshold:
-                                is_duplicate = True
-                                break
+                        _, ratio = calculate_temporal_overlap(
+                            seg_c.start_seconds,
+                            seg_c.end_seconds,
+                            seg_e.start_seconds,
+                            seg_e.end_seconds,
+                        )
+                        if ratio > overlap_threshold:
+                            is_duplicate = True
+                            break
                     if is_duplicate:
                         break
             if not is_duplicate:
@@ -95,11 +78,16 @@ class PromoRanker:
         return kept
 
     def rerank_for_diversity(
-        self, candidates: List[PromoCandidate], top_k: int = 15, hook_penalty_factor: float = 0.88
+        self,
+        candidates: List[PromoCandidate],
+        top_k: int = 15,
+        hook_penalty_factor: float = 0.88,
+        episode_penalty_factor: float = 0.90,
     ) -> List[PromoCandidate]:
         """
-        Applies diversity reranking (MMR-style) to prevent the top promos from being
-        dominated by a single hook type or the same episode.
+        Applies MMR diversity reranking to balance promo types and episodes.
+        Saves adjusted_score and diversity_penalty onto candidate so ranking order
+        is strictly monotonic and completely transparent.
         """
         available = list(candidates)
         ranked: List[PromoCandidate] = []
@@ -109,25 +97,28 @@ class PromoRanker:
         while available and len(ranked) < top_k:
             best_idx = -1
             best_adjusted_score = -1.0
+            best_total_penalty = 1.0
 
             for i, cand in enumerate(available):
                 h_type = cand.hook.type
                 h_count = hook_counts.get(h_type, 0)
-                
-                # Penalty for repeated hook type
-                penalty = hook_penalty_factor ** h_count
+                h_penalty = hook_penalty_factor ** h_count
 
-                # Penalty for same episode dominance
                 ep_count = sum(episode_counts.get(ep, 0) for ep in cand.episodes)
-                ep_penalty = 0.90 ** ep_count
+                ep_penalty = episode_penalty_factor ** ep_count
 
-                adj_score = cand.scores.composite_score * penalty * ep_penalty
+                total_penalty = h_penalty * ep_penalty
+                adj_score = cand.scores.composite_score * total_penalty
+
                 if adj_score > best_adjusted_score:
                     best_adjusted_score = adj_score
+                    best_total_penalty = total_penalty
                     best_idx = i
 
             chosen = available.pop(best_idx)
             chosen.rank = len(ranked) + 1
+            chosen.scores.adjusted_score = round(best_adjusted_score, 2)
+            chosen.scores.diversity_penalty = round(best_total_penalty, 3)
             ranked.append(chosen)
 
             # Update frequencies

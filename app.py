@@ -106,7 +106,9 @@ with tab_cards:
     else:
         for p in filtered_promos:
             rank = p.get("rank", 0)
-            score = p.get("scores", {}).get("composite_score", 0)
+            score = p.get("scores", {}).get("adjusted_score") or p.get("scores", {}).get("composite_score", 0)
+            raw_score = p.get("scores", {}).get("composite_score", score)
+            penalty = p.get("scores", {}).get("diversity_penalty", 1.0)
             eps_str = ", ".join(f"Ep {e}" for e in p.get("episodes", []))
             dur = p.get("total_duration", 0)
             p_type = p.get("promo_type", "").replace("_", " ").title()
@@ -117,7 +119,7 @@ with tab_cards:
                     st.markdown(f"### Rank {rank}: {p['hook']['name']} `({p_type})`")
                     st.caption(f"**Target:** {eps_str} | **Duration:** {dur:.1f}s | **Hook:** `{p['hook']['type']}`")
                 with head_col2:
-                    st.metric("Score", f"{score:.2f}")
+                    st.metric("Effective Score", f"{score:.2f}", delta=f"Raw: {raw_score:.2f}" if penalty < 1.0 else None)
 
                 # Segments
                 segs_text = " | ".join(f"`{s['start']} → {s['end']}` ({s['duration']:.1f}s)" for s in p.get("segments", []))

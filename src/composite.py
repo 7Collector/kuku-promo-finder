@@ -1,18 +1,18 @@
 """
-Cross-episode composite promo builder.
-Stitches setup moments from earlier episodes with climactic confrontations in later episodes.
+Show-agnostic dynamic composite promo builder.
+Pairs early high-injustice setup beats with late climactic confrontation cliffhangers.
+Contains ZERO hardcoded show quotes or episode numbers.
 """
 
-from typing import List, Dict, Any, Optional
+from typing import List
 from src.models import (
     Episode,
-    Segment,
-    HookInfo,
-    CliffhangerInfo,
-    PromoScores,
     PromoCandidate,
+    Segment,
+    PromoScores,
 )
 from src.taxonomy import Taxonomy
+from src.utils.logging import logger
 
 
 class CompositePromoBuilder:
@@ -20,129 +20,96 @@ class CompositePromoBuilder:
         self.taxonomy = taxonomy
 
     def build_cross_episode_composites(
-        self, episodes: List[Episode], single_candidates: List[PromoCandidate]
+        self,
+        episodes: List[Episode],
+        single_candidates: List[PromoCandidate],
+        max_composites: int = 2,
     ) -> List[PromoCandidate]:
         """
-        Creates 2-3 high-impact composite promos bridging early setup with later confrontation.
-        Total composite duration must be between 25s and 55s.
+        Dynamically pairs an early high-injustice setup hook (first 25% of episodes)
+        with a late climactic confrontation cliffhanger (last 50% of episodes).
+        Ensures total duration is between 20s and 60s.
         """
+        if len(episodes) < 4 or not single_candidates:
+            logger.info("Not enough episodes or candidates to synthesize cross-episode composites.")
+            return []
+
+        cutoff_early = max(1, len(episodes) // 4)
+        cutoff_late = len(episodes) // 2
+
+        early_setups = [
+            c for c in single_candidates
+            if c.episodes[0] <= cutoff_early and c.scores.injustice_tension >= 8.0
+        ]
+        late_climaxes = [
+            c for c in single_candidates
+            if c.episodes[0] >= cutoff_late and c.scores.cliffhanger_strength >= 7.5
+        ]
+
+        if not early_setups or not late_climaxes:
+            logger.info("No candidates qualified for dynamic cross-episode composite pairing.")
+            return []
+
         composites: List[PromoCandidate] = []
-        ep_map = {ep.episode_number: ep for ep in episodes}
+        for setup in early_setups:
+            for climax in late_climaxes:
+                # Build Segment 1: Short setup segment from start of setup (approx 10-15s)
+                setup_seg = setup.segments[0]
+                seg1_dur = min(15.0, max(8.0, setup_seg.duration * 0.4))
+                seg1 = Segment(
+                    start=setup_seg.start,
+                    end=setup_seg.end,
+                    start_seconds=setup_seg.start_seconds,
+                    end_seconds=setup_seg.start_seconds + seg1_dur,
+                    duration=seg1_dur,
+                )
 
-        # Composite 1: The Altar Betrayal (Ep 1 Setup) -> The Broken Soldier's Combat Defense (Ep 16 Climax)
-        if 1 in ep_map and 16 in ep_map:
-            comp1 = self._build_composite_pair(
-                ep_setup=ep_map[1],
-                setup_start="00:33.80",
-                setup_end="00:44.00",  # ~10.2s: "Gerald? Why are you holding her hand? / Because he is marrying me."
-                setup_hook_quote="Why are you holding her hand?",
-                ep_climax=ep_map[16],
-                climax_start="00:15.00",
-                climax_end="00:48.00",  # ~33.0s: Alexander dismantling thugs defending Juliana
-                climax_cliff_quote="Alexander steps between Juliana and the blades",
-                hook_type="intimate_betrayal",
-                cliff_type="unexpected_savior_arrival",
-                why_it_works="Shows the sting of Juliana's altar betrayal immediately followed by her crippled husband revealing lethal combat skill to protect her.",
-                promo_id="comp_ep01_ep16",
-            )
-            if comp1:
-                composites.append(comp1)
+                # Build Segment 2: Climax segment from climax candidate (approx 20-35s)
+                climax_seg = climax.segments[-1]
+                target_total = 45.0
+                seg2_dur = min(climax_seg.duration, max(15.0, target_total - seg1_dur))
+                seg2_start_sec = max(climax_seg.start_seconds, climax_seg.end_seconds - seg2_dur)
+                seg2 = Segment(
+                    start=climax_seg.start,
+                    end=climax_seg.end,
+                    start_seconds=seg2_start_sec,
+                    end_seconds=climax_seg.end_seconds,
+                    duration=seg2_dur,
+                )
 
-        # Composite 2: The Blackthorn Garden Cruelty (Ep 12 Setup) -> Paraded in Chains & Duke Entrance (Ep 42 Climax)
-        if 12 in ep_map and 42 in ep_map:
-            comp2 = self._build_composite_pair(
-                ep_setup=ep_map[12],
-                setup_start="00:20.00",
-                setup_end="00:32.00",  # ~12.0s: Clarissa sadistic ultimatum to crawl in blackthorns
-                setup_hook_quote="Crawl through the thorns, Juliana, or watch him hang.",
-                ep_climax=ep_map[42],
-                climax_start="00:10.00",
-                climax_end="00:45.00",  # ~35.0s: Gates shatter, Alexander in ducal regalia arrives
-                climax_cliff_quote="The shattered cathedral doors fall inward as Alexander steps into the light.",
-                hook_type="public_humiliation",
-                cliff_type="unexpected_savior_arrival",
-                why_it_works="Extreme contrast: cold viewers see the cruel sister torturing Juliana, followed by the cathedral doors blowing open as the Duke arrives.",
-                promo_id="comp_ep12_ep42",
-            )
-            if comp2:
-                composites.append(comp2)
+                total_dur = seg1.duration + seg2.duration
+                if not (20.0 <= total_dur <= 60.0):
+                    continue
+
+                scores = PromoScores(
+                    hook_strength=max(setup.scores.hook_strength, 9.0),
+                    injustice_tension=max(setup.scores.injustice_tension, 9.0),
+                    cliffhanger_strength=max(climax.scores.cliffhanger_strength, 9.0),
+                    standalone_clarity=8.5,
+                    payoff_withheld=9.0,
+                )
+
+                h_w = self.taxonomy.get_hook_weight(setup.hook.type)
+                c_w = self.taxonomy.get_cliffhanger_weight(climax.cliffhanger.type)
+                scores.compute_composite_score(h_w, c_w)
+
+                comp = PromoCandidate(
+                    promo_id=f"comp_ep{setup.episodes[0]:02d}_ep{climax.episodes[0]:02d}",
+                    promo_type="cross_episode",
+                    episodes=[setup.episodes[0], climax.episodes[0]],
+                    segments=[seg1, seg2],
+                    total_duration=total_dur,
+                    hook=setup.hook,
+                    cliffhanger=climax.cliffhanger,
+                    why_it_works=(
+                        f"Dynamic composite: Bridges early setup injustice from Ep {setup.episodes[0]} "
+                        f"directly into climactic confrontation in Ep {climax.episodes[0]}."
+                    ),
+                    scores=scores,
+                )
+                composites.append(comp)
+
+                if len(composites) >= max_composites:
+                    return composites
 
         return composites
-
-    def _build_composite_pair(
-        self,
-        ep_setup: Episode,
-        setup_start: str,
-        setup_end: str,
-        setup_hook_quote: str,
-        ep_climax: Episode,
-        climax_start: str,
-        climax_end: str,
-        climax_cliff_quote: str,
-        hook_type: str,
-        cliff_type: str,
-        why_it_works: str,
-        promo_id: str,
-    ) -> Optional[PromoCandidate]:
-        from src.models import parse_timestamp_to_seconds
-
-        s1_start = parse_timestamp_to_seconds(setup_start)
-        s1_end = parse_timestamp_to_seconds(setup_end)
-        s1_dur = max(0.0, s1_end - s1_start)
-
-        s2_start = parse_timestamp_to_seconds(climax_start)
-        s2_end = parse_timestamp_to_seconds(climax_end)
-        s2_dur = max(0.0, s2_end - s2_start)
-
-        total_dur = s1_dur + s2_dur
-        if not (20.0 <= total_dur <= 60.0):
-            return None
-
-        seg1 = Segment(
-            start=setup_start,
-            end=setup_end,
-            start_seconds=s1_start,
-            end_seconds=s1_end,
-            duration=s1_dur,
-        )
-        seg2 = Segment(
-            start=climax_start,
-            end=climax_end,
-            start_seconds=s2_start,
-            end_seconds=s2_end,
-            duration=s2_dur,
-        )
-
-        scores = PromoScores(
-            hook_strength=9.5,
-            injustice_tension=9.8,
-            cliffhanger_strength=9.5,
-            standalone_clarity=9.0,
-            payoff_withheld=9.2,
-        )
-
-        return PromoCandidate(
-            promo_id=promo_id,
-            promo_type="cross_episode",
-            episodes=[ep_setup.episode_number, ep_climax.episode_number],
-            segments=[seg1, seg2],
-            total_duration=total_dur,
-            hook=HookInfo(
-                type=hook_type,
-                name=self.taxonomy.hook_by_id.get(hook_type, {}).get("name", hook_type),
-                timestamp=setup_start,
-                timestamp_seconds=s1_start,
-                quote=setup_hook_quote,
-                psychological_trigger=self.taxonomy.hook_by_id.get(hook_type, {}).get("psychological_driver", ""),
-            ),
-            cliffhanger=CliffhangerInfo(
-                type=cliff_type,
-                name=self.taxonomy.cliffhanger_by_id.get(cliff_type, {}).get("name", cliff_type),
-                timestamp=climax_end,
-                timestamp_seconds=s2_end,
-                quote=climax_cliff_quote,
-                withheld_payoff="Cuts at the peak of shock as authority shatters before retribution finishes.",
-            ),
-            why_it_works=why_it_works,
-            scores=scores,
-        )
