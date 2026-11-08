@@ -18,7 +18,10 @@ import {
   LayoutGrid,
   X,
   RotateCcw,
+  UploadCloud,
+  Download,
 } from "lucide-react";
+import CustomUploadModal from "@/components/CustomUploadModal";
 
 interface Promo {
   rank: number;
@@ -26,6 +29,7 @@ interface Promo {
   promo_type: "single_episode" | "cross_episode";
   episodes: number[];
   segments: {
+    episode?: number;
     start: string;
     end: string;
     start_seconds: number;
@@ -102,14 +106,32 @@ export default function HomePage() {
   const [viewMode, setViewMode] = useState<"grid" | "table">("grid");
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [activeModalPromo, setActiveModalPromo] = useState<Promo | null>(null);
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+  const [isCustomActive, setIsCustomActive] = useState(false);
+  const [baselinePromos, setBaselinePromos] = useState<Promo[]>([]);
+  const [baselineMeta, setBaselineMeta] = useState<any>(null);
+  const [serverKeyStatus, setServerKeyStatus] = useState({ hasGeminiKey: false, hasOpenaiKey: false });
 
-  // Fetch full dataset once for accurate category counts
+  // Fetch full dataset once for accurate category counts & server status
   useEffect(() => {
     fetch("/api/promos")
       .then((res) => res.json())
       .then((data) => {
-        setAllPromos(data.promos || []);
+        const fetchedPromos = data.promos || [];
+        setAllPromos(fetchedPromos);
+        setBaselinePromos(fetchedPromos);
         setMeta(data.meta || null);
+        setBaselineMeta(data.meta || null);
+      })
+      .catch(() => {});
+
+    fetch("/api/pipeline/status")
+      .then((res) => res.json())
+      .then((data) => {
+        setServerKeyStatus({
+          hasGeminiKey: Boolean(data.hasGeminiKey),
+          hasOpenaiKey: Boolean(data.hasOpenaiKey),
+        });
       })
       .catch(() => {});
   }, []);
@@ -119,6 +141,7 @@ export default function HomePage() {
     function handleKeyDown(e: KeyboardEvent) {
       if (e.key === "Escape") {
         setActiveModalPromo(null);
+        setIsUploadModalOpen(false);
       }
     }
     window.addEventListener("keydown", handleKeyDown);
@@ -126,8 +149,45 @@ export default function HomePage() {
   }, []);
 
   useEffect(() => {
-    fetchPromos();
-  }, [selectedHook, selectedType, minScore, searchQuery]);
+    if (isCustomActive) {
+      filterCustomPromos();
+    } else {
+      fetchPromos();
+    }
+  }, [selectedHook, selectedType, minScore, searchQuery, isCustomActive, allPromos]);
+
+  function filterCustomPromos() {
+    let filtered = [...allPromos];
+    if (selectedHook !== "all") {
+      filtered = filtered.filter((p) => p.hook.type === selectedHook);
+    }
+    if (selectedType !== "all") {
+      filtered = filtered.filter((p) => p.promo_type === selectedType);
+    }
+    if (minScore > 0) {
+      filtered = filtered.filter(
+        (p) => (p.scores?.adjusted_score || p.scores?.composite_score || 0) >= minScore
+      );
+    }
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      filtered = filtered.filter((p) =>
+        (
+          (p.hook?.quote || "") +
+          " " +
+          (p.cliffhanger?.quote || "") +
+          " " +
+          (p.why_it_works || "") +
+          " " +
+          (p.hook?.name || "")
+        )
+          .toLowerCase()
+          .includes(q)
+      );
+    }
+    setPromos(filtered);
+    setLoading(false);
+  }
 
   async function fetchPromos() {
     try {
@@ -145,6 +205,84 @@ export default function HomePage() {
     } finally {
       setLoading(false);
     }
+  }
+
+  function handleCustomRunSuccess(data: any) {
+    setIsCustomActive(true);
+    setAllPromos(data.ranked_promos || []);
+    setPromos(data.ranked_promos || []);
+    setMeta({
+      show: data.show_title || "Custom Show",
+      episodes: data.episodes_analyzed || 1,
+      beats: data.total_beats || 0,
+      extractor: {
+        provider: data.meta?.provider || "llm",
+        model: data.meta?.model || "active",
+      },
+      auditor: {
+        method: data.meta?.provider === "heuristic" ? "rules" : "llm",
+      },
+    });
+    resetFilters();
+  }
+
+  function handleResetToBaseline() {
+    setIsCustomActive(false);
+    setAllPromos(baselinePromos);
+    setPromos(baselinePromos);
+    setMeta(baselineMeta);
+    resetFilters();
+  }
+
+  function downloadCustomCsv() {
+    const headers = [
+      "promo_id",
+      "rank",
+      "episode",
+      "segment_order",
+      "start_time",
+      "end_time",
+      "duration_seconds",
+      "hook_quote",
+      "cliffhanger_quote",
+      "payoff_location",
+      "audit_verdict",
+    ];
+    const rows = [headers.join(",")];
+    promos.forEach((p) => {
+      p.segments.forEach((seg, idx) => {
+        rows.push(
+          [
+            `"${p.promo_id}"`,
+            p.rank || "",
+            seg.episode ?? p.episodes[0] ?? "",
+            idx + 1,
+            `"${seg.start}"`,
+            `"${seg.end}"`,
+            (seg.duration || seg.end_seconds - seg.start_seconds).toFixed(2),
+            `"${(p.hook?.quote || "").replace(/"/g, '""')}"`,
+            `"${(p.cliffhanger?.quote || "").replace(/"/g, '""')}"`,
+            `"${p.payoff_location || "unknown"}"`,
+            `"${p.quality_audit?.passed ? "PASS" : "FAIL"}"`,
+          ].join(",")
+        );
+      });
+    });
+    const blob = new Blob([rows.join("\n")], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "custom_promos.csv";
+    a.click();
+  }
+
+  function downloadCustomJson() {
+    const blob = new Blob([JSON.stringify(promos, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "custom_promos.json";
+    a.click();
   }
 
   const hookCounts = useMemo(() => {
@@ -191,49 +329,168 @@ export default function HomePage() {
     <div className="kuku-container">
       {/* ── Top Overview Banner ───────────────────────── */}
       <div style={{ marginBottom: "var(--s-32)" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "var(--s-8)", marginBottom: "var(--s-8)" }}>
-          <span
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 4,
-              padding: "4px 10px",
-              borderRadius: "var(--radius-full)",
-              background: "var(--surface)",
-              border: "1px solid var(--hairline)",
-              fontSize: 12,
-              fontWeight: 500,
-              color: "var(--ink-2)",
-            }}
-          >
-            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--accent)" }} />
-            Show: {meta?.show ?? "(no run found)"}
-          </span>
-          <span
-            style={{
-              padding: "4px 10px",
-              borderRadius: "var(--radius-full)",
-              background: "var(--sunken)",
-              fontSize: 12,
-              color: "var(--ink-3)",
-            }}
-          >
-            {meta ? `${meta.episodes} episodes · ${meta.extractor.provider}/${meta.extractor.model}` : ""}
-          </span>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "var(--s-16)" }}>
+          <div>
+            <div style={{ display: "flex", alignItems: "center", gap: "var(--s-8)", marginBottom: "var(--s-8)" }}>
+              <span
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 4,
+                  padding: "4px 10px",
+                  borderRadius: "var(--radius-full)",
+                  background: "var(--surface)",
+                  border: "1px solid var(--hairline)",
+                  fontSize: 12,
+                  fontWeight: 500,
+                  color: "var(--ink-2)",
+                }}
+              >
+                <span style={{ width: 6, height: 6, borderRadius: "50%", background: isCustomActive ? "var(--success-strong)" : "var(--accent)" }} />
+                Show: {meta?.show ?? "(no run found)"}
+              </span>
+              <span
+                style={{
+                  padding: "4px 10px",
+                  borderRadius: "var(--radius-full)",
+                  background: "var(--sunken)",
+                  fontSize: 12,
+                  color: "var(--ink-3)",
+                }}
+              >
+                {meta ? `${meta.episodes} episodes · ${meta.extractor?.provider || meta.provider || "llm"}/${meta.extractor?.model || meta.model || "frontier"}` : ""}
+              </span>
+            </div>
+
+            {meta && meta.auditor?.method !== "llm" && !isCustomActive && (
+              <p className="om-caption" style={{ color: "var(--warning-strong)", marginBottom: "var(--s-12)" }}>
+                Smoke-test output from the offline keyword engine. "Passed rule lint" is not a quality judgement.
+              </p>
+            )}
+            <h1 className="om-display" style={{ color: "var(--ink)", marginBottom: "var(--s-8)" }}>
+              Viral Acquisition Promos
+            </h1>
+            <p className="om-body" style={{ color: "var(--ink-2)", maxWidth: 760 }}>
+              Ranked 20–60 second ad cuts for Instagram Reels, TikTok, and YouTube Shorts.
+              Optimized for unearned interpersonal injustice (&ldquo;blood boils&rdquo;) with withheld catharsis.
+            </p>
+          </div>
+
+          <div style={{ display: "flex", gap: "var(--s-8)", flexWrap: "wrap", alignItems: "center" }}>
+            <button
+              onClick={() => setIsUploadModalOpen(true)}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                padding: "10px 18px",
+                borderRadius: "var(--radius-md)",
+                background: "var(--ai-gradient)",
+                color: "#fff",
+                border: "none",
+                fontWeight: 600,
+                fontSize: 13,
+                cursor: "pointer",
+                boxShadow: "0 4px 14px rgba(11, 61, 145, 0.2)",
+              }}
+            >
+              <UploadCloud size={16} />
+              <span>Upload Custom Script</span>
+            </button>
+            <Link
+              href="/episodes"
+              className="om-button om-button--secondary"
+              style={{ padding: "10px 16px", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 6 }}
+            >
+              <Layers size={14} />
+              <span>Browse Beats</span>
+            </Link>
+          </div>
         </div>
 
-        {meta && meta.auditor?.method !== "llm" && (
-          <p className="om-caption" style={{ color: "var(--warning-strong)", marginBottom: "var(--s-12)" }}>
-            Smoke-test output from the offline keyword engine. "Passed rule lint" is not a quality judgement.
-          </p>
+        {/* Custom Run Active Banner */}
+        {isCustomActive && (
+          <div
+            style={{
+              marginTop: "var(--s-16)",
+              padding: "var(--s-12) var(--s-16)",
+              borderRadius: "var(--radius-lg)",
+              background: "var(--sunken)",
+              border: "1px solid var(--accent)",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              flexWrap: "wrap",
+              gap: "var(--s-12)",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <span style={{ fontSize: 16 }}>⚡</span>
+              <div>
+                <strong style={{ fontSize: 13, color: "var(--ink)" }}>Custom Screenplay Analysis Active</strong>
+                <span style={{ fontSize: 12, color: "var(--ink-2)", marginLeft: 6 }}>
+                  ({allPromos.length} candidate promos ranked)
+                </span>
+              </div>
+            </div>
+            <div style={{ display: "flex", gap: 8 }}>
+              <button
+                onClick={downloadCustomCsv}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 4,
+                  padding: "6px 12px",
+                  borderRadius: "var(--radius-sm)",
+                  background: "var(--surface)",
+                  border: "1px solid var(--hairline)",
+                  fontSize: 12,
+                  fontWeight: 600,
+                  color: "var(--ink)",
+                  cursor: "pointer",
+                }}
+              >
+                <Download size={13} /> Export CSV
+              </button>
+              <button
+                onClick={downloadCustomJson}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 4,
+                  padding: "6px 12px",
+                  borderRadius: "var(--radius-sm)",
+                  background: "var(--surface)",
+                  border: "1px solid var(--hairline)",
+                  fontSize: 12,
+                  fontWeight: 600,
+                  color: "var(--ink)",
+                  cursor: "pointer",
+                }}
+              >
+                <Download size={13} /> Export JSON
+              </button>
+              <button
+                onClick={handleResetToBaseline}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 4,
+                  padding: "6px 12px",
+                  borderRadius: "var(--radius-sm)",
+                  background: "var(--sunken)",
+                  border: "1px solid var(--hairline)",
+                  fontSize: 12,
+                  fontWeight: 600,
+                  color: "var(--accent)",
+                  cursor: "pointer",
+                }}
+              >
+                <RotateCcw size={13} /> Reset to Shipped Show
+              </button>
+            </div>
+          </div>
         )}
-        <h1 className="om-display" style={{ color: "var(--ink)", marginBottom: "var(--s-8)" }}>
-          Viral Acquisition Promos
-        </h1>
-        <p className="om-body" style={{ color: "var(--ink-2)", maxWidth: 760 }}>
-          Ranked 20–60 second ad cuts for Instagram Reels, TikTok, and YouTube Shorts.
-          Optimized for unearned interpersonal injustice (&ldquo;blood boils&rdquo;) with withheld catharsis.
-        </p>
       </div>
 
       {/* ── Featured Hero Board (The One Dark Surface) ──── */}
@@ -1098,6 +1355,14 @@ export default function HomePage() {
           </div>
         </div>
       )}
+
+      {/* ── Custom Upload Modal ───────────────────────────── */}
+      <CustomUploadModal
+        isOpen={isUploadModalOpen}
+        onClose={() => setIsUploadModalOpen(false)}
+        onSuccess={handleCustomRunSuccess}
+        serverKeyStatus={serverKeyStatus}
+      />
     </div>
   );
 }

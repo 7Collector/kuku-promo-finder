@@ -101,11 +101,17 @@ Other options: `--audit-model` / `--audit-provider` (configure an explicit indep
 ## Evaluation
 No hand-picked ground truth exists yet, so recall is unmeasured. To measure it: write your picks to `eval/ground_truth.json` (format in `eval/recall.py`) before looking at the output, then `python eval/recall.py`.
 
-## Web viewer
+## Web Viewer & Custom Screenplay API (Vercel Ready)
 ```bash
 npm install && npm run dev      # http://localhost:3000
 ```
-Pages: ranked promos (with audit verdict and flaw type) and a screenplay beat browser. It reads `outputs/` and `assets/` from disk (override with `KUKU_OUTPUT_DIR`, `KUKU_ASSETS_DIR`, `KUKU_SHOW`); it has no approve/reject controls and has not been deployed.
+- **Interactive UI:** Click **"Upload Custom Script"** on the home page to upload your own screenplays as multiple `.txt` files, a `.zip` archive, or by pasting formatted screenplay text. Run extraction and auditing via Gemini, OpenAI, or the offline heuristic engine with live progress, download ranked CSV/JSON, or reset to the shipped baseline anytime.
+- **Vercel Free Tier Deployment:**
+  - Designed for serverless zero-dependency execution in Next.js (Node.js runtime).
+  - Add your LLM keys in Vercel Project Settings $\rightarrow$ Environment Variables: `GEMINI_API_KEY` (recommended, fast & free-tier friendly) or `OPENAI_API_KEY`.
+- **REST API (`/api/pipeline/analyze`):**
+  - `POST /api/pipeline/analyze`: Accepts `multipart/form-data` (with `.txt` or `.zip` files) or JSON `{ provider: "gemini"|"openai"|"heuristic", screenplayText: "...", format: "json"|"csv" }`. Returns ranked promos with verbatim quotes, timestamps, audit tiers, and payoff locations.
+  - `GET /api/pipeline/status`: Checks if server environment keys are configured.
 
 ## Layout
 ```
