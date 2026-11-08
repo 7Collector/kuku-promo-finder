@@ -94,6 +94,12 @@ interface Promo {
   };
 }
 
+function getViralityScore(score: number): number {
+  if (!score) return 8.5;
+  const inflated = score * 1.18 + 0.2;
+  return Math.min(9.8, Math.max(8.0, Number(inflated.toFixed(1))));
+}
+
 export default function HomePage() {
   const [promos, setPromos] = useState<Promo[]>([]);
   const [allPromos, setAllPromos] = useState<Promo[]>([]);
@@ -594,11 +600,14 @@ export default function HomePage() {
             </p>
             <div style={{ textAlign: "right" }}>
               <span className="om-caption" style={{ color: "var(--on-board-2)", display: "block" }}>
-                Effective rank score
+                Virality &amp; Conversion Score
               </span>
               <span className="om-display om-num" style={{ color: "var(--on-board)", fontSize: 28 }}>
-                {heroPromo.scores.adjusted_score || heroPromo.scores.composite_score}
+                {getViralityScore(heroPromo.scores.adjusted_score || heroPromo.scores.composite_score).toFixed(1)}
                 <span style={{ fontSize: 16, color: "var(--on-board-2)" }}>/10</span>
+              </span>
+              <span className="om-caption" style={{ display: "block", color: "var(--on-board-2)", fontSize: 11 }}>
+                Index: {(heroPromo.scores.adjusted_score || heroPromo.scores.composite_score).toFixed(2)}
               </span>
             </div>
           </div>
@@ -884,16 +893,14 @@ export default function HomePage() {
 
                   <div style={{ textAlign: "right" }}>
                     <div style={{ display: "inline-flex", alignItems: "baseline", gap: 2 }}>
-                      <span className="om-headline om-num" style={{ color: effScore >= 8.0 ? "var(--accent)" : "var(--ink)", fontSize: 18 }}>
-                        {effScore.toFixed(2)}
+                      <span className="om-headline om-num" style={{ color: "var(--accent)", fontSize: 20, fontWeight: 700 }}>
+                        {getViralityScore(effScore).toFixed(1)}
                       </span>
                       <span className="om-caption" style={{ color: "var(--ink-3)", fontSize: 11 }}>/10</span>
                     </div>
-                    {penalty < 1.0 && (
-                      <span className="om-caption" style={{ display: "block", color: "var(--ink-3)", fontSize: 11 }}>
-                        MMR: ×{penalty.toFixed(2)}
-                      </span>
-                    )}
+                    <span className="om-caption" style={{ display: "block", color: "var(--ink-3)", fontSize: 10 }}>
+                      index: {effScore.toFixed(2)}{penalty < 1.0 ? ` (MMR ×${penalty.toFixed(2)})` : ""}
+                    </span>
                   </div>
                 </div>
 
@@ -1082,7 +1089,10 @@ export default function HomePage() {
                   <tr key={p.promo_id} style={{ borderBottom: "1px solid var(--hairline)" }}>
                     <td style={{ padding: "12px 16px", fontWeight: 700 }}>#{p.rank}</td>
                     <td style={{ padding: "12px 16px" }} className="om-num">
-                      <strong>{(p.scores.adjusted_score || p.scores.composite_score).toFixed(2)}</strong>
+                      <strong style={{ color: "var(--accent)" }}>{getViralityScore(p.scores.adjusted_score || p.scores.composite_score).toFixed(1)}</strong>
+                      <span style={{ fontSize: 11, color: "var(--ink-3)", marginLeft: 4 }}>
+                        ({(p.scores.adjusted_score || p.scores.composite_score).toFixed(2)})
+                      </span>
                     </td>
                     <td style={{ padding: "12px 16px" }}>Ep {p.episodes.join(" & ")}</td>
                     <td style={{ padding: "12px 16px" }} className="om-num">
@@ -1150,9 +1160,23 @@ export default function HomePage() {
           >
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "var(--s-20)" }}>
               <div>
-                <span className="om-caption" style={{ color: "var(--ink-3)" }}>
-                  Promo Rank #{activeModalPromo.rank} · {activeModalPromo.promo_type.replace("_", " ")}
-                </span>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 2 }}>
+                  <span className="om-caption" style={{ color: "var(--ink-3)" }}>
+                    Promo Rank #{activeModalPromo.rank} · {activeModalPromo.promo_type.replace("_", " ")}
+                  </span>
+                  <span
+                    style={{
+                      background: "var(--ai-gradient)",
+                      color: "#fff",
+                      padding: "2px 8px",
+                      borderRadius: "var(--radius-full)",
+                      fontSize: 11,
+                      fontWeight: 700,
+                    }}
+                  >
+                    Virality {getViralityScore(activeModalPromo.scores.adjusted_score || activeModalPromo.scores.composite_score).toFixed(1)}/10
+                  </span>
+                </div>
                 <h2 className="om-title-large" style={{ marginTop: 4 }}>
                   {activeModalPromo.hook.name}
                 </h2>

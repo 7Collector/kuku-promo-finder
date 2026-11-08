@@ -1,6 +1,6 @@
 # Kuku Promo Finder: Find the Promos (Problem 1)
 
-**Author:** Rakshit · **Repo:** `run.py` (engine), `app/` (Next.js viewer) · **Run:** `outputs/promos.meta.json`
+**Author:** Rakshit · **GitHub Repo:** [7Collector/kuku-promo-finder](https://github.com/7Collector/kuku-promo-finder) · **Live Web App:** [kuku-promo-finder-theta.vercel.app](https://kuku-promo-finder-theta.vercel.app/) · **Run:** `outputs/promos.meta.json`
 
 ## 1. Problem, Product Framing & Scope
 An editor watches every episode to pick 20-60s promos by hand, and new shows ship weekly. The tool reads timestamped screenplays and returns ranked promos: episode, every segment's start/end, hook, cliffhanger, and why it converts.
@@ -35,8 +35,8 @@ An editor watches every episode to pick 20-60s promos by hand, and new shows shi
 - **Why Composites are Disabled:** Naive pairing across episodes severed character and emotional continuity. Safe composites require hook-first cuts followed by setup scenes with identical character IDs, validated by blind cold-read scoring.
 - **Ground Truth & Recall:** Without a human-labeled ground truth (`eval/ground_truth.json`), absolute recall and precision remain **unmeasured**.
 
-## 5. Human in the Loop & Editor Handoff
-Editors review picks via the Next.js viewer or `outputs/PROMOS.md`, displaying audit tier badges, dual-judge critique breakdowns, flaw types, and cliffhanger trim indicators. `--export-csv` outputs `outputs/promos.csv` with one row per segment formatted in `mm:ss.ss` with verbatim quotes and verified `payoff_location`.
+## 5. Human in the Loop, Web Viewer & Editor Handoff
+Editors review picks via the Next.js viewer (deployed live at [kuku-promo-finder-theta.vercel.app](https://kuku-promo-finder-theta.vercel.app/)) or `outputs/PROMOS.md`, displaying audit tier badges, dual-judge critique breakdowns, flaw types, and cliffhanger trim indicators. The web app includes an interactive "Upload Custom Script" tool and zero-dependency REST API (`/api/pipeline/analyze`) supporting ZIP or multi-file uploads with Gemini/OpenAI execution. `--export-csv` outputs `outputs/promos.csv` with one row per segment formatted in `mm:ss.ss` with verbatim quotes and verified `payoff_location`.
 
 ## 6. Cost & Execution Profile (Measured)
 - **Committed Headline Run:** Extraction and audit panel executed with caching across OpenAI `gpt-6-luna` and Gemini `gemini-3.5-flash-lite`. Cached cost is **$0.0190**, with **$0.0002** live cost from discovery probes. Pure re-ranking is **$0.0000** and runs in **<0.1s**.
