@@ -2,9 +2,11 @@
 
 ## Tools used
 - **Antigravity** (earlier sessions) and **Claude Code** (audit and fix session, 2026-11-07): coding assistants for the parser, taxonomy, pipeline, UI and tests.
-- **gpt-6-luna**: the runtime model for extraction and audit (`outputs/promos.meta.json`).
+- **gpt-6-luna** (OpenAI, extraction & panel judge) and **gemini-3.5-flash-lite** (Google Gemini, independent panel judge): the runtime models for extraction and dual-judge audit panel (`outputs/promos.meta.json`).
 
-Authorship note: which design ideas (e.g. the "Blood Boils" framing, the two-layer taxonomy) came from the author versus an assistant cannot be reconstructed from the repository, so none are attributed here.
+## Authorship & Design Attribution
+<!-- TODO(User): Fill in which design ideas (e.g. the "Blood Boils" framing, conversion-intent framing, the two-layer taxonomy, beat-edge snapping) came from the author versus an assistant. This cannot be reconstructed from git history alone. -->
+- **TODO**: Add author vs assistant attribution for specific design choices and framing decisions.
 
 ## Where AI got it wrong (each item has an artifact in git history or `outputs/`)
 

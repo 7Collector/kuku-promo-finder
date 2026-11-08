@@ -86,12 +86,86 @@ class TestValidation(unittest.TestCase):
                               "text": "Kneel, or I will finish what I started.", "withheld_payoff": "x"})
         self.assertIsNotNone(self.convert(rc)[0])
 
-    def test_cliffhanger_must_be_at_the_end(self):
+    def test_cliffhanger_trim_below_20s_is_dropped(self):
         early = raw(cliffhanger={"type": "mortal_ultimatum", "timestamp": "00:05.00",
                                  "text": "I did nothing wrong.", "withheld_payoff": "x"})
         cand, reason = self.convert(early)
         self.assertIsNone(cand)
-        self.assertIn("last 6s", reason)
+        self.assertEqual(reason, "too short after cliffhanger trim")
+
+    def test_cliffhanger_trimmed_clip_passes_all_checks(self):
+        # Action beat ends at 30.0s; clip ends at 42.0s. Tail window is [36s, 42s].
+        # Cliffhanger beat ends at 30.0s, so it ends before the tail window.
+        # Trimmed clip runs 00:00.00 -> 00:30.00 (30.0s >= 20s).
+        mid = raw(cliffhanger={"type": "physical_aggression", "timestamp": "00:12.00",
+                              "text": "Gerald grabs her by the collar", "withheld_payoff": "x"})
+        cand, reason = self.convert(mid)
+        self.assertIsNotNone(cand)
+        self.assertEqual(reason, "")
+        self.assertTrue(cand.trimmed_from_end)
+        self.assertEqual(cand.seconds_removed, 12.0)
+        self.assertEqual(cand.total_duration, 30.0)
+        self.assertEqual(cand.segments[-1].end, "00:30.00")
+        errs = check_candidate(cand, {7: self.ep})
+        self.assertEqual(errs, [])
+
+    def test_multi_segment_cliffhanger_trim(self):
+        # Multi-segment clip: Segment 1 (00:00 -> 00:30, 30s), Segment 2 (00:30 -> 00:42, 12s)
+        # Cliffhanger beat is in Segment 1 ("Gerald grabs her by the collar", ends at 30s).
+        # Trimming drops Segment 2 and keeps Segment 1 trimmed to 30s.
+        multi = raw(
+            segments=[{"start": "00:00.00", "end": "00:30.00"}, {"start": "00:30.00", "end": "00:42.00"}],
+            cliffhanger={"type": "physical_aggression", "timestamp": "00:12.00",
+                         "text": "Gerald grabs her by the collar", "withheld_payoff": "x"},
+        )
+        cand, reason = self.convert(multi)
+        self.assertIsNotNone(cand)
+        self.assertEqual(reason, "")
+        self.assertTrue(cand.trimmed_from_end)
+        self.assertEqual(len(cand.segments), 1)
+        self.assertEqual(cand.segments[0].start, "00:00.00")
+        self.assertEqual(cand.segments[0].end, "00:30.00")
+        self.assertEqual(cand.total_duration, 30.0)
+        self.assertEqual(cand.seconds_removed, 12.0)
+        errs = check_candidate(cand, {7: self.ep})
+        self.assertEqual(errs, [])
+
+    def test_fake_provider_with_mid_clip_cliffhanger(self):
+        from src.providers.base import BaseLLMProvider
+
+        class MidClipProvider(BaseLLMProvider):
+            @property
+            def name(self) -> str:
+                return "fake_mid"
+            @property
+            def model(self) -> str:
+                return "fake-mid-1"
+            def generate_json(self, system_prompt: str, user_prompt: str):
+                return {
+                    "candidates": [
+                        {
+                            "segments": [{"start": "00:00.00", "end": "00:42.00"}],
+                            "hook": {"type": "public_humiliation", "timestamp": "00:00.00", "text": "You are nothing without us, Juliana."},
+                            "cliffhanger": {"type": "physical_aggression", "timestamp": "00:12.00",
+                                            "text": "Gerald grabs her by the collar", "withheld_payoff": "rescue"},
+                            "scores": {"hook_strength": 9, "injustice_tension": 9, "cliffhanger_strength": 9,
+                                       "standalone_clarity": 9, "payoff_withheld": 9, "conversion_intent": 8.5},
+                            "conversion_intent": 8.5,
+                            "conversion_reason": "Aggression cliffhanger",
+                        }
+                    ]
+                }
+
+        ext = PromoExtractor(self.ex.taxonomy, MidClipProvider(), episodes=[self.ep])
+        cands = ext.extract_candidates_for_episode(self.ep, {"show_title": "Test"})
+        self.assertEqual(len(cands), 1)
+        cand = cands[0]
+        self.assertTrue(cand.trimmed_from_end)
+        self.assertEqual(cand.total_duration, 30.0)
+        self.assertEqual(cand.seconds_removed, 12.0)
+        self.assertEqual(cand.extractor_model, "fake-mid-1")
+        errs = check_candidate(cand, {7: self.ep})
+        self.assertEqual(errs, [])
 
     def test_duration_out_of_range_rejected(self):
         cand, reason = self.convert(raw(segments=[{"start": "00:00.00", "end": "00:12.00"}]))

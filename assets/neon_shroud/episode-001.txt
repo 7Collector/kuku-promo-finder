@@ -1,0 +1,21 @@
+EPISODE NUMBER: 1
+EPISODE LOGLINE: In Neo-Veridia, Detective Silas Ray investigates a severed cybernetic spine.
+
+SCENE 1
+Scene heading: INT. ALLEYWAY - NIGHT
+Scene start: 00:00.00
+Scene end: 00:45.00
+
+**SILAS (Gravelly):**
+Start: (00:00.00) | End: (00:08.00)
+"This wasn't a street mugging. This military-grade neural lace was ripped out clean."
+
+**KIRA (Tense):**
+Start: (00:08.00) | End: (00:25.00)
+"Silas, drop the badge. Syndicate leader Vance ordered everyone who saw this code silenced."
+
+**SILAS (Steely):**
+Start: (00:25.00) | End: (00:45.00)
+"Tell Vance I am coming for his server farm next."
+
+--- SCRIPT END ---

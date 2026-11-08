@@ -1,0 +1,21 @@
+EPISODE NUMBER: 2
+EPISODE LOGLINE: Silas storms the neon district to extract an encrypted memory core.
+
+SCENE 1
+Scene heading: INT. NEON CLUB - NIGHT
+Scene start: 00:00.00
+Scene end: 00:50.00
+
+**VANCE (Smirking):**
+Start: (00:00.00) | End: (00:10.00)
+"You walked right into the kill zone, Detective."
+
+**SILAS (Deadly):**
+Start: (00:10.00) | End: (00:30.00)
+"I didn't come to arrest you. I came to shut down your black market rig."
+
+**VANCE (Laughing):**
+Start: (00:30.00) | End: (00:50.00)
+"The virus is already pulsing through the city grid. You are ten seconds too late."
+
+--- SCRIPT END ---

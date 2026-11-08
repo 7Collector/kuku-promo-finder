@@ -1,0 +1,33 @@
+{
+  "ablation_name": "panel",
+  "generated_at": "2026-11-07T14:14:47Z",
+  "git_commit": "9223301",
+  "show": "I Married a Broken Soldier. He was a Duke",
+  "counts": {
+    "total_candidates": 42,
+    "ranked": 15,
+    "audit_passed": 23,
+    "audit_failed": 19,
+    "audit_errors": 0
+  },
+  "usage": {
+    "calls": 42,
+    "cache_hits": 42,
+    "prompt_tokens": 0,
+    "completion_tokens": 0
+  },
+  "wall_seconds": 0.0,
+  "estimated_cost_usd": 0.0,
+  "audit_panel_report": {
+    "mode": "single_judge",
+    "agreement_rate": 1.0,
+    "disagreements": [],
+    "judges": [
+      "openai:gpt-6-luna"
+    ]
+  },
+  "stages_enabled": [
+    "extraction",
+    "audit_panel"
+  ]
+}

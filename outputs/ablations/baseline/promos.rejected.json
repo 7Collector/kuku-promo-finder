@@ -1,0 +1,930 @@
+{
+  "near_misses_reported_by_model": [
+    {
+      "episode": 3,
+      "start": "00:40.50",
+      "end": "01:08.10",
+      "reason": "Strong injustice and a stranger's entrance, but the screenplay does not show the entrance stunning anyone or the protector physically intervening before the cut, so no listed cliffhanger type is fully supported."
+    },
+    {
+      "episode": 3,
+      "start": "01:50.90",
+      "end": "02:25.75",
+      "reason": "The marriage proposal is left unanswered, but that romantic decision cliffhanger has no matching type in the supplied cliffhanger taxonomy."
+    },
+    {
+      "episode": 3,
+      "start": "00:00.00",
+      "end": "00:22.50",
+      "reason": "The sister's cruel wedding claim is compelling, but the final line does not fit a listed cliffhanger type, and the scene does not explicitly establish the witnesses required for public_humiliation."
+    },
+    {
+      "episode": 4,
+      "start": "01:55.00",
+      "end": "02:31.40",
+      "reason": "Juliana delivers her comeback and walks away with her new husband; the humiliation conflict reaches a satisfying resolution rather than withholding its payoff."
+    },
+    {
+      "episode": 4,
+      "start": "01:16.20",
+      "end": "01:54.80",
+      "reason": "The wedding ceremony culminates in the explicit pronouncement that they are husband and wife, resolving the central decision this episode builds toward."
+    },
+    {
+      "episode": 4,
+      "start": "00:28.00",
+      "end": "00:52.50",
+      "reason": "The man's reassurance is emotionally warm, but the segment opens without a strong cold-viewer hook and ends without a sharp unresolved cliffhanger."
+    },
+    {
+      "episode": 2,
+      "start": "00:00.00",
+      "end": "00:42.30",
+      "reason": "The public abandonment is a strong hook, but this section ends on her father's rejection without a clear payoff-withheld cliffhanger beat from the taxonomy."
+    },
+    {
+      "episode": 2,
+      "start": "01:14.40",
+      "end": "01:47.40",
+      "reason": "Juliana delivers her full indictment and ends by rejecting the shame Gerald tried to impose; the emotional conflict resolves within the clip, making it more of a payoff than a promo cliffhanger."
+    },
+    {
+      "episode": 1,
+      "start": "00:01.00",
+      "end": "00:29.80",
+      "reason": "The segment opens on joyful anticipation and does not reach the warning to turn around until well after the first three seconds, so it misses the required immediate hook."
+    },
+    {
+      "episode": 1,
+      "start": "01:30.90",
+      "end": "02:17.00",
+      "reason": "Although the family insults are painful, the opening 'Enough!' is not a strong scroll-stopping hook, and the ending is an expression of suppressed fury rather than a clear withheld payoff."
+    },
+    {
+      "episode": 1,
+      "start": "01:59.80",
+      "end": "02:17.00",
+      "reason": "This passage is under the 20-second minimum and ends after the groom's insults without a distinct cliffhanger."
+    },
+    {
+      "episode": 7,
+      "start": "01:30.00",
+      "end": "01:36.50",
+      "reason": "Gerald and the aristocratic woman flee, resolving the immediate confrontation; the moment is also under the 20-second minimum."
+    },
+    {
+      "episode": 7,
+      "start": "01:40.80",
+      "end": "01:47.80",
+      "reason": "Alexander's confident reply closes the exchange rather than leaving an unresolved conflict, and the moment is under the 20-second minimum."
+    },
+    {
+      "episode": 7,
+      "start": "00:05.00",
+      "end": "00:11.50",
+      "reason": "The carriage's arrival is atmospheric setup without a clear conflict hook, and the moment is under the 20-second minimum."
+    },
+    {
+      "episode": 5,
+      "start": "00:06.80",
+      "end": "00:41.50",
+      "reason": "The father's disownment is a strong injustice beat, but Juliana's reply gives the sequence a self-contained emotional button rather than a sharp unresolved cliffhanger."
+    },
+    {
+      "episode": 5,
+      "start": "00:49.00",
+      "end": "01:14.50",
+      "reason": "The ledger is taken and thrown, so the central act of cruelty has already landed; the segment ends on Juliana's distress without a new unanswered threat."
+    },
+    {
+      "episode": 5,
+      "start": "01:20.50",
+      "end": "01:50.50",
+      "reason": "Alexander's comfort and defense are compelling, but opening on the aftermath needs more context and makes a weaker cold-viewer hook."
+    },
+    {
+      "episode": 6,
+      "start": "00:30.15",
+      "end": "00:56.40",
+      "reason": "The humiliation line gives the segment an emotional hook, but the scene moves into the cabin and Juliana finds comfort; it ends without an unresolved conflict or cliffhanger."
+    },
+    {
+      "episode": 6,
+      "start": "00:40.70",
+      "end": "01:16.80",
+      "reason": "Juliana's line about losing everything is affecting, but the exchange turns into a practical, caring moment rather than building toward a withheld payoff."
+    },
+    {
+      "episode": 6,
+      "start": "01:32.10",
+      "end": "01:55.00",
+      "reason": "The reflective ending conveys a tender change in Juliana's feelings, but it is a soft emotional resolution, not a cliffhanger."
+    },
+    {
+      "episode": 9,
+      "start": "00:58.80",
+      "end": "01:08.20",
+      "reason": "The mother's line confirms the fever is breaking and Juliana is thanked for saving the child; the central crisis resolves instead of ending before its payoff."
+    },
+    {
+      "episode": 9,
+      "start": "01:15.10",
+      "end": "01:23.80",
+      "reason": "The warning about gossip and Juliana's resolve suggest future trouble, but this exchange has no concrete escalation or strong cliffhanger."
+    },
+    {
+      "episode": 10,
+      "start": "00:02.10",
+      "end": "00:28.00",
+      "reason": "The sudden door bang and Alexander's bleeding arm offer a brief jolt, but the scene quickly turns into Juliana tending to him; it builds no strong injustice and ends without a withheld payoff."
+    },
+    {
+      "episode": 10,
+      "start": "00:38.10",
+      "end": "01:25.90",
+      "reason": "The scar reveal and Alexander's intimate confession are emotionally engaging, but the scene is tender rather than conflict-driven, and the final line does not create a clear cliffhanger from the listed types."
+    },
+    {
+      "episode": 12,
+      "start": "00:00.50",
+      "end": "00:13.90",
+      "reason": "The arrest and Juliana's defense create immediate injustice, but this span is only 13.4 seconds—below the 20-second minimum—and ends before the accusation develops."
+    },
+    {
+      "episode": 12,
+      "start": "01:09.60",
+      "end": "01:27.21",
+      "reason": "Juliana's response is emotionally strong, but the span is under 20 seconds and her decision to proceed answers the ultimatum rather than cutting before that choice."
+    },
+    {
+      "episode": 12,
+      "start": "00:26.80",
+      "end": "00:52.30",
+      "reason": "The planted-watch accusation and dangerous ring setup are intriguing, but this cut ends before Clarissa states the threatened consequence, so the stakes and cliffhanger remain weak."
+    },
+    {
+      "episode": 11,
+      "start": "00:16.80",
+      "end": "00:50.00",
+      "reason": "The theft accusation creates tension, but ending on Gerald inviting the search does not land a sufficiently specific cliffhanger beat."
+    },
+    {
+      "episode": 11,
+      "start": "01:21.30",
+      "end": "01:30.00",
+      "reason": "Alexander's temptation to strike Gerald is tense, but the screenplay shows him choosing restraint rather than initiating a retaliatory action; this segment is also under 20 seconds."
+    },
+    {
+      "episode": 11,
+      "start": "01:44.20",
+      "end": "01:46.60",
+      "reason": "Gerald's gloating line confirms the discovery instead of withholding its payoff, and the moment is too short to qualify as a promo."
+    },
+    {
+      "episode": 8,
+      "start": "00:53.30",
+      "end": "01:18.00",
+      "reason": "The war-scar question and Juliana’s reflection offer gentle emotional development, but the scene ends in peaceful understanding rather than an unresolved cliffhanger."
+    },
+    {
+      "episode": 8,
+      "start": "00:25.00",
+      "end": "00:51.20",
+      "reason": "The beard-trimming exchange is playful and affectionate, but it lacks a strong cold-open hook, meaningful conflict, and a payoff that remains urgently withheld."
+    },
+    {
+      "episode": 8,
+      "start": "00:00.20",
+      "end": "00:24.20",
+      "reason": "The herbal-book conversation introduces Alexander’s survival knowledge, but it opens softly and resolves as a calm bonding beat, not a cliffhanger."
+    },
+    {
+      "episode": 13,
+      "start": "00:05.10",
+      "end": "00:45.50",
+      "reason": "The pleas and taunts build sympathy, but the segment ends before Juliana enters the briars, leaving the danger more anticipated than active."
+    },
+    {
+      "episode": 13,
+      "start": "00:57.20",
+      "end": "01:52.00",
+      "reason": "Juliana finds and grasps the ring, resolving the immediate search objective; the clip gives away the payoff instead of cutting before it."
+    },
+    {
+      "episode": 15,
+      "start": "00:03.60",
+      "end": "00:49.50",
+      "reason": "The destruction and shove create strong injustice, but the shove has already landed by the end and there is no qualifying withheld retaliation or arrival beat to cut on."
+    },
+    {
+      "episode": 15,
+      "start": "01:00.00",
+      "end": "01:26.00",
+      "reason": "The raised club looks like a strong visual hook, but the screenplay does not show a concrete blow in motion within the opening seconds; the segment also ends on a challenge rather than a specific retaliation or other qualifying cliffhanger."
+    },
+    {
+      "episode": 14,
+      "start": "00:00.50",
+      "end": "00:38.50",
+      "reason": "The bloody hand revealing the ring is a striking opening, but finding it frees Alexander and the segment ends on his remorseful line, not an unresolved cliffhanger."
+    },
+    {
+      "episode": 14,
+      "start": "00:47.20",
+      "end": "01:27.00",
+      "reason": "The protective vow and clenched fist tease future vengeance, but no specific retaliatory action begins; the fist is only a body-language beat, so it does not meet the available cliffhanger types."
+    },
+    {
+      "episode": 16,
+      "start": "00:00.00",
+      "end": "00:28.50",
+      "reason": "The fight is visually forceful, but Alexander has already overpowered the attackers by the end, resolving the immediate conflict."
+    },
+    {
+      "episode": 16,
+      "start": "00:36.20",
+      "end": "00:58.20",
+      "reason": "It includes the culprit reveal, but opens on a low-tension question and ends after the attackers flee; the mystery is answered rather than withheld."
+    },
+    {
+      "episode": 16,
+      "start": "01:04.20",
+      "end": "01:23.19",
+      "reason": "The emotional bond may interest existing viewers, but it lacks an early hook and ends on a resolved, quiet beat rather than a strong cliffhanger."
+    },
+    {
+      "episode": 18,
+      "start": "00:00.00",
+      "end": "00:28.90",
+      "reason": "The fire is an immediate danger, but this section ends by explaining the danger rather than cutting on a strong unresolved turn."
+    },
+    {
+      "episode": 18,
+      "start": "01:51.50",
+      "end": "02:22.50",
+      "reason": "The escape through the window resolves the immediate peril; the aftermath is emotional but does not introduce a comparably sharp cliffhanger."
+    },
+    {
+      "episode": 18,
+      "start": "02:43.00",
+      "end": "03:06.50",
+      "reason": "It contains the revenge vow and final question, but lasts only 23.5 seconds and opens on the less arresting line “We have nowhere to go.”"
+    },
+    {
+      "episode": 20,
+      "start": "00:21.30",
+      "end": "00:56.00",
+      "reason": "The succession plot raises stakes, but the final promise that the peasants will learn their place is a general boast, not a concrete cliffhanger or action cut."
+    },
+    {
+      "episode": 20,
+      "start": "01:28.20",
+      "end": "01:49.20",
+      "reason": "Catherine's contempt for the peasants is cruel, but the scene is mostly villainous boasting and ends on her ambition rather than an imminent confrontation or withheld payoff."
+    },
+    {
+      "episode": 22,
+      "start": "00:19.10",
+      "end": "00:42.50",
+      "reason": "“The Duchess is dying” is a strong cold hook, but the segment ends with Juliana and Prudence entering the manor, not on a sufficiently sharp cliffhanger."
+    },
+    {
+      "episode": 22,
+      "start": "00:43.00",
+      "end": "01:21.00",
+      "reason": "The housekeeper's suspicion creates tension, but she leaves and Prudence says “That was close,” resolving the immediate confrontation rather than withholding a payoff."
+    },
+    {
+      "episode": 22,
+      "start": "01:53.80",
+      "end": "02:11.00",
+      "reason": "The dying Duchess's distress and Juliana's question create a promising medical mystery, but this segment is only 17.2 seconds, below the 20-second minimum; extending it to qualify leaves no valid taxonomy hook within the first three seconds."
+    },
+    {
+      "episode": 21,
+      "start": "01:31.00",
+      "end": "01:54.00",
+      "reason": "The Dowager Duchess's illness is an intriguing reveal, but the opening complaint is a soft hook and the scene ends on Juliana's apprehension rather than a decisive cliffhanger."
+    },
+    {
+      "episode": 21,
+      "start": "00:42.80",
+      "end": "01:30.80",
+      "reason": "Juliana's remedy appears to work and Toby's breathing settles, resolving the immediate crisis instead of withholding its payoff."
+    },
+    {
+      "episode": 21,
+      "start": "00:00.00",
+      "end": "00:40.40",
+      "reason": "The barn-door slam and desperate plea arrive after the first three seconds; the segment opens on quiet, non-hook action."
+    },
+    {
+      "episode": 23,
+      "start": "00:40.80",
+      "end": "01:30.50",
+      "reason": "The opening 'No.' is too weak to stop a cold viewer, and the segment delivers the arsenic identification instead of ending on a strong unresolved beat."
+    },
+    {
+      "episode": 23,
+      "start": "01:47.50",
+      "end": "02:11.20",
+      "reason": "The urgent treatment and door sounds create suspense, but the segment opens on explanation rather than a strong hook; the door sound alone also does not confirm an entrant."
+    },
+    {
+      "episode": 19,
+      "start": "00:00.00",
+      "end": "00:41.50",
+      "reason": "The burned-home opening has emotional weight, but the villagers offer shelter and food during the segment, resolving its immediate need; it ends with departure rather than a cliffhanger."
+    },
+    {
+      "episode": 19,
+      "start": "01:37.20",
+      "end": "01:52.50",
+      "reason": "This intimate reassurance beat is only 15.3 seconds, below the 20-second minimum, and ends on comfort rather than an unresolved cliffhanger."
+    },
+    {
+      "episode": 26,
+      "start": "00:14.20",
+      "end": "00:55.50",
+      "reason": "The opening question creates mild curiosity, but the scene mainly establishes the characters and ends on a warning rather than a strong unresolved cliffhanger."
+    },
+    {
+      "episode": 26,
+      "start": "00:56.00",
+      "end": "01:06.70",
+      "reason": "The poisoning accusation looks like a strong hook, but the segment is under 20 seconds and Juliana reassures the Duchess that she is safe, resolving that immediate tension."
+    },
+    {
+      "episode": 26,
+      "start": "01:13.80",
+      "end": "01:55.50",
+      "reason": "It reaches the same compelling ring reveal, but opens with a comparatively mild question about why Juliana works as a maid, which is less likely to stop a cold viewer."
+    },
+    {
+      "episode": 25,
+      "start": "00:13.20",
+      "end": "00:57.20",
+      "reason": "The visible wound and Alexander's demand for the attacker create urgency, but the segment ends by naming Lady Catherine rather than on a qualifying cliffhanger; the screenplay shows no retaliation beginning."
+    },
+    {
+      "episode": 25,
+      "start": "01:20.20",
+      "end": "01:49.40",
+      "reason": "The arsenic disclosure is a strong reveal, but Alexander's question, \"Alone?\", is answered before the segment ends, so its suspense is resolved rather than withheld."
+    },
+    {
+      "episode": 25,
+      "start": "02:17.40",
+      "end": "02:48.00",
+      "reason": "Alexander's warning that they could have killed Juliana briefly raises danger, but she insists on returning, he agrees to hear everything, and they walk together; the conflict settles instead of ending at an unresolved peak."
+    },
+    {
+      "episode": 17,
+      "start": "00:00.00",
+      "end": "00:31.50",
+      "reason": "The garden wreckage and Alexander’s protective vow build tenderness, but the opening is visual aftermath rather than a strong hook, and the vow reassures instead of leaving a conflict unresolved."
+    },
+    {
+      "episode": 17,
+      "start": "00:56.50",
+      "end": "01:22.50",
+      "reason": "Juliana’s fear of losing Alexander is an emotional confession, but their exchange resolves into mutual romantic reassurance rather than a cliffhanger."
+    },
+    {
+      "episode": 17,
+      "start": "01:48.30",
+      "end": "01:58.88",
+      "reason": "The narration hints that Alexander may have secrets, but no evidence or confrontation follows; this ending is a tender fade-out, not a withheld payoff, and the segment is under 20 seconds."
+    },
+    {
+      "episode": 28,
+      "start": "00:24.80",
+      "end": "00:56.60",
+      "reason": "The Duchess’s defense and accusation are compelling, but this section opens without establishing why Juliana is being held; the accusation of Catherine is then dismissed as delusion before the interrupted testimony beat."
+    },
+    {
+      "episode": 28,
+      "start": "01:10.80",
+      "end": "01:24.40",
+      "reason": "Catherine stealing Juliana’s locket and threatening her is emotionally sharp, but this section is under the 20-second minimum."
+    },
+    {
+      "episode": 31,
+      "start": "00:06.90",
+      "end": "00:43.00",
+      "reason": "The dungeon taunts establish Juliana's humiliation, but the segment ends on her defiant reply rather than an unresolved threat or action."
+    },
+    {
+      "episode": 31,
+      "start": "00:43.20",
+      "end": "01:23.20",
+      "reason": "The altar betrayal and Juliana's defense of her marriage are compelling, but the exchange lands on a complete emotional statement rather than a cliffhanger."
+    },
+    {
+      "episode": 29,
+      "start": "00:00.00",
+      "end": "00:20.10",
+      "reason": "The forced escort and pleas establish distress, but the opening does not clearly explain the threat or deliver a strong unresolved cliffhanger."
+    },
+    {
+      "episode": 29,
+      "start": "01:24.00",
+      "end": "01:54.80",
+      "reason": "The shove into the cell is a strong shock, but the remaining beat is Juliana's grief and vow; it does not set up a distinct next-beat payoff as strongly as the accusation-and-challenge sequence."
+    },
+    {
+      "episode": 27,
+      "start": "00:01.30",
+      "end": "00:46.40",
+      "reason": "The ring mystery builds curiosity, but this stretch ends on a question without a distinct cliffhanger beat and needs more context to make the crest's significance clear."
+    },
+    {
+      "episode": 33,
+      "start": "00:02.50",
+      "end": "00:32.00",
+      "reason": "The opening sounds intriguing, but most of this stretch is a subdued fact-finding exchange; it lacks an immediate, sharp conflict hook."
+    },
+    {
+      "episode": 33,
+      "start": "02:29.50",
+      "end": "02:54.04",
+      "reason": "The maid's guilt and collapse are emotionally affecting, but the stretch ends in silent aftermath rather than on a suspenseful unresolved beat."
+    },
+    {
+      "episode": 33,
+      "start": "01:35.00",
+      "end": "01:56.50",
+      "reason": "The prayer-versus-chanting exchange intensifies the false accusation, but it ends on the maid's distressed denial without a strong cliffhanger."
+    },
+    {
+      "episode": 30,
+      "start": "00:48.00",
+      "end": "01:27.80",
+      "reason": "The opening is only doors creaking; the first compelling line begins at 00:51.20, more than three seconds after the segment starts, so it fails the hook timing rule."
+    },
+    {
+      "episode": 30,
+      "start": "02:24.50",
+      "end": "02:31.21",
+      "reason": "Juliana's frightened image may be emotionally effective, but the moment is under 20 seconds and depends on visual expression rather than a clear new development."
+    },
+    {
+      "episode": 24,
+      "start": "00:32.50",
+      "end": "01:29.80",
+      "reason": "The strike is a strong opening hook, but the clip ends on Juliana's completed vow, not a qualifying cut before a retaliation or other cliffhanger payoff."
+    },
+    {
+      "episode": 24,
+      "start": "00:29.00",
+      "end": "00:48.00",
+      "reason": "The cruelty and physical assault build injustice, but the scene's threat lands rather than leaving a clear payoff withheld."
+    },
+    {
+      "episode": 24,
+      "start": "01:21.20",
+      "end": "01:29.80",
+      "reason": "Juliana's hidden journal and bottle create curiosity, but this moment is under 20 seconds and ends on a completed declaration rather than a cliffhanger."
+    },
+    {
+      "episode": 35,
+      "start": "00:37.00",
+      "end": "00:58.00",
+      "reason": "The reunion is emotionally strong, but the moment resolves its immediate question—Alexander is alive—rather than ending on an unresolved conflict."
+    },
+    {
+      "episode": 35,
+      "start": "00:05.50",
+      "end": "00:27.00",
+      "reason": "The escape line creates urgency, but the segment mainly follows her journey to the cabin and ends on arrival without a strong cliffhanger."
+    },
+    {
+      "episode": 35,
+      "start": "01:18.00",
+      "end": "01:50.00",
+      "reason": "The military-history explanation builds stakes, but it is exposition-heavy and ends with Alexander’s survival already stated rather than cutting on a sharp unresolved beat."
+    },
+    {
+      "episode": 39,
+      "start": "00:29.80",
+      "end": "00:50.00",
+      "reason": "The assault on the sentry is attention-grabbing, but the confrontation resolves when the road is declared clear; it does not end on a strong withheld payoff."
+    },
+    {
+      "episode": 39,
+      "start": "01:08.50",
+      "end": "01:38.41",
+      "reason": "The opening is Alexander's visual emergence in ducal regalia, while the spoken address \"Your Grace\" comes more than three seconds later; the hook depends on visual impact the screenplay alone cannot verify."
+    },
+    {
+      "episode": 39,
+      "start": "00:00.00",
+      "end": "00:24.20",
+      "reason": "The segment opens on crates, a carriage, and guards, then moves into tactical exposition; it lacks a strong cold-viewer hook."
+    },
+    {
+      "episode": 40,
+      "start": "00:23.20",
+      "end": "00:48.30",
+      "reason": "The threat develops after the opening taunt, but the first line is not a strong enough cold-viewer hook and the closing remark about what comes after the wedding is vague."
+    },
+    {
+      "episode": 40,
+      "start": "01:18.50",
+      "end": "01:50.08",
+      "reason": "The doors opening suggests an arrival, but the screenplay does not identify who enters; the opening is not a verifiable hook and the scene does not show an intervention."
+    },
+    {
+      "episode": 40,
+      "start": "00:00.00",
+      "end": "00:34.20",
+      "reason": "The opening bells and carriage arrival are atmosphere, while the sharper threat arrives too late to serve as the required opening hook."
+    },
+    {
+      "episode": 41,
+      "start": "00:58.00",
+      "end": "01:03.50",
+      "reason": "Juliana’s defiant line is a strong moment, but the segment is under 20 seconds and does not end on a clear withheld payoff."
+    },
+    {
+      "episode": 41,
+      "start": "01:21.00",
+      "end": "01:33.50",
+      "reason": "The explosion and figures at the entrance make a strong cliffhanger, but this segment is only 12.5 seconds and lacks enough setup to stand alone."
+    },
+    {
+      "episode": 41,
+      "start": "00:04.90",
+      "end": "00:36.80",
+      "reason": "Catherine’s threat and the crowd’s mockery build injustice, but the segment ends on ridicule rather than a cliffhanger."
+    },
+    {
+      "episode": 42,
+      "start": "00:01.00",
+      "end": "00:16.40",
+      "reason": "The dramatic entrance and identity exchange are promising, but this stretch is under the 20-second minimum and has no cliffhanger."
+    },
+    {
+      "episode": 42,
+      "start": "01:04.00",
+      "end": "01:17.50",
+      "reason": "The Duke announcement and revenge line are strong, but the segment is too short to meet the minimum duration and gives away the identity reveal."
+    },
+    {
+      "episode": 42,
+      "start": "00:30.50",
+      "end": "00:54.00",
+      "reason": "Rupert's denial leads into Alexander's reunion with his mother, resolving the emotional beat rather than ending on a withheld payoff."
+    },
+    {
+      "episode": 36,
+      "start": "00:13.50",
+      "end": "00:43.70",
+      "reason": "The conspiracy and Alexander's presumed death are intriguing, but the military backstory needs context and the segment ends without an immediate personal threat or strong unresolved turn."
+    },
+    {
+      "episode": 36,
+      "start": "02:57.00",
+      "end": "03:16.80",
+      "reason": "The fist-clench action is visually dependent, and the segment is only 19.8 seconds—below the 20-second minimum."
+    },
+    {
+      "episode": 44,
+      "start": "00:00.00",
+      "end": "00:13.20",
+      "reason": "The arrest confrontation is brisk, but it is under the 20-second minimum and the constable’s authority is already asserted before the beat ends."
+    },
+    {
+      "episode": 44,
+      "start": "00:25.20",
+      "end": "00:42.80",
+      "reason": "Catherine’s emotional plea is under 20 seconds and relies on backstory about her relationship with Alexander."
+    },
+    {
+      "episode": 44,
+      "start": "00:46.60",
+      "end": "01:03.40",
+      "reason": "The exchange ends on Alexander’s skeptical question, but it is under 20 seconds and offers little context or a strong standalone hook."
+    },
+    {
+      "episode": 32,
+      "start": "00:16.20",
+      "end": "00:39.10",
+      "reason": "Catherine's threat about Juliana's mother is cruel, but the segment ends on a verbal exchange rather than a strong cliffhanger, and the ledger and mother context need explanation."
+    },
+    {
+      "episode": 32,
+      "start": "00:54.60",
+      "end": "01:26.20",
+      "reason": "The breakup and Juliana's declaration of love are emotionally clear, but the exchange reaches a satisfying emotional statement instead of cutting on an unresolved threat or action."
+    },
+    {
+      "episode": 32,
+      "start": "01:47.20",
+      "end": "02:18.60",
+      "reason": "Juliana's attack on Catherine's values builds tension, but ending on Catherine's unfinished insult lacks a concrete action in flight; the branding-iron threat begins afterward."
+    },
+    {
+      "episode": 48,
+      "start": "00:34.20",
+      "end": "00:58.20",
+      "reason": "Catherine's account of being humiliated leads into her scheme, but the apparent public-humiliation hook is about the antagonist, not the protagonist."
+    },
+    {
+      "episode": 48,
+      "start": "01:01.80",
+      "end": "01:13.40",
+      "reason": "The secret order is intriguing, but this span is only 11.6 seconds, below the 20-second minimum."
+    },
+    {
+      "episode": 37,
+      "start": "01:33.50",
+      "end": "01:56.20",
+      "reason": "Juliana's defiance makes a strong emotional beat, but the final declaration is a resolved statement of resolve rather than a specific cliffhanger or withheld payoff."
+    },
+    {
+      "episode": 37,
+      "start": "00:58.80",
+      "end": "01:27.50",
+      "reason": "The public execution threat is clear, but this stretch is mostly explanatory villain dialogue and ends by restating the plan rather than introducing a sharper unresolved beat."
+    },
+    {
+      "episode": 37,
+      "start": "01:57.20",
+      "end": "02:28.00",
+      "reason": "Clarissa's monologue reinforces the threat, but the segment offers no new turn or imminent confrontation before ending."
+    },
+    {
+      "episode": 47,
+      "start": "00:56.80",
+      "end": "01:23.40",
+      "reason": "The expulsion order and Catherine’s plea build tension, but the clip ends on “Stop.” without showing a specific counter-action or a cliffhanger that fits the listed types."
+    },
+    {
+      "episode": 47,
+      "start": "01:23.50",
+      "end": "02:11.20",
+      "reason": "Juliana’s conditions create a compelling reversal, but Catherine accepts them before the segment ends, resolving the conflict rather than withholding its payoff."
+    },
+    {
+      "episode": 47,
+      "start": "00:23.40",
+      "end": "00:54.80",
+      "reason": "The marriage stakes are understandable, but Alexander’s reassurance resolves the emotional tension and does not leave a cliffhanger."
+    },
+    {
+      "episode": 34,
+      "start": "00:01.20",
+      "end": "00:54.20",
+      "reason": "The accusation establishes the trial clearly, but the segment ends with the maid merely confirming she witnessed treatments; it does not land a strong, specific cliffhanger."
+    },
+    {
+      "episode": 34,
+      "start": "01:25.00",
+      "end": "02:14.40",
+      "reason": "Juliana's defense and the poisoning accusations build conflict, but starting with “It was not a ritual!” needs context and the segment ends on an explanation rather than a cliffhanger."
+    },
+    {
+      "episode": 45,
+      "start": "00:00.00",
+      "end": "00:48.80",
+      "reason": "The shackled bride is a striking opening image, but the sequence ends on mutual declarations of love, resolving its emotional beat instead of cutting on an unresolved conflict."
+    },
+    {
+      "episode": 45,
+      "start": "00:49.00",
+      "end": "01:23.00",
+      "reason": "Catherine's opening plea is a weak cold hook, and Rupert's final gasp does not establish a clear unresolved threat or withheld payoff."
+    },
+    {
+      "episode": 38,
+      "start": "00:45.50",
+      "end": "01:06.50",
+      "reason": "“What if I die here?” is an emotional opening, but the segment ends on Juliana's vow not to betray Alexander rather than an unresolved cliffhanger beat."
+    },
+    {
+      "episode": 38,
+      "start": "01:04.50",
+      "end": "01:27.91",
+      "reason": "The bells signal the wedding and Juliana's possible execution, but they open as atmosphere rather than a clear hook; the ending on “Alexander...” does not withhold a specific imminent payoff."
+    },
+    {
+      "episode": 38,
+      "start": "00:11.00",
+      "end": "00:31.00",
+      "reason": "The guard's secret kindness is moving, but the opening action is not a strong cold-viewer hook and Juliana receiving and eating the bread resolves the moment."
+    },
+    {
+      "episode": 50,
+      "start": "00:00.00",
+      "end": "00:25.00",
+      "reason": "The opening suggests an illicit affair, but the segment ends on Thomas’s territorial demand rather than a strong cliffhanger; the negotiation’s stakes may also need context."
+    },
+    {
+      "episode": 50,
+      "start": "00:16.80",
+      "end": "00:48.00",
+      "reason": "The price negotiation has a clear setup, but Catherine agrees with “Done,” resolving the immediate bargain instead of cutting before its payoff."
+    },
+    {
+      "episode": 46,
+      "start": "00:20.60",
+      "end": "00:58.00",
+      "reason": "The legal accusations build injustice, but the segment is mostly exposition and ends without a strong unanswered action or cliffhanger."
+    },
+    {
+      "episode": 46,
+      "start": "02:07.20",
+      "end": "02:16.00",
+      "reason": "Alexander's command makes the guards lower their weapons, resolving the immediate standoff rather than cutting before the payoff."
+    },
+    {
+      "episode": 46,
+      "start": "02:21.20",
+      "end": "02:23.80",
+      "reason": "Catherine's ominous line hints at a scheme, but this moment is too short to form a valid promo segment on its own."
+    },
+    {
+      "episode": 43,
+      "start": "00:00.60",
+      "end": "00:21.60",
+      "reason": "The guards' refusal and salute deliver the Duke-identity payoff rather than cutting before it; the clip resolves its central reveal."
+    },
+    {
+      "episode": 43,
+      "start": "01:09.00",
+      "end": "01:42.20",
+      "reason": "The treason accusation and Rupert's denial build tension, but the segment opens on an accusation that needs context and ends without a clear withheld payoff."
+    },
+    {
+      "episode": 43,
+      "start": "01:26.00",
+      "end": "01:52.50",
+      "reason": "The police constable's line could suggest an arrival cliffhanger, but the screenplay only specifies a latch and door sound before the line; the entrance itself is not verified, and the segment lacks a strong opening hook."
+    },
+    {
+      "episode": 49,
+      "start": "00:48.80",
+      "end": "01:23.80",
+      "reason": "The court-humiliation reference and Catherine's concrete scheme are intriguing, but the segment ends with a request rather than a cliffhanger that fits the available taxonomy."
+    },
+    {
+      "episode": 49,
+      "start": "01:31.60",
+      "end": "01:52.80",
+      "reason": "Father Thomas's question about the Duke discovering the treason leaves a risk unanswered, but no listed cliffhanger type fits; the council and Duke stakes also need context."
+    },
+    {
+      "episode": 49,
+      "start": "02:05.00",
+      "end": "02:24.00",
+      "reason": "The exchange seals the alliance and resolves the immediate negotiation rather than cutting before a payoff; it is also under the 20-second minimum."
+    }
+  ],
+  "proposals_rejected_by_validation": [
+    {
+      "episode": 9,
+      "reason": "cliffhanger quote not in the last 6s of the clip",
+      "raw": {
+        "segments": [
+          {
+            "start": "00:02.00",
+            "end": "00:54.30"
+          }
+        ],
+        "total_seconds": 52.3,
+        "hook": {
+          "type": "new:desperate_emergency_at_the_door",
+          "timestamp": "00:02.00",
+          "text": "SFX: Heavy, frantic pounding echoes against the heavy wooden cottage door."
+        },
+        "cliffhanger": {
+          "type": "new:medical_outcome_withheld",
+          "timestamp": "00:54.30",
+          "text": "Wait.",
+          "withheld_payoff": "Whether Juliana's remedy will work and the critically ill child will survive."
+        },
+        "scores": {
+          "hook_strength": 7,
+          "injustice_tension": 5,
+          "cliffhanger_strength": 8,
+          "standalone_clarity": 8,
+          "payoff_withheld": 9
+        },
+        "why_it_works": "A frantic knock quickly leads to a mother's plea for her feverish child, then cuts just as the remedy's success is still uncertain.",
+        "risks": [
+          "The opening hook depends on the pounding sound being clearly conveyed; the screenplay does not establish a visual threat.",
+          "The medical crisis is resolved later in the episode, so extending the clip would spoil its payoff."
+        ]
+      }
+    },
+    {
+      "episode": 33,
+      "reason": "cut point is not on a real beat edge",
+      "raw": {
+        "segments": [
+          {
+            "start": "02:02.80",
+            "end": "02:24.00"
+          }
+        ],
+        "total_seconds": 21.2,
+        "hook": {
+          "type": "unjust_accusation",
+          "timestamp": "02:04.50",
+          "text": "That is witchcraft."
+        },
+        "cliffhanger": {
+          "type": "new:coerced_testimony",
+          "timestamp": "02:20.50",
+          "text": "I never said she was a witch!",
+          "withheld_payoff": "The Lord's answer to the maid's protest—and how he will force her testimony against Juliana."
+        },
+        "scores": {
+          "hook_strength": 8,
+          "injustice_tension": 9,
+          "cliffhanger_strength": 8,
+          "standalone_clarity": 8,
+          "payoff_withheld": 9
+        },
+        "why_it_works": "A clear witchcraft accusation is immediately challenged by the maid's claim that Juliana saved her brother, leaving a cold viewer outraged and waiting for the coercer's next move.",
+        "risks": [
+          "The clip begins mid-conversation, so the exact circumstances of Juliana's actions are not fully explained.",
+          "The false framing is conveyed through dialogue; no visual evidence of the alleged ritual is specified."
+        ]
+      }
+    },
+    {
+      "episode": 44,
+      "reason": "cliffhanger quote not in the last 6s of the clip",
+      "raw": {
+        "segments": [
+          {
+            "start": "00:14.00",
+            "end": "01:10.40"
+          }
+        ],
+        "total_seconds": 56.4,
+        "hook": {
+          "type": "physical_aggression",
+          "timestamp": "00:14.00",
+          "text": "ACTION: A royal redcoat guard firmly forces Rupert down into the stone dust."
+        },
+        "cliffhanger": {
+          "type": "new:romantic_choice_shock",
+          "timestamp": "01:10.10",
+          "text": "CATHERINE (Gasping, Incredulous): \"Her?!\"",
+          "withheld_payoff": "Why Alexander is walking toward Juliana, and what happens when he reaches her."
+        },
+        "scores": {
+          "hook_strength": 8,
+          "injustice_tension": 4,
+          "cliffhanger_strength": 7,
+          "standalone_clarity": 6,
+          "payoff_withheld": 8
+        },
+        "why_it_works": "The abrupt arrest action grabs attention, then a rejected former lover’s shocked reaction leaves a clear question hanging over Alexander’s choice.",
+        "risks": [
+          "The arrest context and Catherine’s past with Alexander are only partly explained for a first-time viewer.",
+          "The final hook depends on the written action of Alexander walking toward Juliana; the screenplay does not describe their next interaction."
+        ]
+      }
+    },
+    {
+      "episode": 43,
+      "reason": "cliffhanger quote not in the last 6s of the clip",
+      "raw": {
+        "segments": [
+          {
+            "start": "00:26.10",
+            "end": "00:47.80"
+          }
+        ],
+        "total_seconds": 21.7,
+        "hook": {
+          "type": "new:official_evidence_challenge",
+          "timestamp": "00:26.10",
+          "text": "Then let the Crown decide."
+        },
+        "cliffhanger": {
+          "type": "truth_half_revealed",
+          "timestamp": "00:47.80",
+          "text": "The report identifies the leak as deliberate.",
+          "withheld_payoff": "Who deliberately leaked the Duke's location, and what consequences will follow."
+        },
+        "scores": {
+          "hook_strength": 7,
+          "injustice_tension": 8,
+          "cliffhanger_strength": 8,
+          "standalone_clarity": 7,
+          "payoff_withheld": 8
+        },
+        "why_it_works": "A cold viewer gets an official-looking Crown dossier, learns the Duke's unit was betrayed, and is left waiting for the culprit's name.",
+        "risks": [
+          "Needs minimal context to understand why Alexander is presenting evidence against Rupert.",
+          "The dossier's appearance and royal crest are visual details; the screenplay does not specify how legible they are on screen."
+        ]
+      }
+    }
+  ]
+}

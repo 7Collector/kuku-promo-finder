@@ -1,0 +1,60 @@
+{
+  "generated_at": "2026-11-07T14:21:05Z",
+  "git_commit": "9223301",
+  "show": "I Married a Broken Soldier. He was a Duke",
+  "input_dir": "assets/I Married a Broken Soldier. He was a Duke",
+  "episodes": 50,
+  "beats": 3727,
+  "extractor": {
+    "provider": "openai",
+    "model": "gpt-6-luna"
+  },
+  "auditor": {
+    "provider": "openai",
+    "model": "gpt-6-luna",
+    "method": "llm"
+  },
+  "composites_enabled": false,
+  "stages_enabled": [
+    "extraction",
+    "audit",
+    "export_csv"
+  ],
+  "scoring_weights": {
+    "hook": 0.3,
+    "cliffhanger": 0.25,
+    "payoff_withheld": 0.2,
+    "injustice_tension": 0.15,
+    "standalone_clarity": 0.1,
+    "conversion_intent": 0.0
+  },
+  "stage_reports": {},
+  "counts": {
+    "single_candidates": 61,
+    "composites": 0,
+    "valid": 61,
+    "after_dedup": 60,
+    "ranked": 15,
+    "audit_passed": 34,
+    "audit_failed": 26,
+    "audit_errors": 0,
+    "ranked_audit_passed": 15
+  },
+  "rejected_by_validation": {
+    "cliffhanger quote not in the last 6s of the clip": 2,
+    "cut point is not on a real beat edge": 1
+  },
+  "constraint_violations": {},
+  "extraction_failures": {},
+  "usage": {
+    "extractor_and_auditor_combined": {
+      "calls": 0,
+      "cache_hits": 110,
+      "prompt_tokens": 0,
+      "completion_tokens": 0,
+      "reasoning_tokens": 0,
+      "latency_s": 0.0
+    }
+  },
+  "wall_seconds": 0.4
+}

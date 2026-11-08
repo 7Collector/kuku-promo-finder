@@ -2,39 +2,45 @@
 
 **Author:** Rakshit · **Repo:** `run.py` (engine), `app/` (Next.js viewer) · **Run:** `outputs/promos.meta.json`
 
-## 1. Problem and scope
-An editor watches every episode to pick 20-60s promos by hand, and new shows ship weekly. The tool reads timestamped screenplays and returns ranked promos: episode, every segment's start/end, hook, cliffhanger, one line on why it works.
-Assumptions: the screenplay is the only input (no video), so "visual" judgements are limited to what stage directions say; a promo is one continuous cut from one episode (cross-episode splicing exists but is experimental and off by default, because nothing in the code can tell whether two scenes cohere).
+## 1. Problem, Product Framing & Scope
+An editor watches every episode to pick 20-60s promos by hand, and new shows ship weekly. The tool reads timestamped screenplays and returns ranked promos: episode, every segment's start/end, hook, cliffhanger, and why it converts.
+- **Conversion Framing:** A promo exists to create a curiosity gap strong enough that a viewer installs the app and pays to see the next moment. It does not summarize the plot and does not protect against spoilers; late-episode reveals are valid picks. Priorities: stakes legible within 3s, an immediate scroll-stopping hook, and unresolved payoff withheld at the cut. "Understood cold" is a secondary sanity check.
+- **Assumptions & Caveats:** Screenplay text is the only input (no video), so visual judgements rely strictly on stage directions. Promos are single-episode cuts (composites remain experimental and disabled). *Conversion priority is an editorial assumption based on observed microdrama ad mechanics; there is no live conversion data.*
 
-## 2. Approach: what is AI, what is code
+## 2. Approach: Code Enforces Constraints, AI Judges Drama
 | Step | Owner | Why |
 |---|---|---|
-| Parse 50 episodes into 3,727 timed beats | Code (`src/parser.py`) | Timestamps must be exact |
-| Find candidate windows, tag hook/cliffhanger, score 5 dimensions, say why | LLM (`gpt-6-luna`, one call per episode) | Needs dramatic judgement |
-| Enforce 20-60s, hook beat starts within 3s, every cut on a real beat edge, hook/cliffhanger quotes exist verbatim, cliffhanger is the last 6s | Code (`src/validation.py`) | Models invent timestamps and quotes, so they are checked, not trusted. LLM cut points within 0.5s of a real beat edge are snapped; the rest are dropped (4 of 48 proposals were) |
-| Adversarial audit of each candidate: the model reads the actual clip screenplay (camera beats included) plus the tag definitions and returns pass/fail with one of 7 flaw types | LLM | Five failure modes: resolution leak, context deficit, visual dependency, slow burn, false reading (+ wrong tag) |
-| Rank: score = 0.30 hook + 0.25 cliffhanger + 0.20 injustice + 0.15 clarity + 0.10 payoff, times taxonomy weights, a 0.82x penalty per repeated hook type and 0.85x per repeated episode; audit-passing promos rank above failing ones | Code | Transparent and repeatable |
+| Parse 50 episodes into 3,727 timed beats | Code (`src/parser.py`) | Timestamps must be mathematically exact |
+| Window discovery, tag hook/cliffhanger, score drama, conversion intent & payoff location | LLM (`gpt-6-luna`, one call per episode) | Identifies dramatic tension, emotional betrayal, and curiosity gaps |
+| Hard constraints: 20-60s, hook starts ≤3s, cuts on real beat edges (snap ≤0.5s), verbatim quotes, cliffhanger in final 6s, payoff beat verification | Code (`src/validation.py`) | Models hallucinate timestamps and quotes. Cuts within 0.5s snap to spoken edges; others drop. Hallucinated payoff locations are discarded. |
+| Dual-Judge adversarial audit panel (`gpt-6-luna` + `gemini-3.5-flash-lite`): inspects clip dialogue, camera beats, and taxonomy definitions | LLM panel (`src/stages.py`, `src/auditor.py`) | Catches resolution leaks, context deficits, visual dependency, and tag mismatches |
+| Tiered Rank: consensus tiers (Tier 1 > Tier 2 > Tier 3) + editorial weights + diversity penalty | Code (`src/constants.py`, `src/ranker.py`) | Tier 1 (both judges pass) ranks first, then Tier 2 (split verdict: "needs editor look"). Repeat penalties prevent feed monotony. |
 
-The hook/cliffhanger taxonomy is config (`config/taxonomy.yaml`, 10 hooks, 6 cliffhangers, with `requires` / `do_not_tag_if`); a new show needs one profile file (`config/shows/<show>.yaml`) and `--show <show>`.
-Offline keyword mode (`--provider heuristic`) exists as a smoke test only. It is labelled as such in every output.
+**Scoring Weights (editorial priors, uncalibrated):** `hook 0.30`, `cliffhanger 0.25`, `payoff_withheld 0.20`, `injustice_tension 0.15`, `standalone_clarity 0.10`, `conversion_intent 0.00`.
 
-## 3. Result (raw outputs in `outputs/`)
-Run `gpt-6-luna`, 50 episodes: 48 proposals, 44 valid, 42 after de-duplication, **23 passed the model audit (55%), 19 failed**. Top 15 are all audit-passing by construction. 13 episodes yielded no candidate (including 6 and 8, which are quiet scenes).
-Rank 1 is Ep 41, 34.4s: nobles sneer "Look at her." at the chained protagonist, then a second segment jumps to the cathedral breach and ends on armed figures in the smoke. Rank 2 is Ep 15, 32.0s: a thug shoves Juliana in the first second, a club is raised over her mother's plants, Alexander storms in and the cut lands as he faces the thugs. They rank first on the weighted score; no human editor has reviewed this run, so treat the order as the tool's opinion, not a verified one.
+## 3. Results & Measured Ablations (`outputs/ablations/`)
+- **Headline Run (50 episodes):** 62 candidates proposed, 62 valid, 60 deduped across the season.
+- **Independent Dual-Judge Panel (`gpt-6-luna` + `gemini-3.5-flash-lite`):**
+  - Evaluated on all 60 candidates: Judge 1 pass rate **55.0%** (33/60), Judge 2 pass rate **63.3%** (38/60).
+  - Raw agreement rate is **68.3%** (41/60), with Cohen's kappa **κ = 0.3493** (fair consensus).
+  - Consensus audit tiers: **Tier 1 = 26, Tier 2 = 19, Tier 3 = 15** (0 audit errors). All 15 headline promos are Tier 1 consensus picks.
+  - Gemini failed 3 previous top-15 promos: `ep28_cand_2` (`resolution_leak`: reveals execution & herbarium book evidence), `ep46_cand_1` (`resolution_leak`: High Priest dialogue resolves core mystery), and `ep34_cand_1` (`slow_burn`: courtroom preamble takes 15s to establish stakes).
+- **Cliffhanger Trim-and-Revalidate:** When a cliffhanger beat ends before the final 6s tail window, code trims the cut to the beat's real end edge and re-verifies all hard constraints. In Ep 15, `ep15_cand_1` was recovered by trimming 7.5s (41.2s -> 33.7s).
+- **Empty Episode Diagnosis:** 6 empty episodes remain in the main pool (`[6, 8, 10, 11, 17, 25]`). Episodes 6, 8, 10, 17 returned 0 model proposals (genuinely quiet dialogue); Episode 11 had cliffhanger quotes ending after cut points; Episode 25 had unsnapped start cuts. Episodes 3, 14, 22, 24, 38, 44, 47, 49 now yield valid candidates.
+- **Payoff Location Verification:** 5 of top 15 promos have a code-verified payoff_location in the screenplay (Rank 2 Ep 2 `00:37.50`, Rank 3 Ep 3 `01:24.00`, Rank 13 Ep 35 `02:25.50`, Rank 14 Ep 18 `01:51.50`, Rank 15 Ep 1 `01:10.60`). The other 10 are `unknown` because the conflict resolves in later episodes or model-proposed timestamps did not snap to real beat edges (preventing hallucinated timestamps).
 
-## 4. Where it picks badly (real runs)
-- **The offline audit was worthless.** The earlier committed output (keyword engine) passed 87/87 of its own audit because its fail thresholds were unreachable from its constant scores. The same 15 promos run through the LLM auditor: **2 pass, 13 fail.** The keyword audit is now labelled "rule lint, not a quality judgement".
-- **The model audit disagrees with the extractor often:** of 19 failures, 13 are `wrong_tag` (e.g. Ep 5: "Choose your next words carefully" was tagged as a withheld threat but is delivered in full), 4 `context_deficit`, 2 `resolution_leak`.
-- **Taxonomy fit:** 10 of the top 15 carry a model-invented `new:` hook type (e.g. `new:poisoning_reveal`), i.e. the 10 hooks do not cover this show's best moments; they get a neutral 0.90 weight.
-- **Self-grading:** extractor and auditor are the same model in this run. `--audit-model` allows an independent judge; I did not run one.
-- **Unmeasured:** there is no hand-picked ground truth, so recall and precision are unknown. `eval/recall.py` computes them once `eval/ground_truth.json` is committed.
-- Earlier failures, now fixed: cliffhanger quotes that appeared 20s before the cut ended; truncated quotes; `--- SCRIPT END ---` text inside a quote; silent fallback to keyword output when an API call failed.
+## 4. Failure Modes, Taxonomy Fit & System Limits
+- **Invalid Offline Audit Replaced:** An earlier keyword audit passed 87/87 candidates due to unreachable score thresholds (`outputs/smoke_test_heuristic/promos.json`, commit `809d946`). Fixed: audits are labelled by method (`llm`/`rules`/`error`), rule lint is distinguished from quality, and single-judge runs refuse same-model self-auditing unless `--allow-self-audit` is explicit.
+- **Taxonomy Mismatch:** In the top 15, **10 of top 15 hooks and 13 of top 15 cliffhangers** carry a model-proposed `new:` tag (e.g. `new:threatened_last_keepsake`). Novel tags receive default weight (0.90), so fine-grained taxonomy weights barely differentiate ranking without taxonomy consolidation.
+- **Why Composites are Disabled:** Naive pairing across episodes severed character and emotional continuity. Safe composites require hook-first cuts followed by setup scenes with identical character IDs, validated by blind cold-read scoring.
+- **Ground Truth & Recall:** Without a human-labeled ground truth (`eval/ground_truth.json`), absolute recall and precision remain **unmeasured**.
 
-## 5. Human in the loop
-The editor reviews `outputs/PROMOS.md` (or the Next.js viewer): every promo shows the audit verdict, flaw type and risks, and failing candidates sit below all passing ones. There are no approve/trim controls; the editor trims in their own tool using the exact timestamps.
+## 5. Human in the Loop & Editor Handoff
+Editors review picks via the Next.js viewer or `outputs/PROMOS.md`, displaying audit tier badges, dual-judge critique breakdowns, flaw types, and cliffhanger trim indicators. `--export-csv` outputs `outputs/promos.csv` with one row per segment formatted in `mm:ss.ss` with verbatim quotes and verified `payoff_location`.
 
-## 6. Cost at volume (measured, 50 episodes, one show)
-92 calls (50 extraction + 42 audit), **250.7s wall** with 8 parallel workers, **546,585 tokens** (376,060 in, 170,525 out of which 138,056 reasoning). At `gpt-6-luna` $0.10 / $0.50 per M tokens (rates from third-party listings, not OpenAI's page) that is about **$0.12**; the same tokens at Gemini 3.8 Flash's introductory $0.75 / $3.75 (from search results of Google's pricing page, unverified) would be about **$0.92**. Re-runs with unchanged prompts cost nothing (disk cache), and failed calls are retried with backoff. Weekly new shows therefore cost on the order of $1 each, and a human spends their time on review, not discovery.
+## 6. Cost & Execution Profile (Measured)
+- **Committed Headline Run:** Extraction and audit panel executed with caching across OpenAI `gpt-6-luna` and Gemini `gemini-3.5-flash-lite`. Cached cost is **$0.0190**, with **$0.0002** live cost from discovery probes. Pure re-ranking is **$0.0000** and runs in **<0.1s**.
+- **Stage Modularity:** Rerank, cold-read, and panel stages run independently with full token and cost provenance recorded in meta files.
 
-## 7. Tools used
-Claude (via Claude Code) wrote and reviewed most of the code, tests and this document; GPT `gpt-6-luna` is the runtime model. See `AGENTS.md` for logged AI mistakes with artifacts.
+## 7. Tools Used
+Antigravity and Claude Code were used for pipeline implementation, validation harness, and UI. Runtime LLMs are OpenAI `gpt-6-luna` (extraction) and Google Gemini `gemini-3.5-flash-lite` (independent audit judge). See `AGENTS.md` for AI failure log.

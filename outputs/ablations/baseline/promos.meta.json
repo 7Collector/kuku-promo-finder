@@ -1,0 +1,22 @@
+{
+  "ablation_name": "baseline",
+  "generated_at": "2026-11-07T14:14:47Z",
+  "git_commit": "9223301",
+  "show": "I Married a Broken Soldier. He was a Duke",
+  "counts": {
+    "total_candidates": 42,
+    "ranked": 15,
+    "audit_passed": 23,
+    "audit_failed": 19,
+    "audit_errors": 0
+  },
+  "usage": {
+    "calls": 92,
+    "prompt_tokens": 376060,
+    "completion_tokens": 170525,
+    "reasoning_tokens": 138056
+  },
+  "wall_seconds": 250.7,
+  "estimated_cost_usd": 0.1229,
+  "scoring_weights": "old (0.30/0.25/0.20/0.15/0.10 - inj before payoff)"
+}

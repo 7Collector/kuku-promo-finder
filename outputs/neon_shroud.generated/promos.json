@@ -1,0 +1,278 @@
+[
+  {
+    "promo_id": "ep03_cand_1",
+    "rank": 1,
+    "promo_type": "single_episode",
+    "episodes": [
+      3
+    ],
+    "segments": [
+      {
+        "episode": 3,
+        "start": "00:00.00",
+        "end": "00:40.00",
+        "start_seconds": 0.0,
+        "end_seconds": 40.0,
+        "duration": 40.0
+      }
+    ],
+    "total_duration": 40.0,
+    "hook": {
+      "type": "new:catastrophic_stakes_ultimatum",
+      "name": "new:catastrophic_stakes_ultimatum",
+      "timestamp": "00:00.00",
+      "timestamp_seconds": 0.0,
+      "quote": "Cut the main uplink or the entire sector goes dark!",
+      "psychological_trigger": ""
+    },
+    "cliffhanger": {
+      "type": "new:life_or_death_sacrifice_decision",
+      "name": "new:life_or_death_sacrifice_decision",
+      "timestamp": "00:40.00",
+      "timestamp_seconds": 40.0,
+      "quote": "Silas, don't do it!",
+      "withheld_payoff": "Whether Silas pulls the relay, stopping the sector-wide blackout at the cost of his neural heart."
+    },
+    "why_it_works": "It opens on an urgent citywide threat, then reveals the personal cost before cutting off at Kira's plea, with Silas's choice unresolved.",
+    "risks": [
+      "The screenplay provides dialogue but does not describe Silas reaching for or pulling the relay, so the tension may depend on visual action not established in the text.",
+      "The conflict is high-stakes but has little injustice or antagonist-driven outrage.",
+      "The blackout and neural relay may need brief context for some viewers."
+    ],
+    "scores": {
+      "hook_strength": 8.0,
+      "injustice_tension": 3.0,
+      "cliffhanger_strength": 7.0,
+      "standalone_clarity": 8.0,
+      "payoff_withheld": 9.0,
+      "conversion_intent": 6.5,
+      "composite_score": 5.83,
+      "adjusted_score": 4.55,
+      "diversity_penalty": 1.0,
+      "audit_multiplier": 0.78
+    },
+    "quality_audit": {
+      "passed": false,
+      "method": "llm",
+      "audit_model": "gemini-3.5-flash-lite",
+      "flaw_type": "slow_burn",
+      "critique": "The clip relies entirely on a prolonged ethical dilemma without introducing a fresh escalating action or plot twist within the first three seconds, leading to a slow burn that causes viewers to swipe away.",
+      "confidence_score": 9.0,
+      "conversion_intent": 4.5,
+      "risks": [
+        "Slow burn start",
+        "High reliance on shouting dialogue without immediate visual context"
+      ]
+    },
+    "engine": "openai",
+    "model": "gpt-6-luna",
+    "extractor_model": "gpt-6-luna",
+    "trimmed_from_end": false,
+    "seconds_removed": 0.0,
+    "audit_tier": 3,
+    "judge_verdicts": [
+      {
+        "judge": "gemini",
+        "model": "gemini-3.5-flash-lite",
+        "pass": false,
+        "flaw_type": "slow_burn",
+        "one_line_reason": "The clip relies entirely on a prolonged ethical dilemma without introducing a fresh escalating action or plot twist within the first three seconds, le",
+        "conversion_intent": 4.5
+      }
+    ],
+    "conversion_intent": 6.5,
+    "conversion_reason": "A clear citywide threat and Silas's potential death make the viewer want to know whether he sacrifices himself.",
+    "payoff_location": "unknown",
+    "stages": [
+      "extraction",
+      "audit"
+    ],
+    "cold_read": null,
+    "audit_panel": null,
+    "rerank": null
+  },
+  {
+    "promo_id": "ep01_cand_1",
+    "rank": 2,
+    "promo_type": "single_episode",
+    "episodes": [
+      1
+    ],
+    "segments": [
+      {
+        "episode": 1,
+        "start": "00:08.00",
+        "end": "00:45.00",
+        "start_seconds": 8.0,
+        "end_seconds": 45.0,
+        "duration": 37.0
+      }
+    ],
+    "total_duration": 37.0,
+    "hook": {
+      "type": "new:syndicate_death_warning",
+      "name": "new:syndicate_death_warning",
+      "timestamp": "00:08.00",
+      "timestamp_seconds": 8.0,
+      "quote": "Silas, drop the badge. Syndicate leader Vance ordered everyone who saw this code silenced.",
+      "psychological_trigger": ""
+    },
+    "cliffhanger": {
+      "type": "new:imminent_confrontation_threat",
+      "name": "new:imminent_confrontation_threat",
+      "timestamp": "00:45.00",
+      "timestamp_seconds": 45.0,
+      "quote": "Tell Vance I am coming for his server farm next.",
+      "withheld_payoff": "Whether Silas reaches Vance's server farm and what happens when he confronts him."
+    },
+    "why_it_works": "The warning makes Silas's danger clear immediately, then his answer promises a confrontation viewers have not seen.",
+    "risks": [
+      "The viewer does not know what the code is or why Silas has a badge.",
+      "The threat is verbal; the screenplay does not establish a visual action or immediate attack.",
+      "The final line completes the promise rather than cutting mid-action, so the cliffhanger relies on anticipation of a future confrontation."
+    ],
+    "scores": {
+      "hook_strength": 7.0,
+      "injustice_tension": 5.0,
+      "cliffhanger_strength": 6.0,
+      "standalone_clarity": 7.0,
+      "payoff_withheld": 8.0,
+      "conversion_intent": 5.5,
+      "composite_score": 5.39,
+      "adjusted_score": 4.2,
+      "diversity_penalty": 1.0,
+      "audit_multiplier": 0.78
+    },
+    "quality_audit": {
+      "passed": false,
+      "method": "llm",
+      "audit_model": "gemini-3.5-flash-lite",
+      "flaw_type": "wrong_tag",
+      "critique": "The promo tags rely on unverified model-proposed types instead of standard platform taxonomy, and the tough-guy one-liners lack a compelling narrative mystery or open question that forces an immediate app install.",
+      "confidence_score": 9.0,
+      "conversion_intent": 4.0,
+      "risks": [
+        "Generic action dialogue fails to build a unique curiosity gap",
+        "Unstandardized taxonomy tags"
+      ]
+    },
+    "engine": "openai",
+    "model": "gpt-6-luna",
+    "extractor_model": "gpt-6-luna",
+    "trimmed_from_end": false,
+    "seconds_removed": 0.0,
+    "audit_tier": 3,
+    "judge_verdicts": [
+      {
+        "judge": "gemini",
+        "model": "gemini-3.5-flash-lite",
+        "pass": false,
+        "flaw_type": "wrong_tag",
+        "one_line_reason": "The promo tags rely on unverified model-proposed types instead of standard platform taxonomy, and the tough-guy one-liners lack a compelling narrative",
+        "conversion_intent": 4.0
+      }
+    ],
+    "conversion_intent": 5.5,
+    "conversion_reason": "A direct warning that witnesses are being silenced, followed by Silas's defiant target, leaves the confrontation unresolved but does not yet show the danger escalating.",
+    "payoff_location": "unknown",
+    "stages": [
+      "extraction",
+      "audit"
+    ],
+    "cold_read": null,
+    "audit_panel": null,
+    "rerank": null
+  },
+  {
+    "promo_id": "ep02_cand_1",
+    "rank": 3,
+    "promo_type": "single_episode",
+    "episodes": [
+      2
+    ],
+    "segments": [
+      {
+        "episode": 2,
+        "start": "00:00.00",
+        "end": "00:50.00",
+        "start_seconds": 0.0,
+        "end_seconds": 50.0,
+        "duration": 50.0
+      }
+    ],
+    "total_duration": 50.0,
+    "hook": {
+      "type": "new:imminent_threat_trap",
+      "name": "new:imminent_threat_trap",
+      "timestamp": "00:00.00",
+      "timestamp_seconds": 0.0,
+      "quote": "You walked right into the kill zone, Detective.",
+      "psychological_trigger": ""
+    },
+    "cliffhanger": {
+      "type": "new:citywide_disaster_reveal",
+      "name": "new:citywide_disaster_reveal",
+      "timestamp": "00:50.00",
+      "timestamp_seconds": 50.0,
+      "quote": "The virus is already pulsing through the city grid. You are ten seconds too late.",
+      "withheld_payoff": "Whether Silas can stop the virus from taking down the city grid."
+    },
+    "why_it_works": "It opens on a direct threat and ends with a citywide catastrophe already in motion, leaving Silas’s next move unresolved.",
+    "risks": [
+      "The screenplay provides dialogue only, so any visual threat or reaction cannot be verified.",
+      "The specific danger of the kill zone and the virus may need visual context to land fully.",
+      "The cliffhanger says Silas is too late, which could weaken curiosity if delivered as a definitive resolution rather than a taunt."
+    ],
+    "scores": {
+      "hook_strength": 7.0,
+      "injustice_tension": 2.0,
+      "cliffhanger_strength": 8.0,
+      "standalone_clarity": 7.0,
+      "payoff_withheld": 8.0,
+      "conversion_intent": 6.5,
+      "composite_score": 5.43,
+      "adjusted_score": 3.6,
+      "diversity_penalty": 1.0,
+      "audit_multiplier": 0.663
+    },
+    "quality_audit": {
+      "passed": false,
+      "method": "llm",
+      "audit_model": "gemini-3.5-flash-lite",
+      "flaw_type": "resolution_leak",
+      "critique": "The clip completely gives away the climax of the confrontation by immediately revealing that the virus is already active and the protagonist has failed to stop it, leaving no active question about whether the trap succeeds.",
+      "confidence_score": 9.0,
+      "conversion_intent": 3.0,
+      "risks": [
+        "Resolution leak gives away the antagonist's success too early",
+        "Dialogue is somewhat generic cyberpunk cliché"
+      ]
+    },
+    "engine": "openai",
+    "model": "gpt-6-luna",
+    "extractor_model": "gpt-6-luna",
+    "trimmed_from_end": false,
+    "seconds_removed": 0.0,
+    "audit_tier": 3,
+    "judge_verdicts": [
+      {
+        "judge": "gemini",
+        "model": "gemini-3.5-flash-lite",
+        "pass": false,
+        "flaw_type": "resolution_leak",
+        "one_line_reason": "The clip completely gives away the climax of the confrontation by immediately revealing that the virus is already active and the protagonist has faile",
+        "conversion_intent": 3.0
+      }
+    ],
+    "conversion_intent": 6.5,
+    "conversion_reason": "The citywide virus threat and claim that Silas is too late create an urgent question about whether he can still stop it.",
+    "payoff_location": "unknown",
+    "stages": [
+      "extraction",
+      "audit"
+    ],
+    "cold_read": null,
+    "audit_panel": null,
+    "rerank": null
+  }
+]

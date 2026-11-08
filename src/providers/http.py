@@ -14,10 +14,11 @@ import requests
 class ProviderError(Exception):
     """A provider call failed. `status` is the HTTP status when known; `retryable` drives backoff."""
 
-    def __init__(self, message: str, status: Optional[int] = None, retryable: bool = False):
+    def __init__(self, message: str, status: Optional[int] = None, retryable: bool = False, retry_after: Optional[float] = None):
         super().__init__(message)
         self.status = status
         self.retryable = retryable
+        self.retry_after = retry_after
 
 
 def scrub(text: str, secret: Optional[str]) -> str:
@@ -35,10 +36,18 @@ def post_json(url: str, headers: Dict[str, str], payload: Dict[str, Any], timeou
     latency = time.time() - t0
     if resp.status_code >= 400:
         body = scrub(resp.text[:300].replace("\n", " "), secret)
+        retry_after_hdr = resp.headers.get("Retry-After") or resp.headers.get("retry-after")
+        retry_after = None
+        if retry_after_hdr:
+            try:
+                retry_after = float(retry_after_hdr)
+            except (ValueError, TypeError):
+                retry_after = None
         raise ProviderError(
             f"HTTP {resp.status_code}: {body}",
             status=resp.status_code,
             retryable=resp.status_code in (408, 409, 429) or resp.status_code >= 500,
+            retry_after=retry_after,
         )
     try:
         return resp.json(), latency

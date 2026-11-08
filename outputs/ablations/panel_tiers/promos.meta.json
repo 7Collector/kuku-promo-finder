@@ -1,0 +1,870 @@
+{
+  "generated_at": "2026-11-07T15:34:49Z",
+  "git_commit": "9223301",
+  "show": "I Married a Broken Soldier. He was a Duke",
+  "input_dir": "assets/I Married a Broken Soldier. He was a Duke",
+  "episodes": 50,
+  "beats": 3727,
+  "extractor": {
+    "provider": "openai",
+    "model": "gpt-6-luna"
+  },
+  "auditor": {
+    "provider": "panel",
+    "model": [
+      "openai:gpt-6-luna",
+      "gemini:gemini-3.5-flash-lite"
+    ],
+    "method": "llm"
+  },
+  "gemini_model_discovered": "gemini-3.5-flash-lite",
+  "allow_self_audit": false,
+  "empty_episodes": {
+    "count": 6,
+    "episodes": [
+      6,
+      8,
+      10,
+      11,
+      17,
+      25
+    ]
+  },
+  "composites_enabled": false,
+  "stages_enabled": [
+    "extraction",
+    "audit",
+    "audit_panel",
+    "export_csv"
+  ],
+  "scoring_weights": {
+    "hook": 0.3,
+    "cliffhanger": 0.25,
+    "payoff_withheld": 0.2,
+    "injustice_tension": 0.15,
+    "standalone_clarity": 0.1,
+    "conversion_intent": 0.0
+  },
+  "stage_reports": {
+    "audit_panel": {
+      "status": "ran",
+      "reason": "live API calls executed",
+      "live_calls": 1,
+      "cache_hits": 119,
+      "tokens": {
+        "prompt_tokens": 107852,
+        "completion_tokens": 36416,
+        "total_tokens": 144268
+      },
+      "cost": "$0.0002 (+ cached original cost $0.0190)",
+      "live_cost_usd": 0.0002,
+      "cached_cost_usd": 0.019,
+      "wall_time_s": 2.66,
+      "total_audited": 60,
+      "judge_1": {
+        "provider": "openai",
+        "model": "gpt-6-luna",
+        "passed": 33,
+        "pass_rate": 0.55
+      },
+      "judge_2": {
+        "provider": "gemini",
+        "model": "gemini-3.5-flash-lite",
+        "passed": 38,
+        "pass_rate": 0.6333
+      },
+      "agreement_count": 41,
+      "agreement_rate": 0.6833,
+      "cohens_kappa": 0.3493,
+      "tier_counts": {
+        "tier_1": 26,
+        "tier_2": 19,
+        "tier_3": 15,
+        "audit_errors": 0
+      },
+      "disagreements": [
+        {
+          "promo_id": "ep41_cand_1",
+          "hook_quote": "Lady Juliana Ashcroft. Look around.",
+          "cliffhanger_quote": "Silhouetted armed figures emerge through the smoke and rubble of the breached doorway. Juliana slowly turns her head, glancing back toward the light.",
+          "judge_1": {
+            "model": "gpt-6-luna",
+            "passed": false,
+            "flaw": "wrong_tag",
+            "critique": "The public-humiliation tag fits: Catherine mocks Juliana before the congregation, and Juliana is chained and publicly degraded. But armed silhouettes emerging from smoke are not established as a powerful protector or savior; they could be another threat, so the tagged cliffhanger overstates what the screenplay reveals."
+          },
+          "judge_2": {
+            "model": "gemini-3.5-flash-lite",
+            "passed": true,
+            "flaw": null,
+            "critique": "The clip establishes immediate high stakes with a public humiliation in chains and delivers a high-spectacle cliffhanger cut right as armed figures breach the cathedral."
+          }
+        },
+        {
+          "promo_id": "ep15_cand_1",
+          "hook_quote": "The Thug with Cap violently shoves Juliana back with both hands; she cries out as she loses her balance and crashes hard onto the wet stone path.",
+          "cliffhanger_quote": "Alexander places himself directly between Juliana and the three thugs, staring them down with cold, deadly intent.",
+          "judge_1": {
+            "model": "gpt-6-luna",
+            "passed": false,
+            "flaw": "wrong_tag",
+            "critique": "The shove is a valid physical-aggression hook, and the conflict remains unresolved: Alexander only steps between Juliana and the thugs before the clip cuts. But the screenplay establishes his intimidating arrival, not unquestionable power; he has not yet defeated or otherwise proven himself against them, so the unexpected-savior tag overstates what a cold viewer can know."
+          },
+          "judge_2": {
+            "model": "gemini-3.5-flash-lite",
+            "passed": true,
+            "flaw": null,
+            "critique": "The promo expertly sets up high sympathy through visceral physical abuse and emotional degradation, ending on a pristine cliffhanger before the savior delivers any strikes or lines. The curiosity gap is maximum because viewers will demand retribution for the crushed flowers and humiliation."
+          }
+        },
+        {
+          "promo_id": "ep28_cand_1",
+          "hook_quote": "Look at her, Rupert.",
+          "cliffhanger_quote": "The poison has clearly damaged her mind.",
+          "judge_1": {
+            "model": "gpt-6-luna",
+            "passed": false,
+            "flaw": "resolution_leak",
+            "critique": "The Duchess explicitly confirms Juliana is innocent and says she saved her, giving away the central answer before the cut. Rupert's gaslighting leaves Juliana in danger and sets up a new question, but it arrives after the original accusation has already been resolved for the viewer."
+          },
+          "judge_2": {
+            "model": "gemini-3.5-flash-lite",
+            "passed": true,
+            "flaw": null,
+            "critique": "The promo effectively establishes immediate high stakes, featuring a framed protagonist, an unexpected witness revelation, and a chilling villain gaslight as the witness collapses. No resolution leak occurs, leaving Juliana in extreme peril and creating a powerful push for the viewer to continue watching."
+          }
+        },
+        {
+          "promo_id": "ep02_cand_2",
+          "hook_quote": "Why are you surprised, sister? Look at you.",
+          "cliffhanger_quote": "Go home quietly, Juliana. At least leave this chapel with some dignity.",
+          "judge_1": {
+            "model": "gpt-6-luna",
+            "passed": false,
+            "flaw": "other",
+            "critique": "The opening insult is immediate and the situation is understandable, but the clip sustains humiliation without introducing a reveal, reversal, or specific unanswered question that strongly promises a payoff. It ends on a command to leave, with Juliana’s response unseen; that creates a small reaction gap, but not a compelling reason to pay for the next moment."
+          },
+          "judge_2": {
+            "model": "gemini-3.5-flash-lite",
+            "passed": true,
+            "flaw": null,
+            "critique": "The clip delivers an uninterrupted stream of high-stakes rage bait, escalating from the sister's vicious insults to the matriarch and groom casting Juliana out without resolving her plight. A cold viewer immediately understands the betrayal and is left at peak frustration, driving high curiosity for her retribution or rescue."
+          }
+        },
+        {
+          "promo_id": "ep01_cand_2",
+          "hook_quote": "You are the daughter people tolerate because they have to.",
+          "cliffhanger_quote": "...when Clarissa is the true jewel of the county.",
+          "judge_1": {
+            "model": "gpt-6-luna",
+            "passed": false,
+            "flaw": "wrong_tag",
+            "critique": "The dialogue is genuinely cruel, but the screenplay shows only Juliana, Clarissa, Gerald, and the matriarch; an altar setting alone does not establish the crowd or peer audience required for the public_humiliation tag. The clip does leave the betrayal unresolved, though the next-moment hook is mainly emotional rather than a specific unanswered question."
+          },
+          "judge_2": {
+            "model": "gemini-3.5-flash-lite",
+            "passed": true,
+            "flaw": null,
+            "critique": "The promo masterfully establishes the protagonist's public humiliation and betrayal, creating a powerful curiosity gap about her future without offering any resolution or retribution within the clip. The hook is immediate, and the core conflict is clearly legible."
+          }
+        },
+        {
+          "promo_id": "ep32_cand_1",
+          "hook_quote": "Nothing. Until you have nothing left beneath it.",
+          "cliffhanger_quote": "Juliana gasps, freezing as the glowing tip of the iron thrusts forward, stopping mere millimeters from her right eye.",
+          "judge_1": {
+            "model": "gpt-6-luna",
+            "passed": false,
+            "flaw": "slow_burn",
+            "critique": "The opening line is cryptic without context, and the clip spends most of its 45 seconds on Juliana’s extended verbal takedown before the physical danger becomes immediate near the end. Her verbal victory is satisfying, but the branding attack remains unresolved, so the ending still leaves a reason to watch on."
+          },
+          "judge_2": {
+            "model": "gemini-3.5-flash-lite",
+            "passed": true,
+            "flaw": null,
+            "critique": "This promo is highly effective, establishing immediate high stakes and a compelling power dynamic between the defiant, chained Juliana and the enraged Catherine. The verbal sparring is sharp, and the cliffhanger is intensely visual and creates a strong desire to see the resolution."
+          }
+        },
+        {
+          "promo_id": "ep36_cand_2",
+          "hook_quote": "...and killing my wife afterward.",
+          "cliffhanger_quote": "...their dead Duke is coming home.",
+          "judge_1": {
+            "model": "gpt-6-luna",
+            "passed": false,
+            "flaw": "context_deficit",
+            "critique": "The opening fragment, “...and killing my wife afterward,” can sound like Alexander is threatening his own wife; the clip never clearly establishes who intends to kill Juliana. The later revenge vow creates a strong unresolved next moment, but the cold viewer must infer the central threat and who “they” are."
+          },
+          "judge_2": {
+            "model": "gemini-3.5-flash-lite",
+            "passed": true,
+            "flaw": null,
+            "critique": "This promo effectively establishes Alexander's intense rage and the high stakes of his wife Juliana being taken, along with his past betrayal. The cliffhanger, \"their dead Duke is coming home,\" creates a powerful curiosity gap, promising a dramatic return and revelation without resolving the conflict."
+          }
+        },
+        {
+          "promo_id": "ep46_cand_1",
+          "hook_quote": "You married this woman as a nameless beggar...",
+          "cliffhanger_quote": "And no clerk in London ever entered your name in the Royal register, because as far as the Crown knew, Alexander Ashburton was already dead.",
+          "judge_1": {
+            "model": "gpt-6-luna",
+            "passed": true,
+            "flaw": null,
+            "critique": "The opening insult immediately establishes the status conflict, and the clip leaves the marriage’s fate unresolved before ending on the striking claim that Alexander was presumed dead. The long, repetitive legal exposition may lose viewers before that final reveal, and the screenplay gives no reaction to it."
+          },
+          "judge_2": {
+            "model": "gemini-3.5-flash-lite",
+            "passed": false,
+            "flaw": "resolution_leak",
+            "critique": "The promo completely leaks the core mystery and dramatic twist of the episode by having the High Priest explain the entire plot point—that Alexander Ashburton was legally considered dead—in the climax of the clip. This removes the curiosity gap because the secret is fully exposed rather than kept hidden."
+          }
+        },
+        {
+          "promo_id": "ep42_cand_1",
+          "hook_quote": "You cannot be him. Alexander died!",
+          "cliffhanger_quote": "And now, Rupert... we settle what you stole.",
+          "judge_1": {
+            "model": "gpt-6-luna",
+            "passed": true,
+            "flaw": null,
+            "critique": "The opening immediately establishes that Alexander was believed dead, and his mother’s explicit Duke proclamation plus Rupert’s terror make the reveal legible without prior context. His revenge is promised but not shown; the long emotional reunion slows the middle, and the clip leaves the specifics of what Rupert stole unclear."
+          },
+          "judge_2": {
+            "model": "gemini-3.5-flash-lite",
+            "passed": false,
+            "flaw": "resolution_leak",
+            "critique": "The clip shows the complete identity reveal, the emotional reunion with the mother, the public validation of his title, and immediate cornering of the antagonist Rupert, leaving very little immediate jeopardy to force an app install."
+          }
+        },
+        {
+          "promo_id": "ep21_cand_1",
+          "hook_quote": "Lady Juliana! Please! You have to help me, Toby is dying!",
+          "cliffhanger_quote": "Stand up. Sinking to your knees will not save him. Let me grab my ledger. We go now.",
+          "judge_1": {
+            "model": "gpt-6-luna",
+            "passed": true,
+            "flaw": null,
+            "critique": "The child’s danger and Juliana’s decision to help are clear even without prior context, and the clip ends before Toby’s fate or the rescue is shown. The repeated pleas make the middle feel somewhat prolonged, and the ending promises a rescue more than a distinctive twist, which may limit paid conversion."
+          },
+          "judge_2": {
+            "model": "gemini-3.5-flash-lite",
+            "passed": false,
+            "flaw": "slow_burn",
+            "critique": "The clip takes nearly 8 seconds of dialogue setup regarding a sick child before the emotional and narrative stakes fully engage the viewer. This opening delay weakens the instant hook required for vertical feeds."
+          }
+        },
+        {
+          "promo_id": "ep34_cand_1",
+          "hook_quote": "Lady Juliana Ashcroft, you are accused of witchcraft, unlawful healing, and poisoning.",
+          "cliffhanger_quote": "Tell the truth.",
+          "judge_1": {
+            "model": "gpt-6-luna",
+            "passed": true,
+            "flaw": null,
+            "critique": "The accusation is clear within the opening seconds, and Juliana’s admission that she healed people does not resolve whether she is guilty or what Prudence will say; the clip ends just before the key testimony. The courtroom visuals add atmosphere, but the stakes and uncertainty are also carried by explicit dialogue."
+          },
+          "judge_2": {
+            "model": "gemini-3.5-flash-lite",
+            "passed": false,
+            "flaw": "slow_burn",
+            "critique": "The hook relies on a courtroom interrogation that takes 15 seconds to establish context, and the dramatic question is too generic to create an urgent desire to pay compared to higher-stakes 'betrayal' or 'power reversal' hooks common in this genre. The cliffhanger is weak because it merely prompts a witness to speak rather than delivering a high-impact revelation or a shocking twist."
+          }
+        },
+        {
+          "promo_id": "ep07_cand_1",
+          "hook_quote": "A fitting home for a woman who threw away everything for a penniless soldier.",
+          "cliffhanger_quote": "And your husband?",
+          "judge_1": {
+            "model": "gpt-6-luna",
+            "passed": true,
+            "flaw": null,
+            "critique": "The opening immediately establishes class-based contempt, and Juliana's defiance does not resolve the conflict: Gerald ends on an implied threat to her husband. The exchange is dialogue-heavy, but the stakes are clear enough without prior context and the answer to that threat remains unseen."
+          },
+          "judge_2": {
+            "model": "gemini-3.5-flash-lite",
+            "passed": false,
+            "flaw": "resolution_leak",
+            "critique": "The clip resolves the immediate emotional tension by having the protagonist 'win' the argument through sheer moral superiority, stripping away the viewer's desire to see her overcome the situation. Additionally, the dialogue reveals too much too soon, making her seem already empowered rather than vulnerable, which undermines the 'broken noble' hook."
+          }
+        },
+        {
+          "promo_id": "ep04_cand_1",
+          "hook_quote": "A penniless nobody for a discarded bride.",
+          "cliffhanger_quote": "Why would you offer me your name?",
+          "judge_1": {
+            "model": "gpt-6-luna",
+            "passed": false,
+            "flaw": "slow_burn",
+            "critique": "The opening “Look at him” gives a cold viewer little to latch onto; the explicit status-based insult that supplies the hook arrives around second 5. The ending question about why the kneeling stranger would offer her his name is unresolved and intriguing, but the clip does not explain what that offer means or establish the broader wedding stakes."
+          },
+          "judge_2": {
+            "model": "gemini-3.5-flash-lite",
+            "passed": true,
+            "flaw": null,
+            "critique": "The clip effectively establishes a high-stakes emotional abuse scenario that creates a strong sympathy hook for the protagonist, with the mystery of the stranger's motivation providing a clean, non-leaking cliffhanger."
+          }
+        },
+        {
+          "promo_id": "ep47_cand_1",
+          "hook_quote": "I have nowhere to go, Your Grace.",
+          "cliffhanger_quote": "As a scullery maid.",
+          "judge_1": {
+            "model": "gpt-6-luna",
+            "passed": false,
+            "flaw": "resolution_leak",
+            "critique": "The clip resolves its immediate question: Juliana stops Catherine from being cast out and delivers the humiliating condition, “As a scullery maid.” Catherine’s acceptance is withheld, but the key reversal and comeuppance are already the ending payoff, so the remaining question may not be compelling enough to drive an install and payment."
+          },
+          "judge_2": {
+            "model": "gemini-3.5-flash-lite",
+            "passed": true,
+            "flaw": null,
+            "critique": "The clip successfully executes a 'tables-turned' narrative arc, moving from the villain's desperation to a definitive power-dynamic shift that creates a strong curiosity gap regarding Catherine's reaction to the demotion."
+          }
+        },
+        {
+          "promo_id": "ep44_cand_1",
+          "hook_quote": "Alexander... I thought you had died.",
+          "cliffhanger_quote": "I was supposed to be your Duchess!",
+          "judge_1": {
+            "model": "gpt-6-luna",
+            "passed": true,
+            "flaw": null,
+            "critique": "The reunion and her claim that she was meant to be his Duchess are clear, and Alexander’s rejection leaves the central question unresolved rather than revealing an answer. A cold viewer may not understand who Rupert is or why Catherine expected to be a Duchess, but the lost-love conflict is legible from the dialogue."
+          },
+          "judge_2": {
+            "model": "gemini-3.5-flash-lite",
+            "passed": false,
+            "flaw": "context_deficit",
+            "critique": "The screenplay centers entirely on 'Catherine,' a character not mentioned in the show's primary synopsis (Juliana vs. Clarissa), leaving the cold viewer unable to identify if they are watching the protagonist or a villainous 'other woman.' Furthermore, Alexander appearing in full 'ducal coat' immediately resolves the title's central mystery regarding his secret identity, leaving no 'broken soldier' intrigue to discover."
+          }
+        },
+        {
+          "promo_id": "ep39_cand_1",
+          "hook_quote": "Enough hiding.",
+          "cliffhanger_quote": "And I am bringing my wife home.",
+          "judge_1": {
+            "model": "gpt-6-luna",
+            "passed": false,
+            "flaw": "resolution_leak",
+            "critique": "The clip fully reveals Alexander’s hidden identity and shows his reclamation of authority: he appears in ducal dress, is addressed as “Your Grace,” and issues commands. It cuts before the wife is brought home, but the central secret is already answered, leaving a fairly generic rescue vow as the remaining reason to continue."
+          },
+          "judge_2": {
+            "model": "gemini-3.5-flash-lite",
+            "passed": true,
+            "flaw": null,
+            "critique": "This promo perfectly executes the 'power reveal' trope, building immense anticipation for the confrontation at the chapel without showing the villains' reactions, which is the actual payoff the viewer must pay to see."
+          }
+        },
+        {
+          "promo_id": "ep20_cand_1",
+          "hook_quote": "Once my cousin Alexander's death is formally sealed by the Crown...",
+          "cliffhanger_quote": "They will learn their place when you wear the ducal crown.",
+          "judge_1": {
+            "model": "gpt-6-luna",
+            "passed": false,
+            "flaw": "other",
+            "critique": "The succession scheme is clear immediately, and the clip does not reveal its outcome. But the ending is only a broad promise that Catherine will wear the ducal crown; with no protagonist, imminent confrontation, or specific next event to wonder about, this plays as villain exposition rather than a compelling reason to pay."
+          },
+          "judge_2": {
+            "model": "gemini-3.5-flash-lite",
+            "passed": true,
+            "flaw": null,
+            "critique": "The clip successfully establishes a high-stakes 'Hate-Watch' hook by introducing clear villains who are not only usurping the protagonist's title but are also actively poisoning a vulnerable relative. The connection between the 'dead' Alexander mentioned and the 'Broken Soldier' in the show title creates an immediate curiosity gap regarding the eventual reveal and revenge."
+          }
+        },
+        {
+          "promo_id": "ep48_cand_2",
+          "hook_quote": "Everyone in that chapel saw me humiliated today.",
+          "cliffhanger_quote": "And make sure no one sees him arrive.",
+          "judge_1": {
+            "model": "gpt-6-luna",
+            "passed": false,
+            "flaw": "context_deficit",
+            "critique": "The humiliation line is immediately understandable, but a cold viewer has no context for who Catherine is, what household or hearing is at stake, or why Father Thomas matters, so the scheme feels vague rather than urgent. The hook also does not actually reveal a revenge plot; the priest’s secret arrival is an unresolved setup, not a resolution leak."
+          },
+          "judge_2": {
+            "model": "gemini-3.5-flash-lite",
+            "passed": true,
+            "flaw": null,
+            "critique": "The promo successfully creates a curiosity gap by initiating a high-stakes covert mission (the secret priest visit) immediately following an emotional hook. While the scene carries significant 'referential debt' regarding characters like Father Thomas and the specific 'humiliation,' the archetypal 'vengeful noblewoman' trope is clear enough to hook a cold viewer."
+          }
+        },
+        {
+          "promo_id": "ep09_cand_1",
+          "hook_quote": "About a war veteran. Some say he resembles the late Duke.",
+          "cliffhanger_quote": "Impossible.",
+          "judge_1": {
+            "model": "gpt-6-luna",
+            "passed": true,
+            "flaw": null,
+            "critique": "The rumor, matching scar, and the nobleman’s shaken “Impossible” leave the identity unresolved, creating a clear curiosity gap. A cold viewer may not know who these men are or why the late Duke matters, but the basic mystery is understandable from the dialogue without relying entirely on the reactions or firelit visuals."
+          },
+          "judge_2": {
+            "model": "gemini-3.5-flash-lite",
+            "passed": false,
+            "flaw": "context_deficit",
+            "critique": "The promo centers on two secondary male characters discussing the hero in the third person, leaving a cold viewer without any context for who they are or why the Blond Nobleman's fear is significant. Without the presence of the female lead or the 'broken soldier' himself, the stakes of the identity reveal remain abstract and fail to create a personal connection."
+          }
+        }
+      ],
+      "gemini_fails_previous_top_15": [
+        {
+          "promo_id": "ep28_cand_2",
+          "flaw_type": "resolution_leak",
+          "reason": "The clip reveals the protagonist's impending execution and the specific evidence (the herbarium book) that will be used against her. This resolves the"
+        },
+        {
+          "promo_id": "ep46_cand_1",
+          "flaw_type": "resolution_leak",
+          "reason": "The promo completely leaks the core mystery and dramatic twist of the episode by having the High Priest explain the entire plot point—that Alexander A"
+        },
+        {
+          "promo_id": "ep34_cand_1",
+          "flaw_type": "slow_burn",
+          "reason": "The hook relies on a courtroom interrogation that takes 15 seconds to establish context, and the dramatic question is too generic to create an urgent "
+        }
+      ],
+      "mode": "dual_judge",
+      "judges": [
+        "openai:gpt-6-luna",
+        "gemini:gemini-3.5-flash-lite"
+      ]
+    }
+  },
+  "stages": {
+    "extraction": {
+      "status": "cached",
+      "reason": "all responses loaded from on-disk cache",
+      "live_calls": 0,
+      "cache_hits": 50,
+      "tokens": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "cost": "cached (original cost $0.0000)",
+      "live_cost_usd": 0.0,
+      "cached_cost_usd": 0.0,
+      "wall_time_s": 5.99
+    },
+    "audit_panel": {
+      "status": "ran",
+      "reason": "live API calls executed",
+      "live_calls": 1,
+      "cache_hits": 119,
+      "tokens": {
+        "prompt_tokens": 107852,
+        "completion_tokens": 36416,
+        "total_tokens": 144268
+      },
+      "cost": "$0.0002 (+ cached original cost $0.0190)",
+      "live_cost_usd": 0.0002,
+      "cached_cost_usd": 0.019,
+      "wall_time_s": 2.66,
+      "total_audited": 60,
+      "judge_1": {
+        "provider": "openai",
+        "model": "gpt-6-luna",
+        "passed": 33,
+        "pass_rate": 0.55
+      },
+      "judge_2": {
+        "provider": "gemini",
+        "model": "gemini-3.5-flash-lite",
+        "passed": 38,
+        "pass_rate": 0.6333
+      },
+      "agreement_count": 41,
+      "agreement_rate": 0.6833,
+      "cohens_kappa": 0.3493,
+      "tier_counts": {
+        "tier_1": 26,
+        "tier_2": 19,
+        "tier_3": 15,
+        "audit_errors": 0
+      },
+      "disagreements": [
+        {
+          "promo_id": "ep41_cand_1",
+          "hook_quote": "Lady Juliana Ashcroft. Look around.",
+          "cliffhanger_quote": "Silhouetted armed figures emerge through the smoke and rubble of the breached doorway. Juliana slowly turns her head, glancing back toward the light.",
+          "judge_1": {
+            "model": "gpt-6-luna",
+            "passed": false,
+            "flaw": "wrong_tag",
+            "critique": "The public-humiliation tag fits: Catherine mocks Juliana before the congregation, and Juliana is chained and publicly degraded. But armed silhouettes emerging from smoke are not established as a powerful protector or savior; they could be another threat, so the tagged cliffhanger overstates what the screenplay reveals."
+          },
+          "judge_2": {
+            "model": "gemini-3.5-flash-lite",
+            "passed": true,
+            "flaw": null,
+            "critique": "The clip establishes immediate high stakes with a public humiliation in chains and delivers a high-spectacle cliffhanger cut right as armed figures breach the cathedral."
+          }
+        },
+        {
+          "promo_id": "ep15_cand_1",
+          "hook_quote": "The Thug with Cap violently shoves Juliana back with both hands; she cries out as she loses her balance and crashes hard onto the wet stone path.",
+          "cliffhanger_quote": "Alexander places himself directly between Juliana and the three thugs, staring them down with cold, deadly intent.",
+          "judge_1": {
+            "model": "gpt-6-luna",
+            "passed": false,
+            "flaw": "wrong_tag",
+            "critique": "The shove is a valid physical-aggression hook, and the conflict remains unresolved: Alexander only steps between Juliana and the thugs before the clip cuts. But the screenplay establishes his intimidating arrival, not unquestionable power; he has not yet defeated or otherwise proven himself against them, so the unexpected-savior tag overstates what a cold viewer can know."
+          },
+          "judge_2": {
+            "model": "gemini-3.5-flash-lite",
+            "passed": true,
+            "flaw": null,
+            "critique": "The promo expertly sets up high sympathy through visceral physical abuse and emotional degradation, ending on a pristine cliffhanger before the savior delivers any strikes or lines. The curiosity gap is maximum because viewers will demand retribution for the crushed flowers and humiliation."
+          }
+        },
+        {
+          "promo_id": "ep28_cand_1",
+          "hook_quote": "Look at her, Rupert.",
+          "cliffhanger_quote": "The poison has clearly damaged her mind.",
+          "judge_1": {
+            "model": "gpt-6-luna",
+            "passed": false,
+            "flaw": "resolution_leak",
+            "critique": "The Duchess explicitly confirms Juliana is innocent and says she saved her, giving away the central answer before the cut. Rupert's gaslighting leaves Juliana in danger and sets up a new question, but it arrives after the original accusation has already been resolved for the viewer."
+          },
+          "judge_2": {
+            "model": "gemini-3.5-flash-lite",
+            "passed": true,
+            "flaw": null,
+            "critique": "The promo effectively establishes immediate high stakes, featuring a framed protagonist, an unexpected witness revelation, and a chilling villain gaslight as the witness collapses. No resolution leak occurs, leaving Juliana in extreme peril and creating a powerful push for the viewer to continue watching."
+          }
+        },
+        {
+          "promo_id": "ep02_cand_2",
+          "hook_quote": "Why are you surprised, sister? Look at you.",
+          "cliffhanger_quote": "Go home quietly, Juliana. At least leave this chapel with some dignity.",
+          "judge_1": {
+            "model": "gpt-6-luna",
+            "passed": false,
+            "flaw": "other",
+            "critique": "The opening insult is immediate and the situation is understandable, but the clip sustains humiliation without introducing a reveal, reversal, or specific unanswered question that strongly promises a payoff. It ends on a command to leave, with Juliana’s response unseen; that creates a small reaction gap, but not a compelling reason to pay for the next moment."
+          },
+          "judge_2": {
+            "model": "gemini-3.5-flash-lite",
+            "passed": true,
+            "flaw": null,
+            "critique": "The clip delivers an uninterrupted stream of high-stakes rage bait, escalating from the sister's vicious insults to the matriarch and groom casting Juliana out without resolving her plight. A cold viewer immediately understands the betrayal and is left at peak frustration, driving high curiosity for her retribution or rescue."
+          }
+        },
+        {
+          "promo_id": "ep01_cand_2",
+          "hook_quote": "You are the daughter people tolerate because they have to.",
+          "cliffhanger_quote": "...when Clarissa is the true jewel of the county.",
+          "judge_1": {
+            "model": "gpt-6-luna",
+            "passed": false,
+            "flaw": "wrong_tag",
+            "critique": "The dialogue is genuinely cruel, but the screenplay shows only Juliana, Clarissa, Gerald, and the matriarch; an altar setting alone does not establish the crowd or peer audience required for the public_humiliation tag. The clip does leave the betrayal unresolved, though the next-moment hook is mainly emotional rather than a specific unanswered question."
+          },
+          "judge_2": {
+            "model": "gemini-3.5-flash-lite",
+            "passed": true,
+            "flaw": null,
+            "critique": "The promo masterfully establishes the protagonist's public humiliation and betrayal, creating a powerful curiosity gap about her future without offering any resolution or retribution within the clip. The hook is immediate, and the core conflict is clearly legible."
+          }
+        },
+        {
+          "promo_id": "ep32_cand_1",
+          "hook_quote": "Nothing. Until you have nothing left beneath it.",
+          "cliffhanger_quote": "Juliana gasps, freezing as the glowing tip of the iron thrusts forward, stopping mere millimeters from her right eye.",
+          "judge_1": {
+            "model": "gpt-6-luna",
+            "passed": false,
+            "flaw": "slow_burn",
+            "critique": "The opening line is cryptic without context, and the clip spends most of its 45 seconds on Juliana’s extended verbal takedown before the physical danger becomes immediate near the end. Her verbal victory is satisfying, but the branding attack remains unresolved, so the ending still leaves a reason to watch on."
+          },
+          "judge_2": {
+            "model": "gemini-3.5-flash-lite",
+            "passed": true,
+            "flaw": null,
+            "critique": "This promo is highly effective, establishing immediate high stakes and a compelling power dynamic between the defiant, chained Juliana and the enraged Catherine. The verbal sparring is sharp, and the cliffhanger is intensely visual and creates a strong desire to see the resolution."
+          }
+        },
+        {
+          "promo_id": "ep36_cand_2",
+          "hook_quote": "...and killing my wife afterward.",
+          "cliffhanger_quote": "...their dead Duke is coming home.",
+          "judge_1": {
+            "model": "gpt-6-luna",
+            "passed": false,
+            "flaw": "context_deficit",
+            "critique": "The opening fragment, “...and killing my wife afterward,” can sound like Alexander is threatening his own wife; the clip never clearly establishes who intends to kill Juliana. The later revenge vow creates a strong unresolved next moment, but the cold viewer must infer the central threat and who “they” are."
+          },
+          "judge_2": {
+            "model": "gemini-3.5-flash-lite",
+            "passed": true,
+            "flaw": null,
+            "critique": "This promo effectively establishes Alexander's intense rage and the high stakes of his wife Juliana being taken, along with his past betrayal. The cliffhanger, \"their dead Duke is coming home,\" creates a powerful curiosity gap, promising a dramatic return and revelation without resolving the conflict."
+          }
+        },
+        {
+          "promo_id": "ep46_cand_1",
+          "hook_quote": "You married this woman as a nameless beggar...",
+          "cliffhanger_quote": "And no clerk in London ever entered your name in the Royal register, because as far as the Crown knew, Alexander Ashburton was already dead.",
+          "judge_1": {
+            "model": "gpt-6-luna",
+            "passed": true,
+            "flaw": null,
+            "critique": "The opening insult immediately establishes the status conflict, and the clip leaves the marriage’s fate unresolved before ending on the striking claim that Alexander was presumed dead. The long, repetitive legal exposition may lose viewers before that final reveal, and the screenplay gives no reaction to it."
+          },
+          "judge_2": {
+            "model": "gemini-3.5-flash-lite",
+            "passed": false,
+            "flaw": "resolution_leak",
+            "critique": "The promo completely leaks the core mystery and dramatic twist of the episode by having the High Priest explain the entire plot point—that Alexander Ashburton was legally considered dead—in the climax of the clip. This removes the curiosity gap because the secret is fully exposed rather than kept hidden."
+          }
+        },
+        {
+          "promo_id": "ep42_cand_1",
+          "hook_quote": "You cannot be him. Alexander died!",
+          "cliffhanger_quote": "And now, Rupert... we settle what you stole.",
+          "judge_1": {
+            "model": "gpt-6-luna",
+            "passed": true,
+            "flaw": null,
+            "critique": "The opening immediately establishes that Alexander was believed dead, and his mother’s explicit Duke proclamation plus Rupert’s terror make the reveal legible without prior context. His revenge is promised but not shown; the long emotional reunion slows the middle, and the clip leaves the specifics of what Rupert stole unclear."
+          },
+          "judge_2": {
+            "model": "gemini-3.5-flash-lite",
+            "passed": false,
+            "flaw": "resolution_leak",
+            "critique": "The clip shows the complete identity reveal, the emotional reunion with the mother, the public validation of his title, and immediate cornering of the antagonist Rupert, leaving very little immediate jeopardy to force an app install."
+          }
+        },
+        {
+          "promo_id": "ep21_cand_1",
+          "hook_quote": "Lady Juliana! Please! You have to help me, Toby is dying!",
+          "cliffhanger_quote": "Stand up. Sinking to your knees will not save him. Let me grab my ledger. We go now.",
+          "judge_1": {
+            "model": "gpt-6-luna",
+            "passed": true,
+            "flaw": null,
+            "critique": "The child’s danger and Juliana’s decision to help are clear even without prior context, and the clip ends before Toby’s fate or the rescue is shown. The repeated pleas make the middle feel somewhat prolonged, and the ending promises a rescue more than a distinctive twist, which may limit paid conversion."
+          },
+          "judge_2": {
+            "model": "gemini-3.5-flash-lite",
+            "passed": false,
+            "flaw": "slow_burn",
+            "critique": "The clip takes nearly 8 seconds of dialogue setup regarding a sick child before the emotional and narrative stakes fully engage the viewer. This opening delay weakens the instant hook required for vertical feeds."
+          }
+        },
+        {
+          "promo_id": "ep34_cand_1",
+          "hook_quote": "Lady Juliana Ashcroft, you are accused of witchcraft, unlawful healing, and poisoning.",
+          "cliffhanger_quote": "Tell the truth.",
+          "judge_1": {
+            "model": "gpt-6-luna",
+            "passed": true,
+            "flaw": null,
+            "critique": "The accusation is clear within the opening seconds, and Juliana’s admission that she healed people does not resolve whether she is guilty or what Prudence will say; the clip ends just before the key testimony. The courtroom visuals add atmosphere, but the stakes and uncertainty are also carried by explicit dialogue."
+          },
+          "judge_2": {
+            "model": "gemini-3.5-flash-lite",
+            "passed": false,
+            "flaw": "slow_burn",
+            "critique": "The hook relies on a courtroom interrogation that takes 15 seconds to establish context, and the dramatic question is too generic to create an urgent desire to pay compared to higher-stakes 'betrayal' or 'power reversal' hooks common in this genre. The cliffhanger is weak because it merely prompts a witness to speak rather than delivering a high-impact revelation or a shocking twist."
+          }
+        },
+        {
+          "promo_id": "ep07_cand_1",
+          "hook_quote": "A fitting home for a woman who threw away everything for a penniless soldier.",
+          "cliffhanger_quote": "And your husband?",
+          "judge_1": {
+            "model": "gpt-6-luna",
+            "passed": true,
+            "flaw": null,
+            "critique": "The opening immediately establishes class-based contempt, and Juliana's defiance does not resolve the conflict: Gerald ends on an implied threat to her husband. The exchange is dialogue-heavy, but the stakes are clear enough without prior context and the answer to that threat remains unseen."
+          },
+          "judge_2": {
+            "model": "gemini-3.5-flash-lite",
+            "passed": false,
+            "flaw": "resolution_leak",
+            "critique": "The clip resolves the immediate emotional tension by having the protagonist 'win' the argument through sheer moral superiority, stripping away the viewer's desire to see her overcome the situation. Additionally, the dialogue reveals too much too soon, making her seem already empowered rather than vulnerable, which undermines the 'broken noble' hook."
+          }
+        },
+        {
+          "promo_id": "ep04_cand_1",
+          "hook_quote": "A penniless nobody for a discarded bride.",
+          "cliffhanger_quote": "Why would you offer me your name?",
+          "judge_1": {
+            "model": "gpt-6-luna",
+            "passed": false,
+            "flaw": "slow_burn",
+            "critique": "The opening “Look at him” gives a cold viewer little to latch onto; the explicit status-based insult that supplies the hook arrives around second 5. The ending question about why the kneeling stranger would offer her his name is unresolved and intriguing, but the clip does not explain what that offer means or establish the broader wedding stakes."
+          },
+          "judge_2": {
+            "model": "gemini-3.5-flash-lite",
+            "passed": true,
+            "flaw": null,
+            "critique": "The clip effectively establishes a high-stakes emotional abuse scenario that creates a strong sympathy hook for the protagonist, with the mystery of the stranger's motivation providing a clean, non-leaking cliffhanger."
+          }
+        },
+        {
+          "promo_id": "ep47_cand_1",
+          "hook_quote": "I have nowhere to go, Your Grace.",
+          "cliffhanger_quote": "As a scullery maid.",
+          "judge_1": {
+            "model": "gpt-6-luna",
+            "passed": false,
+            "flaw": "resolution_leak",
+            "critique": "The clip resolves its immediate question: Juliana stops Catherine from being cast out and delivers the humiliating condition, “As a scullery maid.” Catherine’s acceptance is withheld, but the key reversal and comeuppance are already the ending payoff, so the remaining question may not be compelling enough to drive an install and payment."
+          },
+          "judge_2": {
+            "model": "gemini-3.5-flash-lite",
+            "passed": true,
+            "flaw": null,
+            "critique": "The clip successfully executes a 'tables-turned' narrative arc, moving from the villain's desperation to a definitive power-dynamic shift that creates a strong curiosity gap regarding Catherine's reaction to the demotion."
+          }
+        },
+        {
+          "promo_id": "ep44_cand_1",
+          "hook_quote": "Alexander... I thought you had died.",
+          "cliffhanger_quote": "I was supposed to be your Duchess!",
+          "judge_1": {
+            "model": "gpt-6-luna",
+            "passed": true,
+            "flaw": null,
+            "critique": "The reunion and her claim that she was meant to be his Duchess are clear, and Alexander’s rejection leaves the central question unresolved rather than revealing an answer. A cold viewer may not understand who Rupert is or why Catherine expected to be a Duchess, but the lost-love conflict is legible from the dialogue."
+          },
+          "judge_2": {
+            "model": "gemini-3.5-flash-lite",
+            "passed": false,
+            "flaw": "context_deficit",
+            "critique": "The screenplay centers entirely on 'Catherine,' a character not mentioned in the show's primary synopsis (Juliana vs. Clarissa), leaving the cold viewer unable to identify if they are watching the protagonist or a villainous 'other woman.' Furthermore, Alexander appearing in full 'ducal coat' immediately resolves the title's central mystery regarding his secret identity, leaving no 'broken soldier' intrigue to discover."
+          }
+        },
+        {
+          "promo_id": "ep39_cand_1",
+          "hook_quote": "Enough hiding.",
+          "cliffhanger_quote": "And I am bringing my wife home.",
+          "judge_1": {
+            "model": "gpt-6-luna",
+            "passed": false,
+            "flaw": "resolution_leak",
+            "critique": "The clip fully reveals Alexander’s hidden identity and shows his reclamation of authority: he appears in ducal dress, is addressed as “Your Grace,” and issues commands. It cuts before the wife is brought home, but the central secret is already answered, leaving a fairly generic rescue vow as the remaining reason to continue."
+          },
+          "judge_2": {
+            "model": "gemini-3.5-flash-lite",
+            "passed": true,
+            "flaw": null,
+            "critique": "This promo perfectly executes the 'power reveal' trope, building immense anticipation for the confrontation at the chapel without showing the villains' reactions, which is the actual payoff the viewer must pay to see."
+          }
+        },
+        {
+          "promo_id": "ep20_cand_1",
+          "hook_quote": "Once my cousin Alexander's death is formally sealed by the Crown...",
+          "cliffhanger_quote": "They will learn their place when you wear the ducal crown.",
+          "judge_1": {
+            "model": "gpt-6-luna",
+            "passed": false,
+            "flaw": "other",
+            "critique": "The succession scheme is clear immediately, and the clip does not reveal its outcome. But the ending is only a broad promise that Catherine will wear the ducal crown; with no protagonist, imminent confrontation, or specific next event to wonder about, this plays as villain exposition rather than a compelling reason to pay."
+          },
+          "judge_2": {
+            "model": "gemini-3.5-flash-lite",
+            "passed": true,
+            "flaw": null,
+            "critique": "The clip successfully establishes a high-stakes 'Hate-Watch' hook by introducing clear villains who are not only usurping the protagonist's title but are also actively poisoning a vulnerable relative. The connection between the 'dead' Alexander mentioned and the 'Broken Soldier' in the show title creates an immediate curiosity gap regarding the eventual reveal and revenge."
+          }
+        },
+        {
+          "promo_id": "ep48_cand_2",
+          "hook_quote": "Everyone in that chapel saw me humiliated today.",
+          "cliffhanger_quote": "And make sure no one sees him arrive.",
+          "judge_1": {
+            "model": "gpt-6-luna",
+            "passed": false,
+            "flaw": "context_deficit",
+            "critique": "The humiliation line is immediately understandable, but a cold viewer has no context for who Catherine is, what household or hearing is at stake, or why Father Thomas matters, so the scheme feels vague rather than urgent. The hook also does not actually reveal a revenge plot; the priest’s secret arrival is an unresolved setup, not a resolution leak."
+          },
+          "judge_2": {
+            "model": "gemini-3.5-flash-lite",
+            "passed": true,
+            "flaw": null,
+            "critique": "The promo successfully creates a curiosity gap by initiating a high-stakes covert mission (the secret priest visit) immediately following an emotional hook. While the scene carries significant 'referential debt' regarding characters like Father Thomas and the specific 'humiliation,' the archetypal 'vengeful noblewoman' trope is clear enough to hook a cold viewer."
+          }
+        },
+        {
+          "promo_id": "ep09_cand_1",
+          "hook_quote": "About a war veteran. Some say he resembles the late Duke.",
+          "cliffhanger_quote": "Impossible.",
+          "judge_1": {
+            "model": "gpt-6-luna",
+            "passed": true,
+            "flaw": null,
+            "critique": "The rumor, matching scar, and the nobleman’s shaken “Impossible” leave the identity unresolved, creating a clear curiosity gap. A cold viewer may not know who these men are or why the late Duke matters, but the basic mystery is understandable from the dialogue without relying entirely on the reactions or firelit visuals."
+          },
+          "judge_2": {
+            "model": "gemini-3.5-flash-lite",
+            "passed": false,
+            "flaw": "context_deficit",
+            "critique": "The promo centers on two secondary male characters discussing the hero in the third person, leaving a cold viewer without any context for who they are or why the Blond Nobleman's fear is significant. Without the presence of the female lead or the 'broken soldier' himself, the stakes of the identity reveal remain abstract and fail to create a personal connection."
+          }
+        }
+      ],
+      "gemini_fails_previous_top_15": [
+        {
+          "promo_id": "ep28_cand_2",
+          "flaw_type": "resolution_leak",
+          "reason": "The clip reveals the protagonist's impending execution and the specific evidence (the herbarium book) that will be used against her. This resolves the"
+        },
+        {
+          "promo_id": "ep46_cand_1",
+          "flaw_type": "resolution_leak",
+          "reason": "The promo completely leaks the core mystery and dramatic twist of the episode by having the High Priest explain the entire plot point—that Alexander A"
+        },
+        {
+          "promo_id": "ep34_cand_1",
+          "flaw_type": "slow_burn",
+          "reason": "The hook relies on a courtroom interrogation that takes 15 seconds to establish context, and the dramatic question is too generic to create an urgent "
+        }
+      ],
+      "mode": "dual_judge",
+      "judges": [
+        "openai:gpt-6-luna",
+        "gemini:gemini-3.5-flash-lite"
+      ]
+    }
+  },
+  "counts": {
+    "single_candidates": 62,
+    "composites": 0,
+    "valid": 62,
+    "after_dedup": 60,
+    "ranked": 15,
+    "audit_passed": 26,
+    "audit_failed": 34,
+    "audit_errors": 0,
+    "not_audited": 0,
+    "tier_1": 26,
+    "tier_2": 19,
+    "tier_3": 15,
+    "ranked_audit_passed": 15
+  },
+  "rejected_by_validation": {
+    "cliffhanger quote not in the last 6s of the clip": 1,
+    "cut point is not on a real beat edge": 1
+  },
+  "constraint_violations": {},
+  "extraction_failures": {},
+  "usage": {
+    "extractor_and_auditor_combined": {
+      "calls": 0,
+      "cache_hits": 50,
+      "prompt_tokens": 0,
+      "completion_tokens": 0,
+      "reasoning_tokens": 0,
+      "latency_s": 0.0,
+      "cached_prompt_tokens": 0,
+      "cached_completion_tokens": 0,
+      "cached_reasoning_tokens": 0
+    }
+  },
+  "wall_seconds": 6.0
+}

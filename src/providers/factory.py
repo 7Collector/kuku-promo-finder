@@ -40,7 +40,7 @@ def get_llm_provider(
     provider_name: Optional[str] = None,
     model_name: Optional[str] = None,
     cache: bool = False,
-    retries: int = 4,
+    retries: int = 8,
 ) -> BaseLLMProvider:
     """
     Instantiates a provider. An explicitly requested provider that is unknown or lacks

@@ -6,8 +6,8 @@ Combines deterministic window analysis with LLM dramatic tagging.
 import threading
 from collections import Counter
 from typing import List, Dict, Any, Optional, Tuple
-from src.constants import CLIFF_WINDOW, EPS, HOOK_WINDOW, MAX_DURATION, MIN_DURATION
-from src.validation import find_quote_beat, snap_to_beat_edge, spoken_beats
+from src.constants import CLIFF_WINDOW, CLIFFHANGER_TAIL_SECONDS, EPS, HOOK_WINDOW, MAX_DURATION, MIN_DURATION
+from src.validation import find_quote_beat, snap_to_beat_edge, spoken_beats, verify_payoff_location, trim_to_cliffhanger
 from src.models import (
     Episode,
     Beat,
@@ -32,9 +32,17 @@ from src.utils.logging import logger
 
 
 class PromoExtractor:
-    def __init__(self, taxonomy: Taxonomy, llm_provider: Optional[BaseLLMProvider] = None):
+    def __init__(
+        self,
+        taxonomy: Taxonomy,
+        llm_provider: Optional[BaseLLMProvider] = None,
+        episodes: Optional[List[Episode]] = None,
+    ):
         self.taxonomy = taxonomy
         self.llm_provider = llm_provider or get_llm_provider()
+        self.episodes_by_num: Dict[int, Episode] = (
+            {e.episode_number: e for e in episodes} if episodes else {}
+        )
         self._lock = threading.Lock()
         # Provenance and diagnostics, surfaced in run metadata.
         self.failures: Dict[int, str] = {}           # episode -> error (LLM call failed after retries)
@@ -185,23 +193,73 @@ class PromoExtractor:
         )
         if hook_beat is None:
             return None, "hook quote not in a beat starting within 3s of the cut"
+
+        trimmed_from_end = False
+        seconds_removed = 0.0
+
         cliff_beat = find_quote_beat(
             [b for b in beats if last.start_seconds - EPS <= b.start_seconds
-             and last.end_seconds - CLIFF_WINDOW <= b.end_seconds <= last.end_seconds + EPS],
+             and last.end_seconds - CLIFFHANGER_TAIL_SECONDS <= b.end_seconds <= last.end_seconds + EPS],
             cliff_quote,
         )
         if cliff_beat is None:
-            return None, "cliffhanger quote not in the last 6s of the clip"
+            # Check if tagged cliffhanger beat is within the clip segments but ends before the tail window
+            matched_seg_idx = -1
+            matched_beat = None
+            for idx, seg in enumerate(segments):
+                seg_beats = [b for b in beats if seg.start_seconds - EPS <= b.start_seconds and b.end_seconds <= seg.end_seconds + EPS]
+                b = find_quote_beat(seg_beats, cliff_quote)
+                if b is not None:
+                    matched_seg_idx = idx
+                    matched_beat = b
+
+            if matched_beat is None:
+                return None, f"cliffhanger quote not in the last {CLIFFHANGER_TAIL_SECONDS:.0f}s of the clip"
+
+            # Tagged cliffhanger beat ends before the tail window: trim the clip end to that beat's real end edge
+            orig_total = total_sec
+            segments = segments[:matched_seg_idx + 1]
+            target_seg = segments[-1]
+            if matched_beat.end_seconds <= target_seg.start_seconds:
+                return None, "too short after cliffhanger trim"
+
+            segments[-1] = Segment(
+                episode=episode.episode_number,
+                start=target_seg.start,
+                end=matched_beat.end_str,
+                start_seconds=target_seg.start_seconds,
+                end_seconds=matched_beat.end_seconds,
+            )
+            total_sec = round(sum(s.duration for s in segments), 2)
+            if total_sec < MIN_DURATION - EPS:
+                return None, "too short after cliffhanger trim"
+
+            trimmed_from_end = True
+            seconds_removed = round(orig_total - total_sec, 2)
+            cliff_beat = matched_beat
 
         scores_dict = rc.get("scores") or {}
         try:
-            scores = PromoScores(**{
+            scores_kwargs = {
                 k: float(scores_dict.get(k, 5.0))
                 for k in ("hook_strength", "injustice_tension", "cliffhanger_strength",
                           "standalone_clarity", "payoff_withheld")
-            })
+            }
+            conversion_raw = rc.get("conversion_intent", scores_dict.get("conversion_intent", 5.0))
+            conversion_intent = max(0.0, min(10.0, float(conversion_raw)))
+            scores_kwargs["conversion_intent"] = conversion_intent
+            scores = PromoScores(**scores_kwargs)
         except (TypeError, ValueError):
             return None, "non-numeric scores"
+
+        conversion_reason = str(rc.get("conversion_reason", rc.get("why_it_works", ""))).strip()
+
+        raw_payoff = rc.get("payoff_location")
+        payoff_location = "unknown"
+        if raw_payoff and str(raw_payoff).strip().lower() not in ("unknown", "none", "null", ""):
+            episodes_map = self.episodes_by_num or {episode.episode_number: episode}
+            verified = verify_payoff_location(raw_payoff, episodes_map)
+            payoff_location = verified or "unknown"
 
         hook_type = self.taxonomy.normalize_type(hook_data.get("type", ""), "hook", "new:unspecified")
         cliff_type = self.taxonomy.normalize_type(cliff_data.get("type", ""), "cliffhanger", "new:unspecified")
@@ -213,6 +271,11 @@ class PromoExtractor:
             episodes=[episode.episode_number],
             segments=segments,
             total_duration=total_sec,
+            trimmed_from_end=trimmed_from_end,
+            seconds_removed=seconds_removed,
+            engine=self.llm_provider.name,
+            model=self.llm_provider.model,
+            extractor_model=self.llm_provider.model,
             hook=HookInfo(
                 type=hook_type,
                 name=self.taxonomy.hook_by_id.get(hook_type, {}).get("name", hook_type),
@@ -232,6 +295,10 @@ class PromoExtractor:
             why_it_works=str(rc.get("why_it_works", "")),
             risks=[str(r) for r in risks] if isinstance(risks, list) else [str(risks)],
             scores=scores,
+            conversion_intent=conversion_intent,
+            conversion_reason=conversion_reason,
+            payoff_location=payoff_location,
+            stages=["extraction"],
         )
         cand.scores.compute_composite_score(
             self.taxonomy.get_hook_weight(hook_type), self.taxonomy.get_cliffhanger_weight(cliff_type)
@@ -393,7 +460,12 @@ class PromoExtractor:
                         cliffhanger_strength=min(10.0, cliff_strength),
                         standalone_clarity=min(10.0, clarity),
                         payoff_withheld=min(10.0, payoff),
+                        conversion_intent=5.0,
                     ),
+                    conversion_intent=5.0,
+                    conversion_reason="Keyword heuristic candidate",
+                    payoff_location="unknown",
+                    stages=["extraction"],
                 )
 
                 # Use canonical scoring method

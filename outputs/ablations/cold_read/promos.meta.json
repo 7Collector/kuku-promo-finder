@@ -1,0 +1,64 @@
+{
+  "ablation_name": "cold_read",
+  "generated_at": "2026-11-07T16:54:40Z",
+  "show": "I Married a Broken Soldier. He was a Duke",
+  "counts": {
+    "total_candidates": 26,
+    "ranked": 15,
+    "tier_1": 26
+  },
+  "stages": {
+    "extraction": {
+      "status": "reused",
+      "reason": "reused from current 60-candidate pool",
+      "live_calls": 0,
+      "cache_hits": 0,
+      "live_cost_usd": 0.0,
+      "cached_cost_usd": 0.0
+    },
+    "cold_read": {
+      "status": "ran",
+      "reason": "live API calls executed",
+      "live_calls": 22,
+      "cache_hits": 4,
+      "live_cost_usd": 0.0053,
+      "cached_cost_usd": 0.0,
+      "wall_time_s": 12.42
+    }
+  },
+  "cold_read_report": {
+    "candidates_evaluated": 26,
+    "correlation": 0.507,
+    "disagreements_count": 4,
+    "disagreements": [
+      {
+        "promo_id": "ep19_cand_1",
+        "standalone_clarity": 7.0,
+        "cold_read_stakes": 9.0,
+        "difference": 2.0,
+        "confused_by": "The exact relationships and legal situation are unclear: it is not explained who Rupert is, what title Alexander may inherit, or why Alexander is away from the house. Lady Catherine\u2019s identity as his mother is only clarified by Alexander\u2019s final line."
+      },
+      {
+        "promo_id": "ep23_cand_1",
+        "standalone_clarity": 7.0,
+        "cold_read_stakes": 9.0,
+        "difference": 2.0,
+        "confused_by": "It is unclear who is coming and why their arrival is frightening. I also don\u2019t know how Juliana knows arsenic was used or whether the remedy she is preparing can actually help."
+      },
+      {
+        "promo_id": "ep27_cand_1",
+        "standalone_clarity": 5.0,
+        "cold_read_stakes": 7.5,
+        "difference": 2.5,
+        "confused_by": "It is not clear who the blond nobleman is, why he and the others arrive so dramatically, or whether Juliana's husband is actually the Duchess's lost son. The Duchess's son and Juliana's husband seem strongly connected by the ring, but the exact relationship is still unconfirmed."
+      },
+      {
+        "promo_id": "ep35_cand_2",
+        "standalone_clarity": 5.0,
+        "cold_read_stakes": 8.0,
+        "difference": 3.0,
+        "confused_by": "The clip does not explain where Alexander has been, what happened to him, or why he says he was not supposed to survive. Those details feel intentionally withheld rather than hard to follow."
+      }
+    ]
+  }
+}

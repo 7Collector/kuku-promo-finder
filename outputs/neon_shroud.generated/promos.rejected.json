@@ -1,0 +1,35 @@
+{
+  "near_misses_reported_by_model": [
+    {
+      "episode": 2,
+      "start": "00:10.00",
+      "end": "00:30.00",
+      "reason": "Silas's declaration establishes his goal but has no immediate payoff or stronger hook at the segment start, and it ends before the virus reveal."
+    },
+    {
+      "episode": 1,
+      "start": "00:00.00",
+      "end": "00:08.00",
+      "reason": "The neural-lace discovery introduces a mystery, but this segment is only 8 seconds and does not meet the 20-second minimum."
+    },
+    {
+      "episode": 3,
+      "start": "00:00.00",
+      "end": "00:08.00",
+      "reason": "The urgent threat is a strong opening hook, but this segment is only 8 seconds and does not meet the 20-second minimum."
+    },
+    {
+      "episode": 3,
+      "start": "00:08.00",
+      "end": "00:28.00",
+      "reason": "Silas's life-or-death cost is compelling, but the segment begins with a conditional explanation and omits Kira's citywide stakes; it also ends before the plea that sharpens the unresolved choice."
+    },
+    {
+      "episode": 3,
+      "start": "00:28.00",
+      "end": "00:40.00",
+      "reason": "Kira's plea creates urgency, but without the preceding lines the audience does not know what Silas is being asked not to do; the segment is also under 20 seconds."
+    }
+  ],
+  "proposals_rejected_by_validation": []
+}

@@ -57,15 +57,35 @@ interface Promo {
     composite_score: number;
     adjusted_score: number;
     diversity_penalty: number;
+    conversion_intent?: number;
   };
+  conversion_intent?: number;
+  conversion_reason?: string;
+  payoff_location?: string;
+  stages?: string[];
+  cold_read?: any;
+  audit_panel?: any;
   engine?: string;
   model?: string;
+  extractor_model?: string;
+  trimmed_from_end?: boolean;
+  seconds_removed?: number;
+  audit_tier?: number | null;
+  judge_verdicts?: {
+    judge: string;
+    model: string;
+    pass: boolean;
+    flaw_type?: string | null;
+    one_line_reason: string;
+    conversion_intent?: number | null;
+  }[];
   quality_audit?: {
     passed: boolean;
-    method?: "llm" | "rules" | "error";
+    method?: "llm" | "rules" | "error" | "not_audited";
     flaw_type?: string;
     critique: string;
     confidence_score: number;
+    conversion_intent?: number;
     risks: string[];
   };
 }
@@ -708,6 +728,38 @@ export default function HomePage() {
 
                 {/* Why it works & Audit flags */}
                 <div style={{ borderTop: "1px solid var(--hairline)", paddingTop: "var(--s-12)", marginTop: "auto" }}>
+                  {p.payoff_location && p.payoff_location !== "unknown" && (
+                    <div style={{ marginBottom: 6, fontSize: 11, color: "var(--accent)", fontWeight: 500 }}>
+                      🎯 Payoff: {p.payoff_location}
+                    </div>
+                  )}
+                  {p.conversion_intent != null && (
+                    <div style={{ marginBottom: 6, fontSize: 11, color: "var(--ink-2)" }}>
+                      🔥 Conversion Intent: <strong>{p.conversion_intent}/10</strong>
+                    </div>
+                  )}
+                  {p.audit_tier != null && (
+                    <div style={{ marginBottom: 6 }}>
+                      <span
+                        style={{
+                          display: "inline-block",
+                          padding: "2px 7px",
+                          borderRadius: "var(--radius-xs)",
+                          fontWeight: 600,
+                          fontSize: 11,
+                          background: p.audit_tier === 1 ? "var(--success-container)" : p.audit_tier === 2 ? "var(--warning-container)" : "var(--sunken)",
+                          color: p.audit_tier === 1 ? "var(--success-on-container)" : p.audit_tier === 2 ? "var(--warning-on-container)" : "var(--ink-2)",
+                        }}
+                      >
+                        Tier {p.audit_tier}: {p.audit_tier === 1 ? "Both judges pass" : p.audit_tier === 2 ? "Split verdict (needs editor look)" : "Both fail"}
+                      </span>
+                    </div>
+                  )}
+                  {p.trimmed_from_end && (
+                    <div style={{ marginBottom: 6, fontSize: 11, color: "var(--ink-3)" }}>
+                      ✂️ Trimmed to cliffhanger (-{p.seconds_removed}s)
+                    </div>
+                  )}
                   <p className="om-caption" style={{ color: "var(--ink-2)", marginBottom: "var(--s-8)", lineHeight: "1.4" }}>
                     {p.why_it_works}
                   </p>
@@ -955,6 +1007,53 @@ export default function HomePage() {
             </div>
 
             {/* Quality Audit Section */}
+            {(activeModalPromo.conversion_intent != null || (activeModalPromo.payoff_location && activeModalPromo.payoff_location !== "unknown") || (activeModalPromo.stages && activeModalPromo.stages.length > 0)) && (
+              <div style={{ background: "var(--paper)", padding: "var(--s-16)", borderRadius: "var(--radius-lg)", marginBottom: "var(--s-24)" }}>
+                {activeModalPromo.conversion_intent != null && (
+                  <div style={{ marginBottom: 6 }}>
+                    <span className="om-caption" style={{ color: "var(--ink-3)" }}>Conversion Intent: </span>
+                    <strong style={{ color: "var(--ink)" }}>{activeModalPromo.conversion_intent} / 10</strong>
+                    {activeModalPromo.conversion_reason && <span style={{ color: "var(--ink-2)", fontSize: 13 }}> — {activeModalPromo.conversion_reason}</span>}
+                  </div>
+                )}
+                {activeModalPromo.payoff_location && activeModalPromo.payoff_location !== "unknown" && (
+                  <div style={{ marginBottom: 6 }}>
+                    <span className="om-caption" style={{ color: "var(--ink-3)" }}>Payoff Location: </span>
+                    <strong style={{ color: "var(--accent)" }}>{activeModalPromo.payoff_location}</strong>
+                  </div>
+                )}
+                {activeModalPromo.stages && activeModalPromo.stages.length > 0 && (
+                  <div>
+                    <span className="om-caption" style={{ color: "var(--ink-3)" }}>Stages: </span>
+                    <span style={{ fontSize: 12, color: "var(--ink-2)" }}>{activeModalPromo.stages.join(", ")}</span>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Judge Panel Verdicts */}
+            {activeModalPromo.judge_verdicts && activeModalPromo.judge_verdicts.length > 0 && (
+              <div style={{ background: "var(--paper)", padding: "var(--s-16)", borderRadius: "var(--radius-lg)", marginBottom: "var(--s-20)" }}>
+                <span className="om-caption" style={{ color: "var(--ink-3)", display: "block", marginBottom: 8 }}>
+                  Judge Panel Verdicts {activeModalPromo.audit_tier != null ? `(Tier ${activeModalPromo.audit_tier})` : ""}
+                </span>
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  {activeModalPromo.judge_verdicts.map((jv, idx) => (
+                    <div key={idx} style={{ fontSize: 12, borderLeft: jv.pass ? "3px solid var(--success-strong)" : "3px solid var(--warning-strong)", paddingLeft: 8 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 6, fontWeight: 600 }}>
+                        <span style={{ color: jv.pass ? "var(--success-strong)" : "var(--warning-strong)" }}>
+                          {jv.pass ? "PASS" : `FAIL (${jv.flaw_type || "unspecified"})`}
+                        </span>
+                        <span style={{ color: "var(--ink-2)" }}>· {jv.judge}:{jv.model}</span>
+                        {jv.conversion_intent != null && <span style={{ color: "var(--ink-3)" }}>· conv: {jv.conversion_intent}/10</span>}
+                      </div>
+                      <p style={{ margin: "2px 0 0", color: "var(--ink-2)" }}>{jv.one_line_reason}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {activeModalPromo.quality_audit && (
               <div style={{ borderTop: "1px solid var(--hairline)", paddingTop: "var(--s-16)", marginBottom: "var(--s-20)" }}>
                 <span className="om-caption" style={{ color: "var(--ink-3)", display: "block", marginBottom: 6 }}>

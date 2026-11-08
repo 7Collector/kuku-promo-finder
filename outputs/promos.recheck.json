@@ -1,0 +1,119 @@
+[
+  {
+    "episode": 3,
+    "has_moment": true,
+    "validated_beat_edges": true,
+    "start": "01:24.00",
+    "end": "02:20.30",
+    "verdict": "model_too_strict",
+    "explanation": "This is the episode’s strongest promo moment: the stranger drops a guard, protects Juliana, and ends on a public marriage proposal. It is not a quiet scene. It falls short of top converting standards because the short segment gives little context for who the stranger is or why his offer matters, and it does not reveal the secret behind his identity."
+  },
+  {
+    "episode": 6,
+    "has_moment": true,
+    "validated_beat_edges": true,
+    "start": "01:04.30",
+    "end": "01:49.00",
+    "verdict": "genuinely_quiet",
+    "explanation": "This is the episode’s strongest emotional arc: Juliana admits she is disappointed, chooses to make the cottage a home, and ends feeling unexpectedly safe with her husband. But it is a gentle, low-stakes scene with no sharp conflict, reveal, or suspenseful turn, so it is unlikely to meet high-converting promo standards."
+  },
+  {
+    "episode": 8,
+    "has_moment": true,
+    "validated_beat_edges": false,
+    "start": "00:58.00",
+    "end": "01:18.00",
+    "verdict": "genuinely_quiet",
+    "explanation": "This is the episode’s clearest emotional turn: Juliana connects Alexander’s practical knowledge to her mother’s book, then rethinks what it means to lose wealth. But it is a gentle, reflective exchange rather than a high-converting promo beat. There is no sharp conflict, reveal, or unresolved cliffhanger; “Perhaps I was wrong” signals a quiet change in perspective, not suspense."
+  },
+  {
+    "episode": 10,
+    "has_moment": true,
+    "validated_beat_edges": true,
+    "start": "01:03.90",
+    "end": "01:25.90",
+    "verdict": "model_too_strict",
+    "explanation": "This is the episode’s strongest promo-sized moment: Juliana’s question leads into Alexander’s vulnerable, romantic admission, giving the scene a clear emotional payoff. It could work for an audience drawn to slow-burn romance, but it is a quiet exchange rather than a high-converting dramatic beat—there is no sharp revelation, external threat, or unresolved plot question, and its impact depends on the performances and chemistry."
+  },
+  {
+    "episode": 14,
+    "has_moment": true,
+    "validated_beat_edges": true,
+    "start": "00:07.70",
+    "end": "00:38.50",
+    "verdict": "model_too_strict",
+    "explanation": "This is the episode’s strongest compact beat: Juliana’s discovery immediately frees Alexander, then the focus shifts to the cost of her sacrifice and his tenderness. It has clear emotional stakes, but falls short of a high-converting promo because the payoff is already resolved, the scene is subdued rather than confrontational, and the final line is poignant rather than a sharp unresolved cliffhanger."
+  },
+  {
+    "episode": 17,
+    "has_moment": true,
+    "validated_beat_edges": true,
+    "start": "00:18.20",
+    "end": "00:39.00",
+    "verdict": "model_too_strict",
+    "explanation": "This is the episode’s strongest compact moment: Juliana thanks Alexander for protecting her, and he turns that gratitude into a personal vow. “I just did” is a crisp emotional button. It may still underperform a high-converting promo: the scene is quiet and intimate, with little action beyond the aftermath of an attack, and no new reveal or unresolved threat in the clip itself."
+  },
+  {
+    "episode": 22,
+    "has_moment": true,
+    "validated_beat_edges": true,
+    "start": "01:34.50",
+    "end": "02:08.80",
+    "verdict": "model_too_strict",
+    "explanation": "This is the episode’s strongest promo moment: Juliana’s awe gives way to a stealthy bedside discovery, the Duchess gasps in distress, and Juliana’s final question creates a clear cliffhanger. It is not a high-converting slam dunk—the opening line is vague without context, and the reveal takes time to build—but the poisoned-illness discovery provides genuine suspense, so overlooking it entirely seems too strict."
+  },
+  {
+    "episode": 24,
+    "has_moment": true,
+    "validated_beat_edges": true,
+    "start": "00:27.00",
+    "end": "00:48.00",
+    "verdict": "model_too_strict",
+    "explanation": "This 21-second stretch has a strong conflict arc: Juliana defends the Duchess, is struck for it, and is publicly put in her place. It is not a genuinely quiet scene. It falls short of high-converting promo standards because the cruelty is familiar and the ending lands on humiliation rather than a reveal, reversal, or clear payoff; the cure and Juliana’s hidden remedy remain unresolved."
+  },
+  {
+    "episode": 25,
+    "has_moment": true,
+    "validated_beat_edges": true,
+    "start": "02:05.80",
+    "end": "02:26.40",
+    "verdict": "model_too_strict",
+    "explanation": "This is the episode’s strongest compact emotional beat: Juliana’s question leads into Alexander’s fear that she could be killed, and “This time.” lands as a pointed final warning. It has relationship tension and danger, but the delivery is quiet and conversational, with no immediate confrontation or visual payoff, so it may be less gripping as a high-converting promo."
+  },
+  {
+    "episode": 38,
+    "has_moment": true,
+    "validated_beat_edges": true,
+    "start": "00:34.50",
+    "end": "01:18.50",
+    "verdict": "model_too_strict",
+    "explanation": "This is a usable, emotionally coherent promo arc: Juliana fears for Alexander, vows not to betray him, then hears wedding bells and realizes her own execution may be next. It falls short of high-converting standards because the scene is mostly quiet, static dialogue and grief rather than a big reveal or visual escalation. The bells and her final line provide subtle tension, but the payoff is restrained."
+  },
+  {
+    "episode": 44,
+    "has_moment": true,
+    "validated_beat_edges": true,
+    "start": "00:25.20",
+    "end": "01:10.40",
+    "verdict": "model_too_strict",
+    "explanation": "This is the episode’s strongest available promo moment: Catherine’s grief turns into a direct plea, Alexander rejects her, and her final “Her?!” lands as he walks toward Juliana. It has genuine emotional tension, but it falls short of high-converting promo standards because the exchange is mostly slow, dialogue-led pleading, with little visual escalation and limited context for viewers unfamiliar with the characters. The ending is a sharp reaction, but not a major reveal or action beat."
+  },
+  {
+    "episode": 47,
+    "has_moment": true,
+    "validated_beat_edges": true,
+    "start": "01:24.00",
+    "end": "02:11.20",
+    "verdict": "model_too_strict",
+    "explanation": "This is the episode’s strongest promo moment: Juliana turns Catherine’s plea for shelter into a public power reversal, with the scullery-maid ultimatum providing a clear payoff. It is tense rather than genuinely quiet, but the scene relies on measured dialogue and humiliation rather than a startling reveal or highly visual action, so it may feel less urgent and immediately clickable than a high-converting promo."
+  },
+  {
+    "episode": 49,
+    "has_moment": true,
+    "validated_beat_edges": true,
+    "start": "01:44.20",
+    "end": "02:19.50",
+    "verdict": "model_too_strict",
+    "explanation": "This is the episode’s strongest stretch: the risk of treason becomes explicit, and Catherine’s promise of influence turns the exchange into a tense bargain. It has usable intrigue, but it’s still a restrained, dialogue-led scene with little visual action or emotional release. The ending lands as a condition, not a major reveal or sharp reversal, so it may suit a quieter intrigue promo better than a high-converting, high-impact one."
+  }
+]

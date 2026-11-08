@@ -1,0 +1,21 @@
+EPISODE NUMBER: 3
+EPISODE LOGLINE: The blackout hits Neo-Veridia as Silas makes a desperate choice.
+
+SCENE 1
+Scene heading: EXT. ROOFTOP RELAY - DAWN
+Scene start: 00:00.00
+Scene end: 00:40.00
+
+**KIRA (Screaming):**
+Start: (00:00.00) | End: (00:08.00)
+"Cut the main uplink or the entire sector goes dark!"
+
+**SILAS (Resolute):**
+Start: (00:08.00) | End: (00:28.00)
+"If I pull this relay, my own neural heart stops beating."
+
+**KIRA (Desperate):**
+Start: (00:28.00) | End: (00:40.00)
+"Silas, don't do it!"
+
+--- SCRIPT END ---

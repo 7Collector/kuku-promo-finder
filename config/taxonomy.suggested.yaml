@@ -1,0 +1,236 @@
+# Suggested taxonomy clusters generated from 'new:' model tags.
+# Review and merge manually into config/taxonomy.yaml as appropriate.
+
+suggested_clusters:
+- id: credible_threat
+  name: Credible Threat
+  category: hook
+  definition: A character or force makes a specific, credible threat of violence,
+    punishment, coercion, or future vengeance.
+  requires:
+  - A threat is stated or unmistakably communicated.
+  - The threatened harm or consequence is credible within the story.
+  do_not_tag_if:
+  - The danger is only implied by events, with no communicated threat.
+  - The threat has already been carried out and creates no new suspense.
+  weight: 1.05
+  subsumed_tags:
+  - armed_threat
+  - explicit_execution_threat
+  - familial_coercion_threat
+  - public_execution_threat
+  - execution_threat
+  - vengeful_threat
+  - open_ended_revenge_threat
+- id: coercive_social_pressure
+  name: Coercive Social Pressure
+  category: hook
+  definition: A character is pressured through emotional manipulation, a leading question,
+    or an attack on their relationship or legitimacy to make them yield or renounce
+    a claim.
+  requires:
+  - A character is being pressured to concede, renounce, or accept a consequential
+    social or personal outcome.
+  - The pressure relies on manipulation, coercion, or a challenge to legitimacy.
+  do_not_tag_if:
+  - The interaction is a non-coercive disagreement or ordinary negotiation.
+  - The scene is primarily a direct threat of physical harm.
+  weight: 0.95
+  subsumed_tags:
+  - coerced_renunciation
+  - marriage_legitimacy_attack
+  - coercive_leading_question
+  - weaponized_grief
+- id: defiant_resistance_at_cost
+  name: Defiant Resistance at Cost
+  category: hook
+  definition: A character resists pressure or danger through an explicit act of defiance
+    or self-sacrifice, accepting serious personal risk.
+  requires:
+  - The character actively refuses, resists, or puts themselves in danger for a consequential
+    cause.
+  - The resistance carries a clear personal cost or credible risk.
+  do_not_tag_if:
+  - The character expresses disagreement without meaningful risk.
+  - The character's sacrifice is merely proposed or discussed rather than enacted
+    or clearly committed to.
+  weight: 1.05
+  subsumed_tags:
+  - cornered_verbal_defiance
+  - life_threatening_self_sacrifice
+- id: identity_or_status_reveal
+  name: Identity or Status Reveal
+  category: hook
+  definition: A concrete clue, recognition, return, or declaration reveals or reclaims
+    a character's concealed identity or elevated status.
+  requires:
+  - The scene supplies a meaningful clue or assertion about who a character is or
+    what status they hold.
+  - The information changes how the character is understood or treated.
+  do_not_tag_if:
+  - The scene only raises suspicion without confirming or asserting identity or status.
+  - The identity or status is already established and no meaningful reveal or reclamation
+    occurs.
+  weight: 1.05
+  subsumed_tags:
+  - crest_recognition
+  - formal_deference_reveal
+  - identity_reclamation_declaration
+  - imposter_arrest_reversal
+  - presumed_dead_survivor
+- id: identity_mystery_seed
+  name: Identity Mystery Seed
+  category: hook
+  definition: A rumor or clue raises consequential uncertainty about a character's
+    true identity without resolving it.
+  requires:
+  - The scene introduces a specific uncertainty or suspicion about identity.
+  - That uncertainty is likely to affect how characters interpret events or treat
+    one another.
+  do_not_tag_if:
+  - The identity is confirmed in the scene.
+  - The uncertainty is incidental and has no apparent narrative consequence.
+  weight: 0.9
+  subsumed_tags:
+  - mysterious_identity_rumor
+  - identity_suspicion
+- id: damaging_secret_exposure
+  name: Damaging Secret or Scandal
+  category: hook
+  definition: Evidence, testimony, or discovery exposes or strongly implicates a character
+    in a concealed scandal, conspiracy, poisoning, or targeted harm.
+  requires:
+  - The scene reveals or materially substantiates concealed wrongdoing or a damaging
+    secret.
+  - The information threatens a character's safety, standing, or relationships.
+  do_not_tag_if:
+  - The information is only a vague suspicion with no specific supporting clue.
+  - The alleged secret is already public and the scene adds no consequential information.
+  weight: 1.0
+  subsumed_tags:
+  - damning_names_reveal
+  - forbidden_affair
+  - poisoning_reveal
+  - poisoning_revelation
+  - secret_conspiracy
+  - targeted_attack_suspicion
+  - scandal_witnessed
+- id: immediate_peril_cut
+  name: Immediate Peril
+  category: cliffhanger
+  definition: The story ends with imminent, unresolved physical harm, forced removal,
+    execution, catastrophe, or loss of a vulnerable object.
+  requires:
+  - A specific danger or consequential loss is imminent.
+  - The danger remains unresolved at the cutoff.
+  do_not_tag_if:
+  - The danger is distant, hypothetical, or already resolved.
+  - The scene ends after the threatened harm has occurred without leaving a new uncertainty.
+  weight: 1.15
+  subsumed_tags:
+  - precious_object_in_immediate_danger
+  - announced_execution_unresolved
+  - forced_removal_in_progress
+  - imminent_disaster
+  - imminent_persecution
+  - imminent_torture_cut
+- id: approaching_discovery_or_arrival
+  name: Approaching Discovery or Arrival
+  category: cliffhanger
+  definition: The cutoff places a concealed person, fact, or action on the verge of
+    being discovered, or makes a consequential clandestine arrival imminent.
+  requires:
+  - Discovery or arrival is close enough to create immediate suspense.
+  - The consequences of discovery or arrival are not yet shown.
+  do_not_tag_if:
+  - The discovery or arrival has already occurred and its consequences are known.
+  - The arrival is routine or has no meaningful suspense attached.
+  weight: 1.0
+  subsumed_tags:
+  - clandestine_arrival_imminent
+  - discovery_interrupted
+  - imminent_discovery
+- id: urgent_rescue_unresolved
+  name: Urgent Rescue Unresolved
+  category: cliffhanger
+  definition: A rescue or urgent objective remains unfinished as time, danger, or
+    a stated deadline closes in.
+  requires:
+  - A person or consequential objective needs urgent rescue or completion.
+  - The attempt, deadline, or outcome remains unresolved at the cutoff.
+  do_not_tag_if:
+  - The rescue or objective has already succeeded or failed conclusively.
+  - There is urgency but no rescue or concrete mission at stake.
+  weight: 1.1
+  subsumed_tags:
+  - urgent_deadline_question
+  - urgent_rescue_stakes
+  - rescue_vow_cut
+  - unfinished_rescue_mission
+- id: response_or_disclosure_withheld
+  name: Response or Disclosure Withheld
+  category: cliffhanger
+  definition: The scene cuts before a consequential answer, confession, testimony,
+    or response is delivered.
+  requires:
+  - A specific answer or disclosure is expected or directly solicited.
+  - The cutoff withholds that information and leaves a consequential question open.
+  do_not_tag_if:
+  - The response is given before the cutoff.
+  - The question is rhetorical or the withheld information has no meaningful consequence.
+  weight: 1.0
+  subsumed_tags:
+  - challenge_response_cut
+  - interrupted_testimony
+  - unanswered_identity
+  - unanswered_proposal_challenge
+  - withheld_confession
+  - withheld_response
+- id: legal_outcome_reversal
+  name: Legal Outcome Reversal or Suspension
+  category: cliffhanger
+  definition: An authority or legal proceeding reverses, interrupts, or leaves unresolved
+    a consequential claim, victory, or verdict.
+  requires:
+  - A formal authority or legal process affects a consequential claim or outcome.
+  - The intervention changes expectations or leaves the result unresolved at the cutoff.
+  do_not_tag_if:
+  - The decision is routine and does not alter the stakes.
+  - The legal outcome is fully resolved before the cutoff.
+  weight: 1.05
+  subsumed_tags:
+  - authority_interrupts_victory
+  - legal_claim_overturned
+  - unanswered_legal_challenge
+  - verdict_cut
+- id: medical_outcome_withheld
+  name: Medical Outcome Withheld
+  category: cliffhanger
+  definition: A consequential medical assessment or treatment result is pending when
+    the scene ends.
+  requires:
+  - A character's health, survival, or condition is in question.
+  - The relevant medical outcome has not yet been revealed.
+  do_not_tag_if:
+  - The character's condition or treatment outcome is already known.
+  - The medical detail has no meaningful effect on the stakes.
+  weight: 1.0
+  subsumed_tags:
+  - medical_outcome_withheld
+- id: antagonist_advantage_unresolved
+  name: Antagonist Advantage Unresolved
+  category: cliffhanger
+  definition: An antagonist's apparent victory or revenge plan is left active and
+    unresolved, preserving uncertainty about what they will do or whether they can
+    be stopped.
+  requires:
+  - An antagonist has gained an apparent advantage or revealed a consequential hostile
+    plan.
+  - The outcome or next step remains unresolved at the cutoff.
+  do_not_tag_if:
+  - The antagonist's plan has been defeated or fully carried out.
+  - The antagonist's advantage is trivial or creates no meaningful suspense.
+  weight: 1.0
+  subsumed_tags:
+  - revenge_plan_withheld
+  - unresolved_villainous_triumph

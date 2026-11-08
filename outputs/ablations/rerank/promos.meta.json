@@ -1,0 +1,61 @@
+{
+  "ablation_name": "rerank",
+  "generated_at": "2026-11-07T16:54:28Z",
+  "show": "I Married a Broken Soldier. He was a Duke",
+  "counts": {
+    "total_candidates": 25,
+    "ranked": 15,
+    "tier_1": 25
+  },
+  "stages": {
+    "extraction": {
+      "status": "reused",
+      "reason": "reused from current 60-candidate pool",
+      "live_calls": 0,
+      "cache_hits": 0,
+      "live_cost_usd": 0.0,
+      "cached_cost_usd": 0.0
+    },
+    "rerank": {
+      "status": "ran",
+      "reason": "live API calls executed",
+      "live_calls": 2,
+      "cache_hits": 0,
+      "live_cost_usd": 0.0034,
+      "cached_cost_usd": 0.0,
+      "wall_time_s": 49.31
+    }
+  },
+  "rerank_report": {
+    "candidates_reranked": 25,
+    "overlap_between_runs": 0.7,
+    "overlap_with_original": 0.7,
+    "tau_between_runs": 0.62,
+    "tau_r1_vs_weighted": 0.333,
+    "tau_r2_vs_weighted": 0.367,
+    "run_1_top_10": [
+      "ep03_cand_1",
+      "ep31_cand_1",
+      "ep30_cand_1",
+      "ep36_cand_1",
+      "ep27_cand_2",
+      "ep02_cand_1",
+      "ep18_cand_1",
+      "ep26_cand_1",
+      "ep46_cand_2",
+      "ep34_cand_2"
+    ],
+    "run_2_top_10": [
+      "ep02_cand_1",
+      "ep03_cand_1",
+      "ep30_cand_1",
+      "ep31_cand_1",
+      "ep27_cand_2",
+      "ep36_cand_1",
+      "ep29_cand_1",
+      "ep05_cand_1",
+      "ep22_cand_1",
+      "ep26_cand_1"
+    ]
+  }
+}

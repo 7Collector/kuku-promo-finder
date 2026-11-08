@@ -109,6 +109,8 @@ class PromoAuditor:
         return "\n\n".join(slices) if slices else fallback
 
     def audit_candidate(self, candidate: PromoCandidate) -> QualityAudit:
+        if "audit" not in candidate.stages:
+            candidate.stages.append("audit")
         if not self.llm_provider.is_live:
             return self._audit_via_rules(candidate)
         try:
@@ -153,6 +155,8 @@ class PromoAuditor:
         if not critique:
             raise ValueError("audit response has no critique")
         risks = resp.get("risks") or []
+        conv_raw = resp.get("conversion_intent")
+        conversion_intent = max(0.0, min(10.0, float(conv_raw))) if conv_raw is not None else None
         return QualityAudit(
             passed=passed,
             method="llm",
@@ -160,6 +164,7 @@ class PromoAuditor:
             flaw_type=None if passed else flaw,
             critique=critique,
             confidence_score=max(0.0, min(10.0, float(resp.get("confidence_score", 5.0)))),
+            conversion_intent=conversion_intent,
             risks=[str(r) for r in risks] if isinstance(risks, list) else [str(risks)],
         )
 
@@ -199,5 +204,6 @@ class PromoAuditor:
             flaw_type=flaw_type,
             critique="[rule lint, not a quality judgement] " + (risks[0] if risks else "No lint flags."),
             confidence_score=0.0,
+            conversion_intent=candidate.conversion_intent or 5.0,
             risks=risks,
         )

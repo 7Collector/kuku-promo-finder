@@ -1,0 +1,227 @@
+{
+  "generated_at": "2026-11-07T15:40:41Z",
+  "git_commit": "9223301",
+  "show": "Neo-Veridia: Neural Blackout",
+  "input_dir": "assets/neon_shroud",
+  "episodes": 3,
+  "beats": 9,
+  "extractor": {
+    "provider": "openai",
+    "model": "gpt-6-luna"
+  },
+  "auditor": {
+    "provider": "gemini",
+    "model": "gemini-3.5-flash-lite",
+    "method": "llm"
+  },
+  "gemini_model_discovered": "gemini-3.5-flash-lite",
+  "allow_self_audit": false,
+  "empty_episodes": {
+    "count": 0,
+    "episodes": []
+  },
+  "composites_enabled": false,
+  "stages_enabled": [
+    "extraction",
+    "audit",
+    "auto_profile"
+  ],
+  "scoring_weights": {
+    "hook": 0.3,
+    "cliffhanger": 0.25,
+    "payoff_withheld": 0.2,
+    "injustice_tension": 0.15,
+    "standalone_clarity": 0.1,
+    "conversion_intent": 0.0
+  },
+  "stage_reports": {
+    "auto_profile": {
+      "show_title": "Neo-Veridia: Neural Blackout",
+      "premise": "In a neon-drenched cyberpunk city, Detective Silas Ray investigates the clean extraction of military-grade neural technology and uncovers a syndicate plot to unleash a virus across the city grid. As the blackout closes in, he must choose between saving Neo-Veridia and sacrificing his own life-supporting neural system.",
+      "target_platform": "TikTok / Instagram Reels / YouTube Shorts",
+      "protagonist": {
+        "name": "Silas Ray",
+        "archetype": "Hard-boiled cyberpunk detective and self-sacrificing hero",
+        "core_conflict": "He is determined to stop the syndicate's neural-tech crimes and citywide virus, even though disabling the relay may stop his own neural heart."
+      },
+      "male_lead": {
+        "name": "Silas Ray",
+        "role": "The central male hero and detective; Kira warns him of the danger and pleads with him not to make the fatal sacrifice."
+      },
+      "antagonists": [
+        {
+          "name": "Vance",
+          "role": "Syndicate leader who profits from black-market neural technology, orders witnesses silenced, and unleashes a virus against the city grid."
+        }
+      ],
+      "recurring_settings": [
+        "Neo-Veridia alleyway at night",
+        "Neon district club",
+        "Rooftop relay at dawn"
+      ],
+      "status": "ran",
+      "reason": "live API calls executed",
+      "live_calls": 1,
+      "cache_hits": 0,
+      "tokens": {
+        "prompt_tokens": 780,
+        "completion_tokens": 571,
+        "total_tokens": 1351
+      },
+      "cost": "$0.0004",
+      "live_cost_usd": 0.0004,
+      "cached_cost_usd": 0.0,
+      "wall_time_s": 7.08,
+      "profile": {
+        "show_title": "Neo-Veridia: Neural Blackout",
+        "premise": "In a neon-drenched cyberpunk city, Detective Silas Ray investigates the clean extraction of military-grade neural technology and uncovers a syndicate plot to unleash a virus across the city grid. As the blackout closes in, he must choose between saving Neo-Veridia and sacrificing his own life-supporting neural system.",
+        "target_platform": "TikTok / Instagram Reels / YouTube Shorts",
+        "protagonist": {
+          "name": "Silas Ray",
+          "archetype": "Hard-boiled cyberpunk detective and self-sacrificing hero",
+          "core_conflict": "He is determined to stop the syndicate's neural-tech crimes and citywide virus, even though disabling the relay may stop his own neural heart."
+        },
+        "male_lead": {
+          "name": "Silas Ray",
+          "role": "The central male hero and detective; Kira warns him of the danger and pleads with him not to make the fatal sacrifice."
+        },
+        "antagonists": [
+          {
+            "name": "Vance",
+            "role": "Syndicate leader who profits from black-market neural technology, orders witnesses silenced, and unleashes a virus against the city grid."
+          }
+        ],
+        "recurring_settings": [
+          "Neo-Veridia alleyway at night",
+          "Neon district club",
+          "Rooftop relay at dawn"
+        ]
+      },
+      "profile_path": "config/shows/neon_shroud.generated.yaml"
+    }
+  },
+  "stages": {
+    "extraction": {
+      "status": "ran",
+      "reason": "live API calls executed",
+      "live_calls": 4,
+      "cache_hits": 0,
+      "tokens": {
+        "prompt_tokens": 15497,
+        "completion_tokens": 4652,
+        "total_tokens": 20149
+      },
+      "cost": "$0.0039",
+      "live_cost_usd": 0.0039,
+      "cached_cost_usd": 0.0,
+      "wall_time_s": 57.63
+    },
+    "auto_profile": {
+      "show_title": "Neo-Veridia: Neural Blackout",
+      "premise": "In a neon-drenched cyberpunk city, Detective Silas Ray investigates the clean extraction of military-grade neural technology and uncovers a syndicate plot to unleash a virus across the city grid. As the blackout closes in, he must choose between saving Neo-Veridia and sacrificing his own life-supporting neural system.",
+      "target_platform": "TikTok / Instagram Reels / YouTube Shorts",
+      "protagonist": {
+        "name": "Silas Ray",
+        "archetype": "Hard-boiled cyberpunk detective and self-sacrificing hero",
+        "core_conflict": "He is determined to stop the syndicate's neural-tech crimes and citywide virus, even though disabling the relay may stop his own neural heart."
+      },
+      "male_lead": {
+        "name": "Silas Ray",
+        "role": "The central male hero and detective; Kira warns him of the danger and pleads with him not to make the fatal sacrifice."
+      },
+      "antagonists": [
+        {
+          "name": "Vance",
+          "role": "Syndicate leader who profits from black-market neural technology, orders witnesses silenced, and unleashes a virus against the city grid."
+        }
+      ],
+      "recurring_settings": [
+        "Neo-Veridia alleyway at night",
+        "Neon district club",
+        "Rooftop relay at dawn"
+      ],
+      "status": "ran",
+      "reason": "live API calls executed",
+      "live_calls": 1,
+      "cache_hits": 0,
+      "tokens": {
+        "prompt_tokens": 780,
+        "completion_tokens": 571,
+        "total_tokens": 1351
+      },
+      "cost": "$0.0004",
+      "live_cost_usd": 0.0004,
+      "cached_cost_usd": 0.0,
+      "wall_time_s": 7.08,
+      "profile": {
+        "show_title": "Neo-Veridia: Neural Blackout",
+        "premise": "In a neon-drenched cyberpunk city, Detective Silas Ray investigates the clean extraction of military-grade neural technology and uncovers a syndicate plot to unleash a virus across the city grid. As the blackout closes in, he must choose between saving Neo-Veridia and sacrificing his own life-supporting neural system.",
+        "target_platform": "TikTok / Instagram Reels / YouTube Shorts",
+        "protagonist": {
+          "name": "Silas Ray",
+          "archetype": "Hard-boiled cyberpunk detective and self-sacrificing hero",
+          "core_conflict": "He is determined to stop the syndicate's neural-tech crimes and citywide virus, even though disabling the relay may stop his own neural heart."
+        },
+        "male_lead": {
+          "name": "Silas Ray",
+          "role": "The central male hero and detective; Kira warns him of the danger and pleads with him not to make the fatal sacrifice."
+        },
+        "antagonists": [
+          {
+            "name": "Vance",
+            "role": "Syndicate leader who profits from black-market neural technology, orders witnesses silenced, and unleashes a virus against the city grid."
+          }
+        ],
+        "recurring_settings": [
+          "Neo-Veridia alleyway at night",
+          "Neon district club",
+          "Rooftop relay at dawn"
+        ]
+      },
+      "profile_path": "config/shows/neon_shroud.generated.yaml"
+    }
+  },
+  "counts": {
+    "single_candidates": 3,
+    "composites": 0,
+    "valid": 3,
+    "after_dedup": 3,
+    "ranked": 3,
+    "audit_passed": 0,
+    "audit_failed": 3,
+    "audit_errors": 0,
+    "not_audited": 0,
+    "tier_1": 0,
+    "tier_2": 0,
+    "tier_3": 3,
+    "ranked_audit_passed": 0
+  },
+  "rejected_by_validation": {},
+  "constraint_violations": {},
+  "extraction_failures": {},
+  "usage": {
+    "extractor": {
+      "calls": 4,
+      "cache_hits": 0,
+      "prompt_tokens": 15497,
+      "completion_tokens": 4652,
+      "reasoning_tokens": 2711,
+      "latency_s": 47.48498606681824,
+      "cached_prompt_tokens": 0,
+      "cached_completion_tokens": 0,
+      "cached_reasoning_tokens": 0
+    },
+    "auditor": {
+      "calls": 3,
+      "cache_hits": 0,
+      "prompt_tokens": 2810,
+      "completion_tokens": 377,
+      "reasoning_tokens": 0,
+      "latency_s": 10.9240562915802,
+      "cached_prompt_tokens": 0,
+      "cached_completion_tokens": 0,
+      "cached_reasoning_tokens": 0
+    }
+  },
+  "wall_seconds": 57.6
+}

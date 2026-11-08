@@ -36,10 +36,21 @@ class BaseLLMProvider(ABC):
         if not hasattr(self, "_usage_lock"):
             self._usage_lock = threading.Lock()
             self._usage = {"calls": 0, "cache_hits": 0, "prompt_tokens": 0,
-                           "completion_tokens": 0, "reasoning_tokens": 0, "latency_s": 0.0}
+                           "completion_tokens": 0, "reasoning_tokens": 0, "latency_s": 0.0,
+                           "cached_prompt_tokens": 0, "cached_completion_tokens": 0, "cached_reasoning_tokens": 0}
+            self._last_usage = {"prompt_tokens": 0, "completion_tokens": 0, "reasoning_tokens": 0, "latency_s": 0.0}
         with self._usage_lock:
+            self._last_usage = {
+                "prompt_tokens": int(prompt_tokens or 0),
+                "completion_tokens": int(completion_tokens or 0),
+                "reasoning_tokens": int(reasoning_tokens or 0),
+                "latency_s": float(latency or 0.0),
+            }
             if cached:
                 self._usage["cache_hits"] += 1
+                self._usage["cached_prompt_tokens"] = self._usage.get("cached_prompt_tokens", 0) + int(prompt_tokens or 0)
+                self._usage["cached_completion_tokens"] = self._usage.get("cached_completion_tokens", 0) + int(completion_tokens or 0)
+                self._usage["cached_reasoning_tokens"] = self._usage.get("cached_reasoning_tokens", 0) + int(reasoning_tokens or 0)
                 return
             self._usage["calls"] += 1
             self._usage["prompt_tokens"] += int(prompt_tokens or 0)
@@ -48,6 +59,11 @@ class BaseLLMProvider(ABC):
             self._usage["latency_s"] += float(latency or 0.0)
 
     @property
+    def last_usage(self) -> Dict[str, Any]:
+        return dict(getattr(self, "_last_usage", {"prompt_tokens": 0, "completion_tokens": 0, "reasoning_tokens": 0, "latency_s": 0.0}))
+
+    @property
     def usage(self) -> Dict[str, Any]:
         return dict(getattr(self, "_usage", {"calls": 0, "cache_hits": 0, "prompt_tokens": 0,
-                                              "completion_tokens": 0, "reasoning_tokens": 0, "latency_s": 0.0}))
+                                              "completion_tokens": 0, "reasoning_tokens": 0, "latency_s": 0.0,
+                                              "cached_prompt_tokens": 0, "cached_completion_tokens": 0, "cached_reasoning_tokens": 0}))

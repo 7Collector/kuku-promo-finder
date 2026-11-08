@@ -1,0 +1,1166 @@
+[
+  {
+    "promo_id": "ep05_cand_1",
+    "rank": 1,
+    "promo_type": "single_episode",
+    "episodes": [
+      5
+    ],
+    "segments": [
+      {
+        "episode": 5,
+        "start": "00:49.00",
+        "end": "01:40.80",
+        "start_seconds": 49.0,
+        "end_seconds": 100.8,
+        "duration": 51.8
+      }
+    ],
+    "total_duration": 51.8,
+    "hook": {
+      "type": "new:threatened_last_keepsake",
+      "name": "new:threatened_last_keepsake",
+      "timestamp": "00:49.00",
+      "timestamp_seconds": 49.0,
+      "quote": "It belonged to my mother! It is all I have left of her.",
+      "psychological_trigger": ""
+    },
+    "cliffhanger": {
+      "type": "interrupted_retaliation",
+      "name": "Interrupted Retaliation / Comeuppance Cut",
+      "timestamp": "01:40.80",
+      "timestamp_seconds": 100.8,
+      "quote": "Choose your next words carefully.",
+      "withheld_payoff": "Whether the mysterious husband follows through on his warning to Gerald, and how Gerald responds."
+    },
+    "why_it_works": "A heartbreaking loss turns into a direct threat, leaving viewers waiting to see whether her new husband will make Gerald regret humiliating her.",
+    "risks": [
+      "The screenplay does not establish a crowd witnessing the humiliation, so avoid implying a public audience beyond the family present.",
+      "The husband is identified only as the mysterious bearded man here; his secret ducal identity is not revealed in this segment.",
+      "The ledger being thrown and retrieved depends on the described visual action."
+    ],
+    "scores": {
+      "hook_strength": 8.0,
+      "injustice_tension": 9.0,
+      "cliffhanger_strength": 8.0,
+      "standalone_clarity": 8.0,
+      "payoff_withheld": 9.0,
+      "conversion_intent": 8.0,
+      "composite_score": 7.51,
+      "adjusted_score": 7.51,
+      "diversity_penalty": 1.0,
+      "audit_multiplier": 1.0
+    },
+    "quality_audit": {
+      "passed": true,
+      "method": "llm",
+      "audit_model": "gpt-6-luna",
+      "flaw_type": null,
+      "critique": "The keepsake is recovered, but the antagonists’ humiliation of Juliana is not answered: the man’s explicit warning to Gerald cuts off before any retaliation lands, so the main conflict remains open. The immediate stakes are legible from the opening, though the final threat is familiar and the rescued book settles the clip’s first, smaller source of suspense.",
+      "confidence_score": 8.5,
+      "conversion_intent": 6.5,
+      "risks": [
+        "The threatened keepsake is returned before the ending, reducing the payoff of the opening hook.",
+        "The closing ultimatum is clear but generic; the clip does not establish who the bearded man is or what he can do."
+      ]
+    },
+    "engine": "openai",
+    "model": "gpt-6-luna",
+    "conversion_intent": 8.0,
+    "conversion_reason": "The family destroys Juliana's last connection to her mother, then her husband threatens the man who keeps mocking her; the retaliation is still pending.",
+    "payoff_location": "unknown",
+    "stages": [
+      "extraction",
+      "audit"
+    ],
+    "cold_read": null,
+    "audit_panel": null,
+    "rerank": null
+  },
+  {
+    "promo_id": "ep02_cand_1",
+    "rank": 2,
+    "promo_type": "single_episode",
+    "episodes": [
+      2
+    ],
+    "segments": [
+      {
+        "episode": 2,
+        "start": "00:00.00",
+        "end": "00:37.10",
+        "start_seconds": 0.0,
+        "end_seconds": 37.1,
+        "duration": 37.1
+      }
+    ],
+    "total_duration": 37.1,
+    "hook": {
+      "type": "intimate_betrayal",
+      "name": "Intimate Betrayal / Public Abandonment",
+      "timestamp": "00:00.00",
+      "timestamp_seconds": 0.0,
+      "quote": "I cannot marry you, Juliana.",
+      "psychological_trigger": "Devastation of sacred bond; intense empathy for betrayed victim"
+    },
+    "cliffhanger": {
+      "type": "new:unanswered_plea_for_protection",
+      "name": "new:unanswered_plea_for_protection",
+      "timestamp": "00:37.10",
+      "timestamp_seconds": 37.1,
+      "quote": "Surely you will not let him humiliate me like this?",
+      "withheld_payoff": "Whether Juliana's father will defend her or abandon her too."
+    },
+    "why_it_works": "The immediate altar rejection establishes the stakes, then the cut makes viewers wait to learn whether Juliana's own family will protect her.",
+    "risks": [
+      "The public setting and family audience are conveyed by the cathedral wedding and dialogue, not detailed crowd action.",
+      "Prior episode context adds weight to the wedding betrayal."
+    ],
+    "scores": {
+      "hook_strength": 9.0,
+      "injustice_tension": 9.0,
+      "cliffhanger_strength": 8.0,
+      "standalone_clarity": 9.0,
+      "payoff_withheld": 9.0,
+      "conversion_intent": 8.5,
+      "composite_score": 7.48,
+      "adjusted_score": 7.48,
+      "diversity_penalty": 1.0,
+      "audit_multiplier": 1.0
+    },
+    "quality_audit": {
+      "passed": true,
+      "method": "llm",
+      "audit_model": "gpt-6-luna",
+      "flaw_type": null,
+      "critique": "The public wedding rejection and selfish switch to Clarissa are immediately legible, and the clip ends on Juliana’s unanswered plea to her father without showing a rescue or comeuppance. The only notable dependency is visual: the father’s stern reaction needs to read clearly as refusal or withheld support, since he does not answer in the excerpt.",
+      "confidence_score": 9.2,
+      "conversion_intent": 7.5,
+      "risks": [
+        "The father’s silent reaction may be less clear on screen than the dialogue-driven betrayal."
+      ]
+    },
+    "engine": "openai",
+    "model": "gpt-6-luna",
+    "conversion_intent": 8.5,
+    "conversion_reason": "A wedding betrayal becomes even crueler when Juliana asks her father for help, and the clip cuts before he answers.",
+    "payoff_location": "Ep 2 00:34.30",
+    "stages": [
+      "extraction",
+      "audit"
+    ],
+    "cold_read": null,
+    "audit_panel": null,
+    "rerank": null
+  },
+  {
+    "promo_id": "ep03_cand_1",
+    "rank": 3,
+    "promo_type": "single_episode",
+    "episodes": [
+      3
+    ],
+    "segments": [
+      {
+        "episode": 3,
+        "start": "00:58.30",
+        "end": "01:23.90",
+        "start_seconds": 58.3,
+        "end_seconds": 83.9,
+        "duration": 25.6
+      }
+    ],
+    "total_duration": 25.6,
+    "hook": {
+      "type": "physical_aggression",
+      "name": "Physical Aggression / Shock Violence",
+      "timestamp": "01:00.50",
+      "timestamp_seconds": 60.5,
+      "quote": "The guards forcefully grab Juliana by both shoulders and drag her backwards.",
+      "psychological_trigger": "Visceral jolt and immediate threat escalation"
+    },
+    "cliffhanger": {
+      "type": "new:armed_standoff_before_violence",
+      "name": "new:armed_standoff_before_violence",
+      "timestamp": "01:23.90",
+      "timestamp_seconds": 83.9,
+      "quote": "...let her go.",
+      "withheld_payoff": "Whether the stranger can stop the armed guard and free Juliana before her family has her removed."
+    },
+    "why_it_works": "The forced removal makes the injustice immediate, and the stranger's final command cuts just before the armed guard's response.",
+    "risks": [
+      "The audience and physical blocking depend partly on the staged cathedral action being clear on screen.",
+      "The stranger's relationship to Juliana and his ability to protect her are not yet established."
+    ],
+    "scores": {
+      "hook_strength": 9.0,
+      "injustice_tension": 9.0,
+      "cliffhanger_strength": 8.0,
+      "standalone_clarity": 8.0,
+      "payoff_withheld": 9.0,
+      "conversion_intent": 8.4,
+      "composite_score": 7.4,
+      "adjusted_score": 7.4,
+      "diversity_penalty": 1.0,
+      "audit_multiplier": 1.0
+    },
+    "quality_audit": {
+      "passed": true,
+      "method": "llm",
+      "audit_model": "gpt-6-luna",
+      "flaw_type": null,
+      "critique": "The opening immediately establishes Juliana being forcibly removed, and the stranger’s final order leaves the confrontation unresolved, creating a clear reason to watch the next moment. The cold viewer need not know the characters’ backstory; however, the “armed standoff” label overstates what the screenplay shows, since no weapons appear.",
+      "confidence_score": 9.0,
+      "conversion_intent": 7.5,
+      "risks": [
+        "The armed-standoff tag is unsupported by the screenplay; the cliffhanger is a threatened confrontation, not a shown armed standoff.",
+        "The payoff depends on the stranger’s threatening delivery, though the physical action and dialogue make the stakes legible."
+      ]
+    },
+    "engine": "openai",
+    "model": "gpt-6-luna",
+    "conversion_intent": 8.4,
+    "conversion_reason": "The family has Juliana seized in public, and a dangerous stranger steps in just before the guard confrontation turns physical.",
+    "payoff_location": "Ep 3 01:21.80",
+    "stages": [
+      "extraction",
+      "audit"
+    ],
+    "cold_read": null,
+    "audit_panel": null,
+    "rerank": null
+  },
+  {
+    "promo_id": "ep12_cand_2",
+    "rank": 4,
+    "promo_type": "single_episode",
+    "episodes": [
+      12
+    ],
+    "segments": [
+      {
+        "episode": 12,
+        "start": "00:57.30",
+        "end": "01:24.70",
+        "start_seconds": 57.3,
+        "end_seconds": 84.7,
+        "duration": 27.4
+      }
+    ],
+    "total_duration": 27.4,
+    "hook": {
+      "type": "new:dangerous_coerced_choice",
+      "name": "new:dangerous_coerced_choice",
+      "timestamp": "00:57.30",
+      "timestamp_seconds": 57.3,
+      "quote": "You will retrieve it with your bare hands before the magistrate arrives.",
+      "psychological_trigger": ""
+    },
+    "cliffhanger": {
+      "type": "new:accepted_dangerous_challenge",
+      "name": "new:accepted_dangerous_challenge",
+      "timestamp": "01:24.70",
+      "timestamp_seconds": 84.7,
+      "quote": "Tell me where the garden is.",
+      "withheld_payoff": "Whether Juliana can retrieve the ring from the frozen briars—and whether doing so will save Alexander."
+    },
+    "why_it_works": "A cruel demand turns into Juliana's desperate decision, then cuts before she faces the frozen thorns.",
+    "risks": [
+      "The opening does not explain why the ring matters or what the magistrate's arrival means.",
+      "The threat to Alexander is not stated until several seconds into the clip.",
+      "The briars' danger is described in dialogue; any visual severity cannot be verified from the screenplay."
+    ],
+    "scores": {
+      "hook_strength": 9.0,
+      "injustice_tension": 9.0,
+      "cliffhanger_strength": 9.0,
+      "standalone_clarity": 7.0,
+      "payoff_withheld": 10.0,
+      "conversion_intent": 8.0,
+      "composite_score": 7.29,
+      "adjusted_score": 7.29,
+      "diversity_penalty": 1.0,
+      "audit_multiplier": 1.0
+    },
+    "quality_audit": {
+      "passed": true,
+      "method": "llm",
+      "audit_model": "gpt-6-luna",
+      "flaw_type": null,
+      "critique": "The ultimatum and threat to hang her husband make the danger and Juliana’s sacrifice understandable immediately, and the clip ends before we see what she must retrieve or what happens next. “It” has no clear antecedent for a cold viewer, but the uncertainty is a curiosity gap rather than a resolution leak.",
+      "confidence_score": 8.5,
+      "conversion_intent": 7.2,
+      "risks": [
+        "The object Juliana must retrieve is never identified, which may make the challenge feel vague.",
+        "The clip depends somewhat on facial expressions and tense delivery, though the dialogue carries the stakes."
+      ]
+    },
+    "engine": "openai",
+    "model": "gpt-6-luna",
+    "conversion_intent": 8.0,
+    "conversion_reason": "Juliana accepts a visibly dangerous task to save her husband, but the attempt and its outcome remain unseen.",
+    "payoff_location": "unknown",
+    "stages": [
+      "extraction",
+      "audit"
+    ],
+    "cold_read": null,
+    "audit_panel": null,
+    "rerank": null
+  },
+  {
+    "promo_id": "ep34_cand_2",
+    "rank": 5,
+    "promo_type": "single_episode",
+    "episodes": [
+      34
+    ],
+    "segments": [
+      {
+        "episode": 34,
+        "start": "02:22.40",
+        "end": "03:10.00",
+        "start_seconds": 142.4,
+        "end_seconds": 190.0,
+        "duration": 47.6
+      }
+    ],
+    "total_duration": 47.6,
+    "hook": {
+      "type": "new:forced_renunciation",
+      "name": "new:forced_renunciation",
+      "timestamp": "02:22.40",
+      "timestamp_seconds": 142.4,
+      "quote": "Lady Juliana, if you wish to save yourself, renounce these practices.",
+      "psychological_trigger": ""
+    },
+    "cliffhanger": {
+      "type": "new:verdict_withheld",
+      "name": "new:verdict_withheld",
+      "timestamp": "03:10.00",
+      "timestamp_seconds": 190.0,
+      "quote": "The Judge extends his raised hand high in judgment over Lady Juliana as the scene holds on her standing still and unbroken before fading to black.",
+      "withheld_payoff": "The judge's verdict and the consequences of Juliana refusing to renounce her healing."
+    },
+    "why_it_works": "The threat is explicit from the start, and the final raised hand promises a verdict while withholding it.",
+    "risks": [
+      "The scene's stakes are clearest if viewers understand she is on trial for witchcraft and poisoning.",
+      "The final action relies on the visual of the judge raising his hand, though that action is specified in the screenplay."
+    ],
+    "scores": {
+      "hook_strength": 8.0,
+      "injustice_tension": 9.0,
+      "cliffhanger_strength": 9.0,
+      "standalone_clarity": 8.0,
+      "payoff_withheld": 10.0,
+      "conversion_intent": 8.0,
+      "composite_score": 7.13,
+      "adjusted_score": 7.13,
+      "diversity_penalty": 1.0,
+      "audit_multiplier": 1.0
+    },
+    "quality_audit": {
+      "passed": true,
+      "method": "llm",
+      "audit_model": "gpt-6-luna",
+      "flaw_type": null,
+      "critique": "The ultimatum and Juliana’s refusal create a clear choice, and the clip withholds the judge’s sentence rather than resolving the conflict. Cold viewers may not understand what “these practices” means until the witchcraft accusation arrives later, and the final cliff relies partly on the raised-hand visual, but the courtroom dialogue makes the pending verdict legible.",
+      "confidence_score": 8.5,
+      "conversion_intent": 7.5,
+      "risks": [
+        "The nature of the accused practices is unclear in the opening seconds",
+        "The final beat depends partly on the judge's visual gesture"
+      ]
+    },
+    "engine": "openai",
+    "model": "gpt-6-luna",
+    "conversion_intent": 8.0,
+    "conversion_reason": "Juliana chooses conviction over betraying her beliefs, and the episode cuts before the judge delivers judgment.",
+    "payoff_location": "unknown",
+    "stages": [
+      "extraction",
+      "audit"
+    ],
+    "cold_read": null,
+    "audit_panel": null,
+    "rerank": null
+  },
+  {
+    "promo_id": "ep31_cand_1",
+    "rank": 6,
+    "promo_type": "single_episode",
+    "episodes": [
+      31
+    ],
+    "segments": [
+      {
+        "episode": 31,
+        "start": "01:51.60",
+        "end": "02:35.20",
+        "start_seconds": 111.6,
+        "end_seconds": 155.2,
+        "duration": 43.6
+      }
+    ],
+    "total_duration": 43.6,
+    "hook": {
+      "type": "class_status_contempt",
+      "name": "Class & Status Contempt",
+      "timestamp": "01:51.60",
+      "timestamp_seconds": 111.6,
+      "quote": "That is why you were born in the wrong world. Women like me are meant to be admired. Women like you are meant to serve.",
+      "psychological_trigger": "Universal outrage against unearned privilege and aristocratic snobbery"
+    },
+    "cliffhanger": {
+      "type": "new:imminent_torture",
+      "name": "new:imminent_torture",
+      "timestamp": "02:35.20",
+      "timestamp_seconds": 155.2,
+      "quote": "Juliana recoils back against the hard dungeon wall, gasping for breath in raw terror as the searing iron stops inches from her eyes.",
+      "withheld_payoff": "Whether Catherine burns Juliana's mother's book or uses the hot iron on Juliana, and how Juliana survives the threat."
+    },
+    "why_it_works": "A cruel class-based threat turns into a personal attack on Juliana's last keepsake, then cuts with the hot iron still inches from her eyes.",
+    "risks": [
+      "The reason Juliana is imprisoned is not explained in this segment.",
+      "The final danger depends partly on seeing the iron's proximity; the screenplay does not show it making contact.",
+      "The book is already being scorched before Catherine makes her final threat, so viewers may wonder how much damage it has taken."
+    ],
+    "scores": {
+      "hook_strength": 8.0,
+      "injustice_tension": 9.0,
+      "cliffhanger_strength": 9.0,
+      "standalone_clarity": 8.0,
+      "payoff_withheld": 9.0,
+      "conversion_intent": 8.0,
+      "composite_score": 6.97,
+      "adjusted_score": 6.97,
+      "diversity_penalty": 1.0,
+      "audit_multiplier": 1.0
+    },
+    "quality_audit": {
+      "passed": true,
+      "method": "llm",
+      "audit_model": "gpt-6-luna",
+      "flaw_type": null,
+      "critique": "The class-based contempt lands immediately, and Juliana’s sharp retort is only a brief reversal: Catherine escalates by destroying the book and ends with the poker inches from Juliana’s face, leaving the central danger unresolved. The book’s destruction and the final threat rely partly on convincing fire and close-up visuals, but the dialogue makes the emotional stakes legible without prior knowledge.",
+      "confidence_score": 8.5,
+      "conversion_intent": 7.5,
+      "risks": [
+        "The burning book and glowing poker need to read clearly on a phone screen.",
+        "The clip gives no context for who Catherine and Juliana are, though their conflict and immediate stakes are understandable."
+      ]
+    },
+    "engine": "openai",
+    "model": "gpt-6-luna",
+    "conversion_intent": 8.0,
+    "conversion_reason": "The escalating cruelty and imminent torture leave the audience wanting to see whether Catherine follows through and how Juliana can resist.",
+    "payoff_location": "unknown",
+    "stages": [
+      "extraction",
+      "audit"
+    ],
+    "cold_read": null,
+    "audit_panel": null,
+    "rerank": null
+  },
+  {
+    "promo_id": "ep30_cand_1",
+    "rank": 7,
+    "promo_type": "single_episode",
+    "episodes": [
+      30
+    ],
+    "segments": [
+      {
+        "episode": 30,
+        "start": "01:34.60",
+        "end": "02:23.50",
+        "start_seconds": 94.6,
+        "end_seconds": 143.5,
+        "duration": 48.9
+      }
+    ],
+    "total_duration": 48.9,
+    "hook": {
+      "type": "unjust_accusation",
+      "name": "Unjust Framing / False Blame",
+      "timestamp": "01:34.60",
+      "timestamp_seconds": 94.6,
+      "quote": "Do not hide the evidence, manufacture it.",
+      "psychological_trigger": "Frustration at inverted justice and gaslighting"
+    },
+    "cliffhanger": {
+      "type": "new:imminent_false_charge",
+      "name": "new:imminent_false_charge",
+      "timestamp": "02:23.50",
+      "timestamp_seconds": 143.5,
+      "quote": "Tomorrow, she stops being a prisoner. She becomes a witch.",
+      "withheld_payoff": "Whether Juliana can expose the fabricated charge or escape the trial and threat of hanging."
+    },
+    "why_it_works": "The blunt order to fabricate evidence stops the scroll, and the cut leaves Juliana facing a planned witchcraft charge without showing her response.",
+    "risks": [
+      "Juliana is not present in this segment, so the viewer sees the conspiracy rather than her reaction.",
+      "The poisoning and captivity context is not fully explained, though the frame-up and hanging threat are legible.",
+      "The segment reveals the antagonists' plan; the withheld payoff is Juliana's fate, not the scheme itself."
+    ],
+    "scores": {
+      "hook_strength": 9.0,
+      "injustice_tension": 10.0,
+      "cliffhanger_strength": 8.0,
+      "standalone_clarity": 8.0,
+      "payoff_withheld": 9.0,
+      "conversion_intent": 8.5,
+      "composite_score": 6.73,
+      "adjusted_score": 6.73,
+      "diversity_penalty": 1.0,
+      "audit_multiplier": 1.0
+    },
+    "quality_audit": {
+      "passed": true,
+      "method": "llm",
+      "audit_model": "gpt-6-luna",
+      "flaw_type": null,
+      "critique": "The conspiracy and imminent execution threat are clear immediately, and nothing shows the accusation succeeding or the conflict being resolved. A cold viewer is not told who “her” is or why she is being targeted, and the long, dialogue-heavy villain scene offers little connection to the protagonist—but the explicit plan to frame and hang her creates a strong next-moment question.",
+      "confidence_score": 8.5,
+      "conversion_intent": 7.0,
+      "risks": [
+        "The target remains unnamed until later, with no context for why the villains are targeting her.",
+        "The clip relies almost entirely on exposition and villain performances; the protagonist is absent.",
+        "The plan is spelled out in detail, so the remaining curiosity is mainly whether she can escape it."
+      ]
+    },
+    "engine": "openai",
+    "model": "gpt-6-luna",
+    "conversion_intent": 8.5,
+    "conversion_reason": "The villains openly manufacture a capital accusation against Juliana, leaving her fate and chance to fight back unresolved.",
+    "payoff_location": "unknown",
+    "stages": [
+      "extraction",
+      "audit"
+    ],
+    "cold_read": null,
+    "audit_panel": null,
+    "rerank": null
+  },
+  {
+    "promo_id": "ep15_cand_2",
+    "rank": 8,
+    "promo_type": "single_episode",
+    "episodes": [
+      15
+    ],
+    "segments": [
+      {
+        "episode": 15,
+        "start": "00:03.60",
+        "end": "01:02.00",
+        "start_seconds": 3.6,
+        "end_seconds": 62.0,
+        "duration": 58.4
+      }
+    ],
+    "total_duration": 58.4,
+    "hook": {
+      "type": "new:property_desecration",
+      "name": "new:property_desecration",
+      "timestamp": "00:03.60",
+      "timestamp_seconds": 3.6,
+      "quote": "The thug brutally smashes his club down into a wooden planter box, shattering the frame.",
+      "psychological_trigger": ""
+    },
+    "cliffhanger": {
+      "type": "new:poised_destruction_cut",
+      "name": "new:poised_destruction_cut",
+      "timestamp": "01:02.00",
+      "timestamp_seconds": 62.0,
+      "quote": "The Tall Thug hoists his heavy wooden club above his head to crush the remaining herbs right before Juliana.",
+      "withheld_payoff": "Whether the thug brings the club down and whether Juliana is hurt before anyone intervenes."
+    },
+    "why_it_works": "The smash opens on active destruction, while Juliana's pleas and the raised club build anger and urgency toward an unresolved intervention.",
+    "risks": [
+      "The opening makes the property destruction clear, but not yet why the plants matter to Juliana.",
+      "The raised club is aimed at the remaining herbs; the text does not establish that Juliana herself is about to be struck."
+    ],
+    "scores": {
+      "hook_strength": 8.0,
+      "injustice_tension": 9.0,
+      "cliffhanger_strength": 8.0,
+      "standalone_clarity": 7.0,
+      "payoff_withheld": 9.0,
+      "conversion_intent": 7.5,
+      "composite_score": 6.68,
+      "adjusted_score": 6.68,
+      "diversity_penalty": 1.0,
+      "audit_multiplier": 1.0
+    },
+    "quality_audit": {
+      "passed": true,
+      "method": "llm",
+      "audit_model": "gpt-6-luna",
+      "flaw_type": null,
+      "critique": "The opening smash makes the threat legible immediately, and the clip ends before the raised club lands, preserving an unresolved danger rather than leaking a comeuppance. A cold viewer may not know why the thugs are targeting Juliana, but the destruction of her medicinal plants and her being shoved into the mud make the immediate stakes clear.",
+      "confidence_score": 9.0,
+      "conversion_intent": 8.0,
+      "risks": [
+        "The clip relies on the destruction, shove, and blood seeping through bandages reading clearly on screen.",
+        "The larger reason for the attack is not established within the clip."
+      ]
+    },
+    "engine": "openai",
+    "model": "gpt-6-luna",
+    "conversion_intent": 7.5,
+    "conversion_reason": "The clip turns the thugs' escalating cruelty into an imminent threat to Juliana and her garden, then cuts before the club falls.",
+    "payoff_location": "Ep 15 01:03.50",
+    "stages": [
+      "extraction",
+      "audit"
+    ],
+    "cold_read": null,
+    "audit_panel": null,
+    "rerank": null
+  },
+  {
+    "promo_id": "ep46_cand_2",
+    "rank": 9,
+    "promo_type": "single_episode",
+    "episodes": [
+      46
+    ],
+    "segments": [
+      {
+        "episode": 46,
+        "start": "01:32.20",
+        "end": "02:03.60",
+        "start_seconds": 92.2,
+        "end_seconds": 123.6,
+        "duration": 31.4
+      }
+    ],
+    "total_duration": 31.4,
+    "hook": {
+      "type": "new:marriage_invalidation",
+      "name": "new:marriage_invalidation",
+      "timestamp": "01:32.20",
+      "timestamp_seconds": 92.2,
+      "quote": "God did not marry you. A frightened parishioner did, without leave, without license, without the Crown's blessing!",
+      "psychological_trigger": ""
+    },
+    "cliffhanger": {
+      "type": "new:trial_verdict_threat",
+      "name": "new:trial_verdict_threat",
+      "timestamp": "02:03.60",
+      "timestamp_seconds": 123.6,
+      "quote": "Ten days. And if the council rules against you, this county watches you lose her twice.",
+      "withheld_payoff": "The council's ruling and whether Alexander and Juliana will remain married."
+    },
+    "why_it_works": "It opens on a direct attack on the marriage, then turns the conflict into a deadline with a painful consequence.",
+    "risks": [
+      "The distinction between the Crown's authority and the High Religious Council may need context.",
+      "The ten-day deadline is not an immediate life-or-death countdown."
+    ],
+    "scores": {
+      "hook_strength": 8.0,
+      "injustice_tension": 8.0,
+      "cliffhanger_strength": 8.0,
+      "standalone_clarity": 8.0,
+      "payoff_withheld": 9.0,
+      "conversion_intent": 8.5,
+      "composite_score": 6.64,
+      "adjusted_score": 6.64,
+      "diversity_penalty": 1.0,
+      "audit_multiplier": 1.0
+    },
+    "quality_audit": {
+      "passed": true,
+      "method": "llm",
+      "audit_model": "gpt-6-luna",
+      "flaw_type": null,
+      "critique": "The clip clearly establishes that Alexander’s marriage is being challenged and that a council ruling is pending in ten days; neither the marriage nor the dispute is resolved. A cold viewer may not know why losing her would matter emotionally, but the immediate stakes and unresolved outcome are legible from the dialogue.",
+      "confidence_score": 8.5,
+      "conversion_intent": 6.5,
+      "risks": [
+        "The relationship history and the meaning of losing her twice are unexplained.",
+        "The pending ruling creates a clear open loop, but the ten-day deadline may feel distant rather than like an immediate next-moment payoff."
+      ]
+    },
+    "engine": "openai",
+    "model": "gpt-6-luna",
+    "conversion_intent": 8.5,
+    "conversion_reason": "A powerful authority threatens to annul the marriage, and Alexander's ten-day trial leaves the couple's future hanging on an unresolved verdict.",
+    "payoff_location": "unknown",
+    "stages": [
+      "extraction",
+      "audit"
+    ],
+    "cold_read": null,
+    "audit_panel": null,
+    "rerank": null
+  },
+  {
+    "promo_id": "ep19_cand_1",
+    "rank": 10,
+    "promo_type": "single_episode",
+    "episodes": [
+      19
+    ],
+    "segments": [
+      {
+        "episode": 19,
+        "start": "00:55.30",
+        "end": "01:18.80",
+        "start_seconds": 55.3,
+        "end_seconds": 78.8,
+        "duration": 23.5
+      }
+    ],
+    "total_duration": 23.5,
+    "hook": {
+      "type": "new:rightful_status_usurpation",
+      "name": "new:rightful_status_usurpation",
+      "timestamp": "00:55.30",
+      "timestamp_seconds": 55.3,
+      "quote": "Rupert has become the face of Ashburg. He sits in your father's room, signs your estate papers, gives orders as though the title already belongs to him.",
+      "psychological_trigger": ""
+    },
+    "cliffhanger": {
+      "type": "new:family_in_peril_revelation",
+      "name": "new:family_in_peril_revelation",
+      "timestamp": "01:18.80",
+      "timestamp_seconds": 78.8,
+      "quote": "My mother is a prisoner in her own house.",
+      "withheld_payoff": "Whether Alexander can free his mother and reclaim Ashburg from the usurpers."
+    },
+    "why_it_works": "The takeover is legible immediately, then the conflict sharpens into a personal threat before Alexander can act.",
+    "risks": [
+      "Needs some context to understand Alexander's title and why Rupert's takeover is illegitimate.",
+      "The reveal is delivered in dialogue; the screenplay does not establish a visual proof of the mother's imprisonment."
+    ],
+    "scores": {
+      "hook_strength": 8.0,
+      "injustice_tension": 8.0,
+      "cliffhanger_strength": 8.0,
+      "standalone_clarity": 7.0,
+      "payoff_withheld": 9.0,
+      "conversion_intent": 7.5,
+      "composite_score": 6.56,
+      "adjusted_score": 6.56,
+      "diversity_penalty": 1.0,
+      "audit_multiplier": 1.0
+    },
+    "quality_audit": {
+      "passed": true,
+      "method": "llm",
+      "audit_model": "gpt-6-luna",
+      "flaw_type": null,
+      "critique": "The opening immediately establishes a takeover, and the final line makes the danger personal without showing Alexander solve it. A cold viewer may not know who Rupert or Lady Catherine are, or how Catherine relates to the mother, but the estate usurpation and family peril remain understandable.",
+      "confidence_score": 8.5,
+      "conversion_intent": 6.5,
+      "risks": [
+        "Unexplained names and titles add some context fog",
+        "The emotional force depends partly on Alexander's restrained visual reaction, though the dialogue carries the stakes"
+      ]
+    },
+    "engine": "openai",
+    "model": "gpt-6-luna",
+    "conversion_intent": 7.5,
+    "conversion_reason": "A clear usurpation escalates into Alexander's mother being held captive, leaving her fate and his response unresolved.",
+    "payoff_location": "unknown",
+    "stages": [
+      "extraction",
+      "audit"
+    ],
+    "cold_read": null,
+    "audit_panel": null,
+    "rerank": null
+  },
+  {
+    "promo_id": "ep26_cand_1",
+    "rank": 11,
+    "promo_type": "single_episode",
+    "episodes": [
+      26
+    ],
+    "segments": [
+      {
+        "episode": 26,
+        "start": "00:56.00",
+        "end": "01:55.50",
+        "start_seconds": 56.0,
+        "end_seconds": 115.5,
+        "duration": 59.5
+      }
+    ],
+    "total_duration": 59.5,
+    "hook": {
+      "type": "new:poisoning_conspiracy",
+      "name": "new:poisoning_conspiracy",
+      "timestamp": "00:56.00",
+      "timestamp_seconds": 56.0,
+      "quote": "Rupert and Catherine want me dead. They are poisoning me in my own bed, aren't they?",
+      "psychological_trigger": ""
+    },
+    "cliffhanger": {
+      "type": "truth_half_revealed",
+      "name": "The Half-Revealed Truth",
+      "timestamp": "01:55.50",
+      "timestamp_seconds": 115.5,
+      "quote": "Where... where... Where did you get this ring? Speak to me!",
+      "withheld_payoff": "Why the Duchess recognizes Juliana's ring and what it reveals about Juliana's identity or connection to her."
+    },
+    "why_it_works": "The Duchess's immediate danger is clear from the opening line, and the ring question ends on a concrete mystery without revealing its answer.",
+    "risks": [
+      "The identities and motives of Rupert and Catherine need context.",
+      "The ring's significance depends partly on the visual being legible; the screenplay does not explain its design."
+    ],
+    "scores": {
+      "hook_strength": 8.0,
+      "injustice_tension": 7.0,
+      "cliffhanger_strength": 8.0,
+      "standalone_clarity": 8.0,
+      "payoff_withheld": 9.0,
+      "conversion_intent": 7.5,
+      "composite_score": 6.52,
+      "adjusted_score": 6.52,
+      "diversity_penalty": 1.0,
+      "audit_multiplier": 1.0
+    },
+    "quality_audit": {
+      "passed": true,
+      "method": "llm",
+      "audit_model": "gpt-6-luna",
+      "flaw_type": null,
+      "critique": "The poisoning accusation is answered almost immediately—Juliana confirms it and says the Duchess is safe—so that hook loses its tension. The ring question supplies a fresh unresolved mystery, though its impact depends on viewers noticing the ring and reading the Duchess’s reaction as significant.",
+      "confidence_score": 8.5,
+      "conversion_intent": 7.0,
+      "risks": [
+        "The poisoning thread is effectively resolved within the opening seconds.",
+        "The ring’s significance is not explained; viewers must trust the Duchess’s shock and urgent question.",
+        "The key reveal relies on the ring being visually distinct and readable in a brief close-up."
+      ]
+    },
+    "engine": "openai",
+    "model": "gpt-6-luna",
+    "conversion_intent": 7.5,
+    "conversion_reason": "A poisoning conspiracy escalates into a mysterious recognition that leaves Juliana's identity unanswered.",
+    "payoff_location": "unknown",
+    "stages": [
+      "extraction",
+      "audit"
+    ],
+    "cold_read": null,
+    "audit_panel": null,
+    "rerank": null
+  },
+  {
+    "promo_id": "ep23_cand_1",
+    "rank": 12,
+    "promo_type": "single_episode",
+    "episodes": [
+      23
+    ],
+    "segments": [
+      {
+        "episode": 23,
+        "start": "01:19.00",
+        "end": "02:11.20",
+        "start_seconds": 79.0,
+        "end_seconds": 131.2,
+        "duration": 52.2
+      }
+    ],
+    "total_duration": 52.2,
+    "hook": {
+      "type": "new:poisoning_discovery",
+      "name": "new:poisoning_discovery",
+      "timestamp": "01:19.00",
+      "timestamp_seconds": 79.0,
+      "quote": "Someone is poisoning her.",
+      "psychological_trigger": ""
+    },
+    "cliffhanger": {
+      "type": "new:approaching_intruder_at_door",
+      "name": "new:approaching_intruder_at_door",
+      "timestamp": "02:11.20",
+      "timestamp_seconds": 131.2,
+      "quote": "SFX: Loud, metallic clack of the door latch turning, followed by the slow creak of wood hinges.",
+      "withheld_payoff": "Who is entering, what they will do, and whether Juliana can save the Duchess."
+    },
+    "why_it_works": "A blunt poisoning reveal gives the stakes immediately, then the turning latch makes the viewer wonder whether the culprit is coming in.",
+    "risks": [
+      "The viewer does not know the Duchess's relationship to Juliana or why the room is forbidden.",
+      "The intruder is only suggested by footsteps and the latch; no person is shown entering in the supplied text.",
+      "Whether the antidote works is not answered in this episode excerpt."
+    ],
+    "scores": {
+      "hook_strength": 8.0,
+      "injustice_tension": 7.0,
+      "cliffhanger_strength": 8.0,
+      "standalone_clarity": 7.0,
+      "payoff_withheld": 9.0,
+      "conversion_intent": 7.5,
+      "composite_score": 6.44,
+      "adjusted_score": 6.44,
+      "diversity_penalty": 1.0,
+      "audit_multiplier": 1.0
+    },
+    "quality_audit": {
+      "passed": true,
+      "method": "llm",
+      "audit_model": "gpt-6-luna",
+      "flaw_type": null,
+      "critique": "The poisoning is stated immediately, and the Duchess’s collapse makes the stakes legible; the cure is only being prepared, not shown to work. The approaching person is unidentified and the door opening cuts off before we see who it is, creating a clear next-moment question, though the opening “her” has a brief referential ambiguity for cold viewers.",
+      "confidence_score": 8.5,
+      "conversion_intent": 7.5,
+      "risks": [
+        "The first line’s “her” is briefly unexplained, though the Duchess’s collapse clarifies the reference moments later.",
+        "The threat relies partly on door and sound effects, but Prudence’s warning also communicates that someone is coming."
+      ]
+    },
+    "engine": "openai",
+    "model": "gpt-6-luna",
+    "conversion_intent": 7.5,
+    "conversion_reason": "The poisoning accusation and someone arriving at the door create a clear threat, with the intruder's identity and intentions unresolved.",
+    "payoff_location": "unknown",
+    "stages": [
+      "extraction",
+      "audit"
+    ],
+    "cold_read": null,
+    "audit_panel": null,
+    "rerank": null
+  },
+  {
+    "promo_id": "ep42_cand_1",
+    "rank": 13,
+    "promo_type": "single_episode",
+    "episodes": [
+      42
+    ],
+    "segments": [
+      {
+        "episode": 42,
+        "start": "00:30.50",
+        "end": "01:17.50",
+        "start_seconds": 30.5,
+        "end_seconds": 77.5,
+        "duration": 47.0
+      }
+    ],
+    "total_duration": 47.0,
+    "hook": {
+      "type": "secret_status_reveal",
+      "name": "Secret Status Reveal / Authority Exposure",
+      "timestamp": "00:30.50",
+      "timestamp_seconds": 30.5,
+      "quote": "You cannot be him. Alexander died!",
+      "psychological_trigger": "Instant dopamine spike from dramatic reversal and shock"
+    },
+    "cliffhanger": {
+      "type": "new:revenge_confrontation",
+      "name": "new:revenge_confrontation",
+      "timestamp": "01:17.50",
+      "timestamp_seconds": 77.5,
+      "quote": "And now, Rupert... we settle what you stole.",
+      "withheld_payoff": "Alexander's confrontation with Rupert and what happens when he tries to settle what Rupert stole."
+    },
+    "why_it_works": "The incredulous opening instantly frames a high-stakes return, while the final threat makes the viewer want to see Rupert face its consequences.",
+    "risks": [
+      "Spoils Alexander's secret identity and ducal status.",
+      "The meaning of what Rupert stole and their history need context.",
+      "The final line is a completed threat, not a retaliation shown in motion."
+    ],
+    "scores": {
+      "hook_strength": 8.0,
+      "injustice_tension": 6.0,
+      "cliffhanger_strength": 7.0,
+      "standalone_clarity": 8.0,
+      "payoff_withheld": 8.0,
+      "conversion_intent": 7.5,
+      "composite_score": 6.37,
+      "adjusted_score": 6.37,
+      "diversity_penalty": 1.0,
+      "audit_multiplier": 1.0
+    },
+    "quality_audit": {
+      "passed": true,
+      "method": "llm",
+      "audit_model": "gpt-6-luna",
+      "flaw_type": null,
+      "critique": "The opening immediately establishes that Alexander was believed dead, and his mother’s explicit Duke proclamation plus Rupert’s terror make the reveal legible without prior context. His revenge is promised but not shown; the long emotional reunion slows the middle, and the clip leaves the specifics of what Rupert stole unclear.",
+      "confidence_score": 8.2,
+      "conversion_intent": 7.2,
+      "risks": [
+        "The revenge payoff is a familiar, nonspecific promise",
+        "The mother-son reunion takes up substantial time after the opening hook",
+        "A cold viewer does not learn what Rupert stole"
+      ]
+    },
+    "engine": "openai",
+    "model": "gpt-6-luna",
+    "conversion_intent": 7.5,
+    "conversion_reason": "A presumed-dead man is revealed as the rightful Duke, then promises to confront the man who wronged him; the confrontation itself is withheld.",
+    "payoff_location": "unknown",
+    "stages": [
+      "extraction",
+      "audit"
+    ],
+    "cold_read": null,
+    "audit_panel": null,
+    "rerank": null
+  },
+  {
+    "promo_id": "ep21_cand_1",
+    "rank": 14,
+    "promo_type": "single_episode",
+    "episodes": [
+      21
+    ],
+    "segments": [
+      {
+        "episode": 21,
+        "start": "00:04.20",
+        "end": "00:40.40",
+        "start_seconds": 4.2,
+        "end_seconds": 40.4,
+        "duration": 36.2
+      }
+    ],
+    "total_duration": 36.2,
+    "hook": {
+      "type": "new:child_life_at_risk",
+      "name": "new:child_life_at_risk",
+      "timestamp": "00:04.20",
+      "timestamp_seconds": 4.2,
+      "quote": "Lady Juliana! Please! You have to help me, Toby is dying!",
+      "psychological_trigger": ""
+    },
+    "cliffhanger": {
+      "type": "new:rescue_before_outcome",
+      "name": "new:rescue_before_outcome",
+      "timestamp": "00:40.40",
+      "timestamp_seconds": 40.4,
+      "quote": "Stand up. Sinking to your knees will not save him. Let me grab my ledger. We go now.",
+      "withheld_payoff": "Whether Juliana's remedy can save Toby."
+    },
+    "why_it_works": "The desperate plea makes the danger instantly legible, then cuts just as Juliana sets out to save him.",
+    "risks": [
+      "The promised rescue outcome appears later in this same episode.",
+      "The moment relies on the performances conveying Prudence's panic."
+    ],
+    "scores": {
+      "hook_strength": 8.0,
+      "injustice_tension": 8.0,
+      "cliffhanger_strength": 7.0,
+      "standalone_clarity": 9.0,
+      "payoff_withheld": 8.0,
+      "conversion_intent": 6.5,
+      "composite_score": 6.36,
+      "adjusted_score": 6.36,
+      "diversity_penalty": 1.0,
+      "audit_multiplier": 1.0
+    },
+    "quality_audit": {
+      "passed": true,
+      "method": "llm",
+      "audit_model": "gpt-6-luna",
+      "flaw_type": null,
+      "critique": "The child’s danger and Juliana’s decision to help are clear even without prior context, and the clip ends before Toby’s fate or the rescue is shown. The repeated pleas make the middle feel somewhat prolonged, and the ending promises a rescue more than a distinctive twist, which may limit paid conversion.",
+      "confidence_score": 8.5,
+      "conversion_intent": 5.5,
+      "risks": [
+        "Repeated pleas slow the middle",
+        "The rescue setup is emotionally clear but not especially distinctive",
+        "The outcome is withheld, but the next moment is framed as a rescue rather than a surprising reveal"
+      ]
+    },
+    "engine": "openai",
+    "model": "gpt-6-luna",
+    "conversion_intent": 6.5,
+    "conversion_reason": "A child's life is at stake and Juliana commits to helping, but the episode reveals the immediate outcome later.",
+    "payoff_location": "Ep 21 01:06.80",
+    "stages": [
+      "extraction",
+      "audit"
+    ],
+    "cold_read": null,
+    "audit_panel": null,
+    "rerank": null
+  },
+  {
+    "promo_id": "ep45_cand_1",
+    "rank": 15,
+    "promo_type": "single_episode",
+    "episodes": [
+      45
+    ],
+    "segments": [
+      {
+        "episode": 45,
+        "start": "01:26.50",
+        "end": "02:01.75",
+        "start_seconds": 86.5,
+        "end_seconds": 121.75,
+        "duration": 35.25
+      }
+    ],
+    "total_duration": 35.25,
+    "hook": {
+      "type": "new:ceremony_interruption",
+      "name": "new:ceremony_interruption",
+      "timestamp": "01:28.40",
+      "timestamp_seconds": 88.4,
+      "quote": "No one will bow yet!",
+      "psychological_trigger": ""
+    },
+    "cliffhanger": {
+      "type": "new:antagonist_triumph_before_countermove",
+      "name": "new:antagonist_triumph_before_countermove",
+      "timestamp": "02:01.75",
+      "timestamp_seconds": 121.75,
+      "quote": "ACTION: Catherine raises her chin, a vindictive smirk spreading across her lips as she realizes her rival's claim has just been torn to pieces.",
+      "withheld_payoff": "Whether Alexander will challenge the ruling and protect Juliana's claim as his wife and Duchess."
+    },
+    "why_it_works": "The interruption instantly turns a public triumph into a legal crisis, then ends on the antagonist's apparent victory before Alexander can respond.",
+    "risks": [
+      "The legal challenge and its grounds are fully stated, so some of the reversal is already revealed.",
+      "The final smirk and the force of the door entrance depend partly on visual performance."
+    ],
+    "scores": {
+      "hook_strength": 8.0,
+      "injustice_tension": 8.0,
+      "cliffhanger_strength": 8.0,
+      "standalone_clarity": 8.0,
+      "payoff_withheld": 7.0,
+      "conversion_intent": 8.0,
+      "composite_score": 6.32,
+      "adjusted_score": 6.32,
+      "diversity_penalty": 1.0,
+      "audit_multiplier": 1.0
+    },
+    "quality_audit": {
+      "passed": true,
+      "method": "llm",
+      "audit_model": "gpt-6-luna",
+      "flaw_type": null,
+      "critique": "The opening door slam and immediate order create a clear interruption, and the proclamation makes the stakes legible even without prior context. It does reveal that the marriage is being declared invalid, but cuts before Alexander or Juliana can respond, leaving the counter-move as a credible reason to continue.",
+      "confidence_score": 8.0,
+      "conversion_intent": 7.5,
+      "risks": [
+        "The legal ruling answers the immediate question of whether the marriage is recognized, reducing some suspense.",
+        "Catherine's relationship to Juliana is unexplained, though her triumphant reaction is readable from context."
+      ]
+    },
+    "engine": "openai",
+    "model": "gpt-6-luna",
+    "conversion_intent": 8.0,
+    "conversion_reason": "A sudden authority overturns the wedding claim just after Juliana is proclaimed Duchess, leaving the audience wanting Alexander's response.",
+    "payoff_location": "unknown",
+    "stages": [
+      "extraction",
+      "audit"
+    ],
+    "cold_read": null,
+    "audit_panel": null,
+    "rerank": null
+  }
+]
