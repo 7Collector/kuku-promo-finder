@@ -110,6 +110,7 @@ export interface PromoCandidate {
   conversion_reason?: string;
   payoff_location?: string;
   stages?: string[];
+  clip_beats?: Beat[];
 }
 
 export interface TaxonomyItem {
@@ -951,6 +952,13 @@ Find up to 3 candidate promos in this episode. Use ONLY timestamps that exist in
     }
 
     if (errs.length === 0) {
+      if (cand.segments && cand.segments.length > 0) {
+        const segStart = cand.segments[0].start_seconds;
+        const segEnd = cand.segments[cand.segments.length - 1].end_seconds;
+        cand.clip_beats = ep.beats.filter(
+          (b) => b.end_seconds > segStart && b.start_seconds < segEnd
+        );
+      }
       validCandidates.push(cand);
     } else {
       rejected.push({ candidate: cand, reasons: errs });

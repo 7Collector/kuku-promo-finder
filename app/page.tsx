@@ -20,6 +20,11 @@ import {
   RotateCcw,
   UploadCloud,
   Download,
+  FileText,
+  ChevronDown,
+  ChevronUp,
+  Loader2,
+  Scissors,
 } from "lucide-react";
 import CustomUploadModal from "@/components/CustomUploadModal";
 
@@ -92,6 +97,7 @@ interface Promo {
     conversion_intent?: number;
     risks: string[];
   };
+  clip_beats?: any[];
 }
 
 
@@ -113,6 +119,12 @@ export default function HomePage() {
   const [baselinePromos, setBaselinePromos] = useState<Promo[]>([]);
   const [baselineMeta, setBaselineMeta] = useState<any>(null);
   const [serverKeyStatus, setServerKeyStatus] = useState({ hasGeminiKey: false, hasOpenaiKey: false });
+  const [isScriptOpen, setIsScriptOpen] = useState(false);
+  const [scriptFilter, setScriptFilter] = useState<"all" | "dialogue">("all");
+  const [scriptCopied, setScriptCopied] = useState(false);
+  const [modalBeats, setModalBeats] = useState<any[]>([]);
+  const [loadingScript, setLoadingScript] = useState(false);
+  const [episodeBeatsCache, setEpisodeBeatsCache] = useState<Record<number, any[]>>({});
 
   // Fetch full dataset once for accurate category counts & server status
   useEffect(() => {
@@ -149,6 +161,104 @@ export default function HomePage() {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
+
+  function parseTimestampSeconds(ts: string): number {
+    if (!ts) return 0;
+    const parts = ts.split(":");
+    if (parts.length === 2) {
+      return parseFloat(parts[0]) * 60 + parseFloat(parts[1]);
+    }
+    return parseFloat(ts) || 0;
+  }
+
+  // Load screenplay beats for active modal promo
+  useEffect(() => {
+    if (!activeModalPromo) {
+      setModalBeats([]);
+      setIsScriptOpen(false);
+      return;
+    }
+
+    if (activeModalPromo.clip_beats && activeModalPromo.clip_beats.length > 0) {
+      setModalBeats(activeModalPromo.clip_beats);
+      return;
+    }
+
+    let isMounted = true;
+    async function loadPromoBeats() {
+      if (!activeModalPromo) return;
+      setLoadingScript(true);
+      try {
+        const targetEpisodes = Array.from(
+          new Set(activeModalPromo.segments.map((s) => s.episode || activeModalPromo.episodes[0] || 1))
+        );
+
+        const updatedCache = { ...episodeBeatsCache };
+        for (const ep of targetEpisodes) {
+          if (!updatedCache[ep]) {
+            const res = await fetch(`/api/episodes?ep=${ep}`);
+            if (res.ok) {
+              const data = await res.json();
+              if (data.beats) {
+                updatedCache[ep] = data.beats;
+              }
+            }
+          }
+        }
+        if (!isMounted) return;
+        setEpisodeBeatsCache(updatedCache);
+
+        const matched: any[] = [];
+        for (const seg of activeModalPromo.segments) {
+          const ep = seg.episode || activeModalPromo.episodes[0] || 1;
+          const beats = updatedCache[ep] || [];
+          const segBeats = beats.filter((b: any) => {
+            const bStart = b.start_seconds ?? parseTimestampSeconds(b.start);
+            const bEnd = b.end_seconds ?? parseTimestampSeconds(b.end);
+            return bEnd > seg.start_seconds && bStart < seg.end_seconds;
+          });
+          matched.push(...segBeats);
+        }
+        setModalBeats(matched);
+      } catch (err) {
+        console.error("Error loading promo screenplay beats:", err);
+      } finally {
+        if (isMounted) setLoadingScript(false);
+      }
+    }
+
+    loadPromoBeats();
+    return () => {
+      isMounted = false;
+    };
+  }, [activeModalPromo]);
+
+  function copyFullScript() {
+    if (!activeModalPromo || modalBeats.length === 0) return;
+    const lines: string[] = [];
+    lines.push(`PROMO AD SCRIPT: Rank #${activeModalPromo.rank} — ${activeModalPromo.hook.name}`);
+    lines.push(`Total Duration: ${activeModalPromo.total_duration.toFixed(1)}s`);
+    lines.push(`Target Cuts: ${activeModalPromo.segments.map((s) => `${s.start} → ${s.end}`).join(" | ")}`);
+    lines.push("");
+
+    const beatsToExport = scriptFilter === "dialogue"
+      ? modalBeats.filter((b) => b.type === "DIALOGUE" || (!["CAMERA", "ACTION", "SOUND", "SFX"].includes(b.type) && b.speaker))
+      : modalBeats;
+
+    for (const b of beatsToExport) {
+      if (b.type === "DIALOGUE" || (!["CAMERA", "ACTION", "SOUND", "SFX"].includes(b.type) && b.speaker)) {
+        const spk = b.emotion ? `${b.speaker} (${b.emotion})` : b.speaker || "SPEAKER";
+        lines.push(`[${b.start} - ${b.end}] ${spk}:`);
+        lines.push(`"${b.text}"\n`);
+      } else {
+        lines.push(`[${b.start} - ${b.end}] [${b.type}]: ${b.text}\n`);
+      }
+    }
+
+    navigator.clipboard.writeText(lines.join("\n"));
+    setScriptCopied(true);
+    setTimeout(() => setScriptCopied(false), 2000);
+  }
 
   useEffect(() => {
     if (isCustomActive) {
@@ -431,7 +541,7 @@ export default function HomePage() {
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <span style={{ fontSize: 16 }}>⚡</span>
+              <Sparkles size={16} style={{ color: "var(--accent)" }} />
               <div>
                 <strong style={{ fontSize: 13, color: "var(--ink)" }}>Custom Screenplay Analysis Active</strong>
                 <span style={{ fontSize: 12, color: "var(--ink-2)", marginLeft: 6 }}>
@@ -596,7 +706,7 @@ export default function HomePage() {
 
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid var(--board-rule)", paddingTop: "var(--s-16)", flexWrap: "wrap", gap: "var(--s-16)" }}>
             <p className="om-subhead" style={{ color: "var(--on-board-2)", maxWidth: 700 }}>
-              💡 <strong style={{ color: "var(--on-board)" }}>Why it works:</strong> {heroPromo.why_it_works}
+              <strong style={{ color: "var(--on-board)" }}>Why it works:</strong> {heroPromo.why_it_works}
             </p>
             <div style={{ textAlign: "right" }}>
               <span
@@ -604,24 +714,24 @@ export default function HomePage() {
                 style={{ color: "var(--on-board-2)", display: "block", cursor: "help" }}
                 title="Weighted prior over hook, cliffhanger, payoff, injustice and clarity. Not a conversion prediction."
               >
-                Rank index (relative, uncalibrated) ℹ️
+                Rank index (relative, uncalibrated)
               </span>
               <span className="om-display om-num" style={{ color: "var(--on-board)", fontSize: 28 }}>
                 {(heroPromo.scores.adjusted_score || heroPromo.scores.composite_score).toFixed(2)}
               </span>
-              <div style={{ display: "flex", gap: 6, justifyContent: "flex-end", marginTop: 4, flexWrap: "wrap", alignItems: "center" }}>
+              <div style={{ display: "flex", gap: 6, justifyContent: "flex-end", marginTop: 6, flexWrap: "wrap", alignItems: "center" }}>
                 {heroPromo.audit_tier && (
-                  <span className="om-tag" style={{ background: "rgba(255,255,255,0.15)", color: "#fff", fontSize: 11 }}>
+                  <span className="kuku-pill" style={{ background: "rgba(255,255,255,0.18)", color: "#fff", border: "1px solid rgba(255,255,255,0.25)" }}>
                     Tier {heroPromo.audit_tier}
                   </span>
                 )}
                 {heroPromo.judge_verdicts?.map((jv, i) => (
-                  <span key={i} className="om-tag" style={{ background: jv.pass ? "rgba(46, 125, 50, 0.3)" : "rgba(198, 40, 40, 0.3)", color: "#fff", fontSize: 11 }}>
+                  <span key={i} className="kuku-pill" style={{ background: jv.pass ? "rgba(46, 125, 50, 0.45)" : "rgba(198, 40, 40, 0.45)", color: "#fff", border: "1px solid rgba(255,255,255,0.25)" }}>
                     {jv.judge === "openai" ? "GPT-6" : "Gemini"}: {jv.pass ? "PASS" : "FAIL"}
                   </span>
                 ))}
                 {heroPromo.conversion_intent != null && (
-                  <span className="om-tag" style={{ background: "rgba(255,255,255,0.15)", color: "#fff", fontSize: 11 }}>
+                  <span className="kuku-pill" style={{ background: "rgba(255,255,255,0.18)", color: "#fff", border: "1px solid rgba(255,255,255,0.25)" }}>
                     Conv: {heroPromo.conversion_intent}/10
                   </span>
                 )}
@@ -815,7 +925,7 @@ export default function HomePage() {
               style={{ color: "var(--ink-3)", cursor: "help" }}
               title="Weighted prior over hook, cliffhanger, payoff, injustice and clarity. Not a conversion prediction."
             >
-              Min rank index: <strong className="om-num" style={{ color: "var(--ink)" }}>{minScore.toFixed(2)}</strong> ℹ️
+              Min rank index: <strong className="om-num" style={{ color: "var(--ink)" }}>{minScore.toFixed(2)}</strong>
             </span>
             <input
               type="range"
@@ -901,9 +1011,9 @@ export default function HomePage() {
                   <div style={{ display: "flex", alignItems: "center", gap: "var(--s-8)" }}>
                     <span
                       style={{
-                        width: 30,
-                        height: 30,
-                        borderRadius: "var(--radius-sm)",
+                        width: 32,
+                        height: 32,
+                        borderRadius: "var(--radius-full)",
                         background: p.rank === 1 ? "var(--board)" : isTop3 ? "var(--accent)" : "var(--sunken)",
                         color: isTop3 ? "#ffffff" : "var(--ink)",
                         display: "flex",
@@ -913,6 +1023,7 @@ export default function HomePage() {
                         fontWeight: 700,
                         fontFamily: "var(--font-sans)",
                         boxShadow: isTop3 ? "0 2px 6px rgba(0,0,0,0.15)" : "none",
+                        flexShrink: 0,
                       }}
                     >
                       {p.rank}
@@ -927,28 +1038,29 @@ export default function HomePage() {
                     </div>
                   </div>
 
-                  <div style={{ textAlign: "right" }}>
-                    <div style={{ display: "inline-flex", alignItems: "baseline", gap: 2 }}>
-                      <span className="om-headline om-num" style={{ color: "var(--accent)", fontSize: 20, fontWeight: 700 }}>
-                        {effScore.toFixed(2)}
-                      </span>
-                    </div>
+                  <div style={{ textAlign: "right", display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
                     <span
-                      className="om-caption"
-                      style={{ display: "block", color: "var(--ink-3)", fontSize: 10, cursor: "help" }}
-                      title="Weighted prior over hook, cliffhanger, payoff, injustice and clarity. Not a conversion prediction."
+                      className="om-headline om-num"
+                      style={{ color: "var(--accent)", fontSize: 22, fontWeight: 700, lineHeight: 1.1 }}
+                      title={`Rank index (relative, uncalibrated). Weighted prior over hook, cliffhanger, payoff, injustice and clarity.${penalty < 1.0 ? ` (penalty ×${penalty.toFixed(2)})` : ""}`}
                     >
-                      Rank index ℹ️
-                      {penalty < 1.0 ? ` (penalty ×${penalty.toFixed(2)})` : ""}
+                      {effScore.toFixed(2)}
                     </span>
-                    <div style={{ display: "flex", gap: 4, justifyContent: "flex-end", marginTop: 4, flexWrap: "wrap" }}>
+                    <div style={{ display: "flex", gap: 5, justifyContent: "flex-end", marginTop: 5, flexWrap: "wrap", alignItems: "center" }}>
                       {p.audit_tier && (
-                        <span className="om-tag" style={{ background: "var(--sunken)", fontSize: 10 }}>
+                        <span
+                          className="kuku-pill"
+                          style={{
+                            background: p.audit_tier === 1 ? "var(--success-container)" : p.audit_tier === 2 ? "var(--warning-container)" : "var(--sunken)",
+                            color: p.audit_tier === 1 ? "var(--success-on-container)" : p.audit_tier === 2 ? "var(--warning-on-container)" : "var(--ink-2)",
+                            fontSize: 10,
+                          }}
+                        >
                           Tier {p.audit_tier}
                         </span>
                       )}
                       {p.conversion_intent != null && (
-                        <span className="om-tag" style={{ background: "var(--sunken)", fontSize: 10 }}>
+                        <span className="kuku-pill" style={{ background: "var(--sunken)", color: "var(--ink-2)", fontSize: 10 }}>
                           Conv: {p.conversion_intent}/10
                         </span>
                       )}
@@ -1046,22 +1158,19 @@ export default function HomePage() {
                 <div style={{ borderTop: "1px solid var(--hairline)", paddingTop: "var(--s-12)", marginTop: "auto" }}>
                   {p.payoff_location && p.payoff_location !== "unknown" && (
                     <div style={{ marginBottom: 6, fontSize: 11, color: "var(--accent)", fontWeight: 500 }}>
-                      🎯 Payoff: {p.payoff_location}
+                      Payoff: {p.payoff_location}
                     </div>
                   )}
                   {p.conversion_intent != null && (
                     <div style={{ marginBottom: 6, fontSize: 11, color: "var(--ink-2)" }}>
-                      🔥 Conversion Intent: <strong>{p.conversion_intent}/10</strong>
+                      Conversion Intent: <strong>{p.conversion_intent}/10</strong>
                     </div>
                   )}
                   {p.audit_tier != null && (
                     <div style={{ marginBottom: 6 }}>
                       <span
+                        className="kuku-pill"
                         style={{
-                          display: "inline-block",
-                          padding: "2px 7px",
-                          borderRadius: "var(--radius-xs)",
-                          fontWeight: 600,
                           fontSize: 11,
                           background: p.audit_tier === 1 ? "var(--success-container)" : p.audit_tier === 2 ? "var(--warning-container)" : "var(--sunken)",
                           color: p.audit_tier === 1 ? "var(--success-on-container)" : p.audit_tier === 2 ? "var(--warning-on-container)" : "var(--ink-2)",
@@ -1072,8 +1181,8 @@ export default function HomePage() {
                     </div>
                   )}
                   {p.trimmed_from_end && (
-                    <div style={{ marginBottom: 6, fontSize: 11, color: "var(--ink-3)" }}>
-                      ✂️ Trimmed to cliffhanger (-{p.seconds_removed}s)
+                    <div style={{ marginBottom: 6, fontSize: 11, color: "var(--ink-3)", display: "flex", alignItems: "center", gap: 4 }}>
+                      <Scissors size={12} /> Trimmed to cliffhanger (-{p.seconds_removed}s)
                     </div>
                   )}
                   <p className="om-caption" style={{ color: "var(--ink-2)", marginBottom: "var(--s-8)", lineHeight: "1.4" }}>
@@ -1145,17 +1254,25 @@ export default function HomePage() {
                   <tr key={p.promo_id} style={{ borderBottom: "1px solid var(--hairline)" }}>
                     <td style={{ padding: "12px 16px", fontWeight: 700 }}>#{p.rank}</td>
                     <td style={{ padding: "12px 16px" }} className="om-num">
-                      <strong style={{ color: "var(--accent)" }}>{(p.scores.adjusted_score || p.scores.composite_score).toFixed(2)}</strong>
-                      <span
-                        style={{ fontSize: 10, color: "var(--ink-3)", display: "block", cursor: "help" }}
-                        title="Weighted prior over hook, cliffhanger, payoff, injustice and clarity. Not a conversion prediction."
-                      >
-                        Rank index
-                      </span>
+                      <strong style={{ color: "var(--accent)", fontSize: 16 }}>{(p.scores.adjusted_score || p.scores.composite_score).toFixed(2)}</strong>
                       {p.audit_tier && (
-                        <span style={{ fontSize: 11, color: "var(--ink-2)", display: "block" }}>
-                          Tier {p.audit_tier} {p.conversion_intent != null ? `· Conv ${p.conversion_intent}/10` : ""}
-                        </span>
+                        <div style={{ display: "flex", gap: 4, marginTop: 4, flexWrap: "wrap" }}>
+                          <span
+                            className="kuku-pill"
+                            style={{
+                              background: p.audit_tier === 1 ? "var(--success-container)" : p.audit_tier === 2 ? "var(--warning-container)" : "var(--sunken)",
+                              color: p.audit_tier === 1 ? "var(--success-on-container)" : p.audit_tier === 2 ? "var(--warning-on-container)" : "var(--ink-2)",
+                              fontSize: 10,
+                            }}
+                          >
+                            Tier {p.audit_tier}
+                          </span>
+                          {p.conversion_intent != null && (
+                            <span className="kuku-pill" style={{ background: "var(--sunken)", color: "var(--ink-2)", fontSize: 10 }}>
+                              Conv {p.conversion_intent}/10
+                            </span>
+                          )}
+                        </div>
                       )}
                     </td>
                     <td style={{ padding: "12px 16px" }}>Ep {p.episodes.join(" & ")}</td>
@@ -1229,15 +1346,11 @@ export default function HomePage() {
                     Promo Rank #{activeModalPromo.rank} · {activeModalPromo.promo_type.replace("_", " ")}
                   </span>
                   <span
-                    className="om-tag"
+                    className="kuku-pill"
                     title="Weighted prior over hook, cliffhanger, payoff, injustice and clarity. Not a conversion prediction."
                     style={{
                       background: "var(--accent)",
                       color: "#fff",
-                      padding: "2px 8px",
-                      borderRadius: "var(--radius-full)",
-                      fontSize: 11,
-                      fontWeight: 700,
                       cursor: "help",
                     }}
                   >
@@ -1245,14 +1358,10 @@ export default function HomePage() {
                   </span>
                   {activeModalPromo.audit_tier && (
                     <span
-                      className="om-tag"
+                      className="kuku-pill"
                       style={{
                         background: activeModalPromo.audit_tier === 1 ? "var(--success-container)" : "var(--warning-container)",
                         color: activeModalPromo.audit_tier === 1 ? "var(--success-on-container)" : "var(--warning-on-container)",
-                        padding: "2px 8px",
-                        borderRadius: "var(--radius-full)",
-                        fontSize: 11,
-                        fontWeight: 600,
                       }}
                     >
                       Tier {activeModalPromo.audit_tier}
@@ -1260,14 +1369,10 @@ export default function HomePage() {
                   )}
                   {activeModalPromo.conversion_intent != null && (
                     <span
-                      className="om-tag"
+                      className="kuku-pill"
                       style={{
                         background: "var(--sunken)",
                         color: "var(--ink-2)",
-                        padding: "2px 8px",
-                        borderRadius: "var(--radius-full)",
-                        fontSize: 11,
-                        fontWeight: 600,
                       }}
                     >
                       Conv: {activeModalPromo.conversion_intent}/10
@@ -1289,10 +1394,13 @@ export default function HomePage() {
                   cursor: "pointer",
                   fontSize: 14,
                   fontWeight: 600,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
                 title="Close modal (Esc)"
               >
-                ✕
+                <X size={16} />
               </button>
             </div>
 
@@ -1353,6 +1461,203 @@ export default function HomePage() {
                   <strong>Withheld payoff:</strong> {activeModalPromo.cliffhanger.withheld_payoff}
                 </p>
               </div>
+            </div>
+
+            {/* ── Collapsible Full Ad Screenplay & Script ── */}
+            <div
+              style={{
+                background: "var(--surface)",
+                border: "1px solid var(--hairline)",
+                borderRadius: "var(--radius-lg)",
+                marginBottom: "var(--s-24)",
+                overflow: "hidden",
+                boxShadow: "0 1px 3px rgba(0, 0, 0, 0.02)",
+              }}
+            >
+              <button
+                type="button"
+                onClick={() => setIsScriptOpen(!isScriptOpen)}
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  padding: "14px 18px",
+                  background: isScriptOpen ? "var(--sunken)" : "transparent",
+                  border: "none",
+                  cursor: "pointer",
+                  textAlign: "left",
+                  transition: "background var(--dur-fast)",
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+                  <FileText size={16} style={{ color: "var(--accent)" }} />
+                  <span className="om-body-strong" style={{ fontSize: 14, color: "var(--ink)" }}>
+                    Full Ad Script & Screenplay
+                  </span>
+                  <span className="kuku-pill" style={{ background: "var(--sunken)", color: "var(--ink-2)", fontSize: 11 }}>
+                    {modalBeats.length} beats
+                  </span>
+                  <span className="kuku-pill" style={{ background: "var(--accent-container)", color: "var(--accent-strong)", fontSize: 11 }}>
+                    {modalBeats.filter((b) => b.type === "DIALOGUE" || (!["CAMERA", "ACTION", "SOUND", "SFX"].includes(b.type) && b.speaker)).length} spoken lines
+                  </span>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 6, color: "var(--ink-3)", fontSize: 12, fontWeight: 500 }}>
+                  <span>{isScriptOpen ? "Hide script" : "Show full ad script"}</span>
+                  {isScriptOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                </div>
+              </button>
+
+              {isScriptOpen && (
+                <div style={{ borderTop: "1px solid var(--hairline)", padding: "var(--s-16)", background: "var(--paper)" }}>
+                  {/* Controls Bar */}
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 10, marginBottom: "var(--s-12)" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                      <button
+                        type="button"
+                        onClick={() => setScriptFilter("all")}
+                        className={`kuku-chip kuku-chip--compact ${scriptFilter === "all" ? "active" : ""}`}
+                        style={{ minHeight: 28, padding: "2px 10px", fontSize: 11 }}
+                      >
+                        All Screenplay Beats
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setScriptFilter("dialogue")}
+                        className={`kuku-chip kuku-chip--compact ${scriptFilter === "dialogue" ? "active" : ""}`}
+                        style={{ minHeight: 28, padding: "2px 10px", fontSize: 11 }}
+                      >
+                        Spoken Dialogue Only
+                      </button>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={copyFullScript}
+                      className="om-button om-button--compact"
+                      style={{ background: "var(--surface)", color: scriptCopied ? "var(--success-strong)" : "var(--ink)", border: "1px solid var(--hairline)", minHeight: 28, padding: "0 10px", fontSize: 11 }}
+                    >
+                      {scriptCopied ? <Check size={12} /> : <Copy size={12} />}
+                      <span>{scriptCopied ? "Copied Script" : "Copy Ad Script"}</span>
+                    </button>
+                  </div>
+
+                  {/* Beats List */}
+                  {loadingScript ? (
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, padding: "32px 0", color: "var(--ink-3)" }}>
+                      <Loader2 size={16} className="animate-spin" />
+                      <span style={{ fontSize: 13 }}>Loading screenplay beats for this cut...</span>
+                    </div>
+                  ) : modalBeats.length === 0 ? (
+                    <div style={{ padding: "20px 0", textAlign: "center", color: "var(--ink-3)", fontSize: 13 }}>
+                      No screenplay beats found in this segment timestamp window.
+                    </div>
+                  ) : (
+                    <div
+                      className="no-scrollbar"
+                      style={{
+                        maxHeight: 380,
+                        overflowY: "auto",
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 8,
+                        paddingRight: 4,
+                      }}
+                    >
+                      {modalBeats
+                        .filter((b) => (scriptFilter === "dialogue" ? b.type === "DIALOGUE" || (!["CAMERA", "ACTION", "SOUND", "SFX"].includes(b.type) && b.speaker) : true))
+                        .map((beat, idx) => {
+                          const isDialogue = beat.type === "DIALOGUE" || (!["CAMERA", "ACTION", "SOUND", "SFX"].includes(beat.type) && Boolean(beat.speaker));
+                          const isHookBeat = activeModalPromo.hook.quote && beat.text && (beat.text.includes(activeModalPromo.hook.quote.slice(0, 20)) || activeModalPromo.hook.quote.includes(beat.text.slice(0, 20)));
+                          const isCliffBeat = activeModalPromo.cliffhanger.quote && beat.text && (beat.text.includes(activeModalPromo.cliffhanger.quote.slice(0, 20)) || activeModalPromo.cliffhanger.quote.includes(beat.text.slice(0, 20)));
+
+                          if (isDialogue) {
+                            return (
+                              <div
+                                key={idx}
+                                style={{
+                                  background: "var(--surface)",
+                                  border: isHookBeat ? "1px solid var(--accent)" : isCliffBeat ? "1px solid var(--warning-strong)" : "1px solid var(--hairline)",
+                                  borderLeft: isHookBeat ? "3px solid var(--accent)" : isCliffBeat ? "3px solid var(--warning-strong)" : "3px solid var(--hairline)",
+                                  borderRadius: "var(--radius-md)",
+                                  padding: "10px 14px",
+                                }}
+                              >
+                                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, marginBottom: 4, flexWrap: "wrap" }}>
+                                  <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
+                                    <span className="kuku-pill" style={{ background: "var(--board)", color: "#fff", fontWeight: 700, fontSize: 11 }}>
+                                      {beat.speaker || "SPEAKER"}
+                                    </span>
+                                    {beat.emotion && (
+                                      <span style={{ fontSize: 11, color: "var(--ink-2)", fontStyle: "italic" }}>
+                                        ({beat.emotion})
+                                      </span>
+                                    )}
+                                    {isHookBeat && (
+                                      <span className="kuku-pill" style={{ background: "var(--accent)", color: "#fff", fontSize: 10 }}>
+                                        Hook
+                                      </span>
+                                    )}
+                                    {isCliffBeat && (
+                                      <span className="kuku-pill" style={{ background: "var(--warning-strong)", color: "#fff", fontSize: 10 }}>
+                                        Cliffhanger
+                                      </span>
+                                    )}
+                                  </div>
+                                  <span className="om-num" style={{ fontSize: 11, color: "var(--ink-3)" }}>
+                                    {beat.start} → {beat.end}
+                                  </span>
+                                </div>
+                                <p style={{ margin: 0, fontSize: 13.5, color: "var(--ink)", lineHeight: 1.5, fontWeight: 500 }}>
+                                  &ldquo;{beat.text}&rdquo;
+                                </p>
+                              </div>
+                            );
+                          }
+
+                          const isAction = beat.type === "ACTION";
+                          const isCamera = beat.type === "CAMERA";
+                          const isSound = beat.type === "SOUND" || /^(SOUND|SFX)/i.test(beat.type);
+
+                          return (
+                            <div
+                              key={idx}
+                              style={{
+                                background: "var(--sunken)",
+                                borderRadius: "var(--radius-md)",
+                                padding: "8px 12px",
+                                display: "flex",
+                                flexDirection: "column",
+                                gap: 3,
+                              }}
+                            >
+                              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
+                                <span
+                                  className="kuku-pill"
+                                  style={{
+                                    background: "var(--surface)",
+                                    color: isAction ? "var(--accent-strong)" : "var(--ink-3)",
+                                    border: "1px solid var(--hairline)",
+                                    fontSize: 10,
+                                    padding: "1px 6px",
+                                  }}
+                                >
+                                  {isAction ? "ACTION" : isCamera ? "CAMERA" : isSound ? "SFX" : beat.type}
+                                </span>
+                                <span className="om-num" style={{ fontSize: 10, color: "var(--ink-3)" }}>
+                                  {beat.start} → {beat.end}
+                                </span>
+                              </div>
+                              <p style={{ margin: 0, fontSize: 12, color: "var(--ink-2)", fontStyle: isAction ? "normal" : "italic", lineHeight: 1.4 }}>
+                                {beat.text}
+                              </p>
+                            </div>
+                          );
+                        })}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
 
             {/* Score Grid */}
@@ -1472,18 +1777,19 @@ export default function HomePage() {
                     {activeModalPromo.quality_audit.risks.map((r, idx) => (
                       <span
                         key={idx}
+                        className="kuku-pill"
                         style={{
-                          display: "inline-block",
                           background: "var(--warning-container)",
                           color: "var(--warning-on-container)",
-                          padding: "4px 10px",
-                          borderRadius: "var(--radius-xs)",
                           fontSize: 12,
                           marginRight: 6,
                           marginBottom: 4,
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: 4,
                         }}
                       >
-                        ⚠️ {r}
+                        <AlertTriangle size={12} /> {r}
                       </span>
                     ))}
                   </div>

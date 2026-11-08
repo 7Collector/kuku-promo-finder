@@ -620,10 +620,10 @@ export default function CustomUploadModal({
                     {files.map((f, i) => (
                       <span
                         key={i}
-                        className="om-tag"
+                        className="kuku-pill"
                         style={{ background: "var(--sunken)", fontSize: 11, color: "var(--ink-2)" }}
                       >
-                        📄 {f.name} ({(f.size / 1024).toFixed(0)} KB)
+                        <FileText size={12} style={{ marginRight: 4 }} /> {f.name} ({(f.size / 1024).toFixed(0)} KB)
                       </span>
                     ))}
                   </div>
@@ -754,7 +754,7 @@ export default function CustomUploadModal({
                     textAlign: "center",
                   }}
                 >
-                  ✨ Google Gemini
+                  Google Gemini
                 </button>
                 <button
                   type="button"
@@ -762,7 +762,7 @@ export default function CustomUploadModal({
                   disabled={isLoading}
                   style={{
                     padding: "8px 10px",
-                    borderRadius: "var(--radius-sm)",
+                    borderRadius: "var(--radius-md)",
                     border: provider === "openai" ? "2px solid var(--accent)" : "1px solid var(--hairline)",
                     background: provider === "openai" ? "var(--surface)" : "transparent",
                     color: "var(--ink)",
@@ -772,7 +772,7 @@ export default function CustomUploadModal({
                     textAlign: "center",
                   }}
                 >
-                  ⚡ OpenAI
+                  OpenAI
                 </button>
                 <button
                   type="button"
@@ -780,7 +780,7 @@ export default function CustomUploadModal({
                   disabled={isLoading}
                   style={{
                     padding: "8px 10px",
-                    borderRadius: "var(--radius-sm)",
+                    borderRadius: "var(--radius-md)",
                     border: provider === "heuristic" ? "2px solid var(--accent)" : "1px solid var(--hairline)",
                     background: provider === "heuristic" ? "var(--surface)" : "transparent",
                     color: "var(--ink)",
@@ -790,7 +790,7 @@ export default function CustomUploadModal({
                     textAlign: "center",
                   }}
                 >
-                  🧪 Offline Heuristic
+                  Offline Heuristic
                 </button>
               </div>
             </div>
@@ -799,17 +799,17 @@ export default function CustomUploadModal({
             <div style={{ marginBottom: 10 }}>
               {provider === "gemini" && (
                 <p className="om-caption" style={{ margin: 0, color: "var(--ink-3)", fontSize: 11 }}>
-                  ℹ️ <strong>Gemini Runner:</strong> Concurrency is locked to 1 with patient retry on HTTP 429. Free-tier keys may encounter rate limits, so execution proceeds deliberately.
+                  <strong>Gemini Runner:</strong> Concurrency is locked to 1 with patient retry on HTTP 429. Free-tier keys may encounter rate limits, so execution proceeds deliberately.
                 </p>
               )}
               {provider === "openai" && (
                 <p className="om-caption" style={{ margin: 0, color: "var(--ink-3)", fontSize: 11 }}>
-                  ℹ️ <strong>OpenAI Runner:</strong> Concurrency is set to 4 concurrent episode extractions.
+                  <strong>OpenAI Runner:</strong> Concurrency is set to 4 concurrent episode extractions.
                 </p>
               )}
               {provider === "heuristic" && (
                 <p className="om-caption" style={{ margin: 0, color: "var(--ink-3)", fontSize: 11 }}>
-                  💡 <strong>Offline Engine:</strong> Deterministic regex taxonomy matcher and hard constraint validator. 0 API calls, 0 cost.
+                  <strong>Offline Engine:</strong> Deterministic regex taxonomy matcher and hard constraint validator. 0 API calls, 0 cost.
                 </p>
               )}
             </div>

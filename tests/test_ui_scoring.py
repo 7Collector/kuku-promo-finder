@@ -57,6 +57,36 @@ class TestUIScoringIntegrity(unittest.TestCase):
                     f"{doc.name} contains forbidden word 'A-grade'",
                 )
 
+    def test_no_emojis_in_frontend(self):
+        """Verifies that no emojis appear in the frontend page or upload modal."""
+        emoji_pattern = re.compile(
+            r"[\U00010000-\U0010ffff]|[\u2600-\u27bf]|[\u2300-\u23ff]|[\u2b50-\u2b55]|[\u203c-\u2049]|\u2139"
+        )
+        for rel_path in ["app/page.tsx", "components/CustomUploadModal.tsx"]:
+            content = (ROOT / rel_path).read_text(encoding="utf-8")
+            matches = emoji_pattern.findall(content)
+            self.assertEqual(
+                matches,
+                [],
+                f"{rel_path} contains forbidden emojis: {matches}",
+            )
+
+    def test_collapsible_ad_script_section(self):
+        """Verifies that the collapsible full ad script & screenplay section is present in app/page.tsx."""
+        page_content = (ROOT / "app" / "page.tsx").read_text(encoding="utf-8")
+        self.assertIn("Full Ad Script & Screenplay", page_content)
+        self.assertIn("copyFullScript", page_content)
+        self.assertIn("loadPromoBeats", page_content)
+        self.assertIn("Spoken Dialogue Only", page_content)
+
+    def test_pill_rounding_in_design(self):
+        """Verifies that kuku-pill is defined with radius-full and used across cards and hero."""
+        css_content = (ROOT / "app" / "globals.css").read_text(encoding="utf-8")
+        self.assertIn(".kuku-pill", css_content)
+        self.assertIn("var(--radius-full)", css_content)
+        page_content = (ROOT / "app" / "page.tsx").read_text(encoding="utf-8")
+        self.assertIn("kuku-pill", page_content)
+
 
 if __name__ == "__main__":
     unittest.main()
