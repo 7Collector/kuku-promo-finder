@@ -1,0 +1,100 @@
+{
+  "summary": {
+    "total_live_cost_usd": 0.0134,
+    "total_cached_cost_usd": 0.048,
+    "total_runs_tracked": 9,
+    "note": "Total live dollar spend incurred across all pipeline runs, ablations, extra stages, and discovery probes."
+  },
+  "runs": [
+    {
+      "run_id": "headline_run",
+      "category": "conversion_run",
+      "description": "Headline 50-episode run: gpt-6-luna extraction & dual-judge panel (gpt-6-luna + gemini-3.5-flash-lite)",
+      "meta_file": "outputs/promos.meta.json",
+      "live_cost_usd": 0.0002,
+      "cached_cost_usd": 0.019,
+      "live_calls": 1,
+      "cache_hits": 169
+    },
+    {
+      "run_id": "gemini_audits",
+      "category": "audit_panel",
+      "description": "Independent Gemini dual-judge audit panel ablation run",
+      "meta_file": "outputs/ablations/panel_tiers/promos.meta.json",
+      "live_cost_usd": 0.0002,
+      "cached_cost_usd": 0.019,
+      "live_calls": 1,
+      "cache_hits": 119
+    },
+    {
+      "run_id": "gemini_only_audit",
+      "category": "audit_single",
+      "description": "Single-judge Gemini audit ablation",
+      "meta_file": "outputs/ablations/gemini_only/promos.meta.json",
+      "live_cost_usd": 0.0,
+      "cached_cost_usd": 0.01,
+      "live_calls": 0,
+      "cache_hits": 60
+    },
+    {
+      "run_id": "extra_stage_cold_read",
+      "category": "extra_stages",
+      "description": "Stage A: zero-context blind model evaluation of candidate clip screenplay text",
+      "meta_file": "outputs/ablations/cold_read/promos.meta.json",
+      "live_cost_usd": 0.0053,
+      "cached_cost_usd": 0.0,
+      "live_calls": 26,
+      "cache_hits": 0
+    },
+    {
+      "run_id": "extra_stage_rerank",
+      "category": "extra_stages",
+      "description": "Stage C: listwise LLM candidate reranking run twice with varied seeds",
+      "meta_file": "outputs/ablations/rerank/promos.meta.json",
+      "live_cost_usd": 0.0034,
+      "cached_cost_usd": 0.0,
+      "live_calls": 2,
+      "cache_hits": 0
+    },
+    {
+      "run_id": "discovery_probes",
+      "category": "discovery_probes",
+      "description": "Stage D: automatic show premise and character extraction probe on sample show",
+      "meta_file": "outputs/neon_shroud.generated/promos.meta.json",
+      "live_cost_usd": 0.0043,
+      "cached_cost_usd": 0.0,
+      "live_calls": 1,
+      "cache_hits": 0
+    },
+    {
+      "run_id": "baseline_run",
+      "category": "baseline",
+      "description": "Initial baseline extraction and single-judge audit",
+      "meta_file": "outputs/ablations/baseline/promos.meta.json",
+      "live_cost_usd": 0.0,
+      "cached_cost_usd": 0.0,
+      "live_calls": 0,
+      "cache_hits": 50
+    },
+    {
+      "run_id": "openai_self_audit",
+      "category": "audit_single",
+      "description": "OpenAI single-judge self-audit comparison run",
+      "meta_file": "outputs/ablations/openai_self_audit/promos.meta.json",
+      "live_cost_usd": 0.0,
+      "cached_cost_usd": 0.0,
+      "live_calls": 0,
+      "cache_hits": 60
+    },
+    {
+      "run_id": "offline_heuristic",
+      "category": "heuristic",
+      "description": "Rule-based offline heuristic fallback execution",
+      "meta_file": "outputs/smoke_test_heuristic/promos.meta.json",
+      "live_cost_usd": 0.0,
+      "cached_cost_usd": 0.0,
+      "live_calls": 0,
+      "cache_hits": 0
+    }
+  ]
+}

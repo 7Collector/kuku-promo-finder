@@ -36,11 +36,21 @@ The web platform is deployed live on **Vercel Free Tier**:
   - Supports multiple `.txt` files or a `.zip` archive.
   - Or paste screenplay text directly with one-click sample loading.
 - **Model Selection & Key Autodetection:**
-  - **Google Gemini** (default, recommended for Vercel Free Tier: ultra-fast and high rate limits).
-  - **OpenAI** (`gpt-4o-mini`, `gpt-6-luna`).
+  - **Google Gemini** (default runner; note that free-tier keys may encounter rate limits on burst requests, so the client runs with concurrency=1 and patient exponential backoff).
+  - **OpenAI** (`gpt-4o-mini`, `gpt-6-luna` with concurrency=4).
   - **Offline Heuristic Smoke Test:** 0 API calls, 0 cost, instant preview.
   - Automatically detects `GEMINI_API_KEY` or `OPENAI_API_KEY` configured in Vercel environment variables, with optional user override.
 - **Export & Workflow:** Filter by hook archetype, inspect dual-judge critiques, download NLE-ready `custom_promos.csv` or `custom_promos.json`, and reset to baseline anytime.
+
+### Verified Vercel Free-Tier Limits
+All serverless function configurations conform to verified Vercel Hobby specifications (Source: [Vercel Function Limitations](https://vercel.com/docs/functions/limitations)):
+- **Request Body Size Limit:** **4.5 MB** (`4,718,592` bytes). Uploads exceeding this limit are pre-checked and rejected with guidance to split `.zip` files.
+- **Function Execution Duration:** Up to **300 seconds** maximum on Hobby (configured to `maxDuration = 60` for individual modular routes to stay well under limits).
+
+### Vercel Environment Variables
+Configure the following environment variables in your Vercel Project Settings:
+- `GEMINI_API_KEY`: API key for Google Gemini model calls (default runtime provider for custom screenplay uploads).
+- `OPENAI_API_KEY`: API key for OpenAI model calls (`gpt-6-luna` extraction and judge audits).
 
 ### Zero-Dependency Serverless REST API
 - **`POST /api/pipeline/analyze`**
@@ -89,12 +99,18 @@ Screenplay Text (.txt / .zip)
     └─ Refuse-Same-Model Rule: strictly refuses extractor grading its own work
        │
        ▼
-[5] Consensus Tiered MMR Ranking (`src/ranker.py`)
+[5] Consensus Tiered Diversity Ranking (`src/ranker.py`)
     ├─ Tier 1: Consensus Pass (both judges pass)
     ├─ Tier 2: Split Verdict ("needs editor look")
     ├─ Tier 3: Both Fail (excluded from top tiers)
     └─ Diversity penalties: repeat hook ×0.82, repeat episode ×0.85
 ```
+
+### Canonical Engine (Python) vs Web Engine (TypeScript)
+- **Canonical Pipeline (`src/` in Python):** Canonical for all committed outputs, evaluation ablations, and test suites. Implements the complete multi-stage research pipeline: dual-judge consensus panel (`--audit-panel`), blind cold-read evaluation (Stage A), listwise reranking (Stage C), automated show profiling (Stage D), taxonomy consolidation (Stage E), and empty-episode rechecking (Stage F).
+- **Interactive Web Engine (`lib/pipeline.ts` in TypeScript):** Serves the browser upload tool and REST APIs on Vercel without Python runtime overhead.
+  - *Supported in TypeScript:* Single judge & dual audit tiers, 20-60s physical constraint checking, hook ≤3s window enforcement, spoken beat edge cut snapping (≤0.5s tolerance), verbatim quote verification, cliffhanger tail trimming recovery, payoff location verification (*timestamp validated as a real beat; meaning not checked*), and count-based repeat penalties.
+  - *Not supported in TypeScript:* Stage A blind cold read, Stage C listwise rerank, Stage D auto-profile, and Stage E taxonomy clustering (which remain offline research tools in Python).
 
 ---
 
@@ -110,9 +126,9 @@ Every figure below is derived directly from committed files and verified by [`ev
   - Agreement Rate: **68.3%** (41/60), Cohen's kappa **$\kappa = 0.3493$** (fair consensus).
 - **Consensus Tiers:** **Tier 1 = 26, Tier 2 = 19, Tier 3 = 15** (0 audit errors). All 15 headline promos are Tier 1 consensus picks.
 - **Cliffhanger Trimming Recovery:** In Ep 15, `ep15_cand_1` was recovered by trimming 7.5s (41.2s $\rightarrow$ 33.7s), meeting the 6s cliffhanger window without dropping the candidate.
-- **Payoff Locations:** 5 of top 15 promos have a code-verified payoff timestamp in the screenplay; the other 10 are marked `unknown` because the conflict resolves in later episodes or proposed timestamps did not snap to real spoken edges.
-- **Empty Episodes:** 6 episodes yield no candidate (`[6, 8, 10, 11, 17, 25]`). Quiet scenes (6, 8, 10, 17) have 0 model proposals; Ep 11 and 25 had hard constraint violations.
-- **Cost Profile:** Total live cost from discovery probes is **$0.0002** (cached run cost **$0.0190**, total meta cost **$0.0134**). Pure mathematical reranking is **$0.0000** and runs in **<0.1s**.
+- **Payoff Locations:** 5 of top 15 promos have a code-verified payoff_location in the screenplay (timestamp validated as a real beat; meaning not checked); the other 10 are marked `unknown` because the conflict resolves in later episodes or proposed timestamps did not snap to real spoken edges.
+- **Empty Episodes:** The empty-episode drop (13 to 6) came mainly from the conversion prompt, with cliffhanger trimming recovering one candidate (Ep 15). 6 empty episodes remain in the main pool (`[6, 8, 10, 11, 17, 25]`). Quiet scenes (6, 8, 10, 17) have 0 model proposals; Ep 11 and 25 had hard constraint violations.
+- **Cost Profile:** Total spend across all runs in `outputs/cost_ledger.json` is **$0.0134** (headline run: $0.0002 live, $0.0190 cached; ablations and extra stages: $0.0132 live). Pure mathematical reranking is **$0.0000** and runs in **<0.1s**.
 
 ---
 
@@ -189,7 +205,7 @@ Every stage is a modular CLI flag, **off by default**. Plain `python run.py` pre
 | **Payoff Verification** | Deterministic Code (`src/validation.py`) | Proposed payoff timestamp must match spoken beat in screenplay or is marked `unknown`. |
 | **Dramatic Tension** | Frontier LLM (`gpt-6-luna`) | Identifies curiosity gaps, unearned injustice, and scroll-stopping power. |
 | **Quality & Flaw Audit** | Dual-Judge Panel (`gpt-6-luna` + Gemini) | Catches resolution leaks, context deficits, visual dependencies, and tag errors. |
-| **MMR Feed Diversity** | Deterministic Code (`src/ranker.py`) | Mathematical penalty for repeated hook archetypes ($\times 0.82$) and episodes ($\times 0.85$). |
+| **Feed Diversity** | Deterministic Code (`src/ranker.py`) | Mathematical penalty for repeated hook archetypes ($\times 0.82$) and episodes ($\times 0.85$). |
 
 ---
 
@@ -201,7 +217,7 @@ src/parser.py     Screenplay parser (to beats)    eval/recall.py         Recall 
 src/validation.py Deterministic hard-rule checks   lib/pipeline.ts        Zero-dependency TypeScript pipeline engine
 src/extractor.py  LLM candidate extraction        app/                   Next.js web application (React 19)
 src/auditor.py    Adversarial audit judge         components/            Custom upload modal & UI components
-src/ranker.py     MMR diversity ranker            config/                taxonomy.yaml, shows/<show>.yaml
+src/ranker.py     Diversity ranker                config/                taxonomy.yaml, shows/<show>.yaml
 src/stages.py     Modular LLM stages A-F          tests/                 55 unit tests (100% pass)
 outputs/          Headline committed outputs      SOLUTION_DOC.pdf       2-page executive submission document
 ```

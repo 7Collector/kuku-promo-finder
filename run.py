@@ -341,7 +341,7 @@ def run_pipeline(
                 "model": audit_provider_obj.model,
                 "pass": cand.quality_audit.passed,
                 "flaw_type": cand.quality_audit.flaw_type,
-                "one_line_reason": cand.quality_audit.critique.split("\n")[0][:150] if cand.quality_audit.critique else "",
+                "one_line_reason": cand.quality_audit.critique.split("\n")[0].strip() if cand.quality_audit.critique else "",
                 "conversion_intent": cand.quality_audit.conversion_intent,
             }]
             return cand

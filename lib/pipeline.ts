@@ -789,39 +789,29 @@ export async function callOpenAI(
 }
 
 // ============================================================================
-// Full Pipeline Runner
+// Single Episode Extraction
 // ============================================================================
 
-export async function runPipelineOnEpisodes(
-  episodes: Episode[],
+export async function extractEpisodeCandidates(
+  ep: Episode,
   options: PipelineOptions = {}
 ): Promise<{
-  ranked_promos: PromoCandidate[];
-  pool: PromoCandidate[];
+  episode_number: number;
+  candidates: PromoCandidate[];
   rejected: any[];
-  meta: any;
 }> {
   const provider = options.provider || "gemini";
   const taxonomy = loadDefaultTaxonomy();
-  const episodesByNum = new Map<number, Episode>(episodes.map((e) => [e.episode_number, e]));
+  const episodesByNum = new Map<number, Episode>([[ep.episode_number, ep]]);
   const rejected: any[] = [];
   const validCandidates: PromoCandidate[] = [];
 
-  // Offline Heuristic mode
   if (provider === "heuristic" || !options.apiKey) {
-    const heuristicPool = runHeuristicExtraction(episodes, taxonomy);
-    const ranked = rankCandidates(heuristicPool, options.topK || 15, options.weights);
+    const heuristicPool = runHeuristicExtraction([ep], taxonomy);
     return {
-      ranked_promos: ranked,
-      pool: heuristicPool,
+      episode_number: ep.episode_number,
+      candidates: heuristicPool,
       rejected: [],
-      meta: {
-        provider: "heuristic",
-        model: "offline-smoke-test",
-        episodes_count: episodes.length,
-        beats_count: episodes.reduce((a, e) => a + e.beats.length, 0),
-        generated_at: new Date().toISOString(),
-      },
     };
   }
 
@@ -853,13 +843,11 @@ Output valid JSON only matching schema:
   ]
 }`;
 
-  // Process episodes
-  for (const ep of episodes) {
-    const beatsText = ep.beats
-      .map((b) => `**${b.speaker ? `${b.speaker} (${b.emotion || "neutral"})` : b.type}:**\nStart: (${b.start}) | End: (${b.end})\n${b.text}`)
-      .join("\n\n");
+  const beatsText = ep.beats
+    .map((b) => `**${b.speaker ? `${b.speaker} (${b.emotion || "neutral"})` : b.type}:**\nStart: (${b.start}) | End: (${b.end})\n${b.text}`)
+    .join("\n\n");
 
-    const userPrompt = `Show: ${options.showTitle || "Custom Microdrama"}
+  const userPrompt = `Show: ${options.showTitle || "Custom Microdrama"}
 Premise: ${options.showPremise || "High stakes vertical drama"}
 Episode: ${ep.episode_number} (Duration: ${ep.duration_seconds.toFixed(1)}s)
 
@@ -869,110 +857,142 @@ ${beatsText}
 
 Find up to 3 candidate promos in this episode. Use ONLY timestamps that exist in the text.`;
 
-    try {
-      const rawJson =
-        provider === "gemini"
-          ? await callGemini(userPrompt, SYSTEM_EXTRACTOR, apiKey, modelName)
-          : await callOpenAI(userPrompt, SYSTEM_EXTRACTOR, apiKey, modelName);
+  const rawJson =
+    provider === "gemini"
+      ? await callGemini(userPrompt, SYSTEM_EXTRACTOR, apiKey, modelName)
+      : await callOpenAI(userPrompt, SYSTEM_EXTRACTOR, apiKey, modelName);
 
-      const parsed = JSON.parse(rawJson);
-      const cands = parsed.candidates || [];
+  const parsed = JSON.parse(rawJson);
+  const cands = parsed.candidates || [];
 
-      for (let idx = 0; idx < cands.length; idx++) {
-        const rawCand = cands[idx];
-        const segments: Segment[] = (rawCand.segments || []).map((s: any) => {
-          const sSec = tryParseTimestamp(s.start) || 0;
-          const eSec = tryParseTimestamp(s.end) || 0;
-          return {
-            episode: ep.episode_number,
-            start: s.start,
-            end: s.end,
-            start_seconds: sSec,
-            end_seconds: eSec,
-            duration: Math.max(0, eSec - sSec),
-          };
-        });
+  for (let idx = 0; idx < cands.length; idx++) {
+    const rawCand = cands[idx];
+    const segments: Segment[] = (rawCand.segments || []).map((s: any) => {
+      const sSec = tryParseTimestamp(s.start) || 0;
+      const eSec = tryParseTimestamp(s.end) || 0;
+      return {
+        episode: ep.episode_number,
+        start: s.start,
+        end: s.end,
+        start_seconds: sSec,
+        end_seconds: eSec,
+        duration: Math.max(0, eSec - sSec),
+      };
+    });
 
-        const hookSec = tryParseTimestamp(rawCand.hook?.timestamp) || segments[0]?.start_seconds || 0;
-        const cliffSec = tryParseTimestamp(rawCand.cliffhanger?.timestamp) || segments[segments.length - 1]?.end_seconds || 0;
+    const hookSec = tryParseTimestamp(rawCand.hook?.timestamp) || segments[0]?.start_seconds || 0;
+    const cliffSec = tryParseTimestamp(rawCand.cliffhanger?.timestamp) || segments[segments.length - 1]?.end_seconds || 0;
 
-        let cand: PromoCandidate = {
-          promo_id: `ep${ep.episode_number}_cand_${idx + 1}`,
-          promo_type: "single_episode",
-          episodes: [ep.episode_number],
-          segments,
-          total_duration: segments.reduce((a, s) => a + s.duration, 0),
-          hook: {
-            type: rawCand.hook?.type || "hook",
-            timestamp: rawCand.hook?.timestamp || segments[0]?.start || "00:00.00",
-            timestamp_seconds: hookSec,
-            quote: rawCand.hook?.text || "",
-          },
-          cliffhanger: {
-            type: rawCand.cliffhanger?.type || "cliffhanger",
-            timestamp: rawCand.cliffhanger?.timestamp || segments[segments.length - 1]?.end || "00:00.00",
-            timestamp_seconds: cliffSec,
-            quote: rawCand.cliffhanger?.text || "",
-            withheld_payoff: rawCand.cliffhanger?.withheld_payoff || "",
-          },
-          why_it_works: rawCand.why_it_works || "High engagement microdrama cut.",
-          risks: rawCand.risks || [],
-          scores: {
-            hook_strength: rawCand.scores?.hook_strength || 7.0,
-            cliffhanger_strength: rawCand.scores?.cliffhanger_strength || 7.0,
-            payoff_withheld: rawCand.scores?.payoff_withheld || 7.0,
-            injustice_tension: rawCand.scores?.injustice_tension || 7.0,
-            standalone_clarity: rawCand.scores?.standalone_clarity || 7.0,
-            composite_score: 7.0,
-            adjusted_score: 7.0,
-            diversity_penalty: 1.0,
-            conversion_intent: rawCand.conversion_intent || 7.0,
-          },
-          engine: provider,
-          model: modelName,
-          conversion_intent: rawCand.conversion_intent || 7.0,
-          conversion_reason: rawCand.conversion_reason || "",
-          payoff_location: rawCand.payoff_location || "unknown",
-        };
+    let cand: PromoCandidate = {
+      promo_id: `ep${ep.episode_number}_cand_${idx + 1}`,
+      promo_type: "single_episode",
+      episodes: [ep.episode_number],
+      segments,
+      total_duration: segments.reduce((a, s) => a + s.duration, 0),
+      hook: {
+        type: rawCand.hook?.type || "hook",
+        timestamp: rawCand.hook?.timestamp || segments[0]?.start || "00:00.00",
+        timestamp_seconds: hookSec,
+        quote: rawCand.hook?.text || "",
+      },
+      cliffhanger: {
+        type: rawCand.cliffhanger?.type || "cliffhanger",
+        timestamp: rawCand.cliffhanger?.timestamp || segments[segments.length - 1]?.end || "00:00.00",
+        timestamp_seconds: cliffSec,
+        quote: rawCand.cliffhanger?.text || "",
+        withheld_payoff: rawCand.cliffhanger?.withheld_payoff || "",
+      },
+      why_it_works: rawCand.why_it_works || "High engagement microdrama cut.",
+      risks: rawCand.risks || [],
+      scores: {
+        hook_strength: rawCand.scores?.hook_strength || 7.0,
+        cliffhanger_strength: rawCand.scores?.cliffhanger_strength || 7.0,
+        payoff_withheld: rawCand.scores?.payoff_withheld || 7.0,
+        injustice_tension: rawCand.scores?.injustice_tension || 7.0,
+        standalone_clarity: rawCand.scores?.standalone_clarity || 7.0,
+        composite_score: 7.0,
+        adjusted_score: 7.0,
+        diversity_penalty: 1.0,
+        conversion_intent: rawCand.conversion_intent || 7.0,
+      },
+      engine: provider,
+      model: options.model || (provider === "gemini" ? "gemini-2.5-flash" : "gpt-4o-mini"),
+      conversion_intent: rawCand.conversion_intent || 7.0,
+      conversion_reason: rawCand.conversion_reason || "",
+      payoff_location: rawCand.payoff_location
+        ? verifyPayoffLocation(rawCand.payoff_location, episodesByNum) || "unknown"
+        : "unknown",
+    };
 
-        // Snap cuts within 0.5s
-        for (const seg of cand.segments) {
-          const sSnap = snapToBeatEdge(ep, seg.start_seconds, "start");
-          if (sSnap) {
-            seg.start = sSnap.start;
-            seg.start_seconds = sSnap.start_seconds;
-          }
-          const eSnap = snapToBeatEdge(ep, seg.end_seconds, "end");
-          if (eSnap) {
-            seg.end = eSnap.end;
-            seg.end_seconds = eSnap.end_seconds;
-          }
-          seg.duration = seg.end_seconds - seg.start_seconds;
-        }
-        cand.total_duration = cand.segments.reduce((a, s) => a + s.duration, 0);
-
-        // Validation
-        let errs = checkCandidate(cand, episodesByNum);
-        if (errs.length > 0 && errs.some((e) => e.includes("cliffhanger quote not found in the last"))) {
-          const { trimmed } = trimToCliffhanger(cand, episodesByNum);
-          if (trimmed) {
-            cand = trimmed;
-            errs = checkCandidate(cand, episodesByNum);
-          }
-        }
-
-        if (errs.length === 0) {
-          validCandidates.push(cand);
-        } else {
-          rejected.push({ candidate: cand, reasons: errs });
-        }
+    // Snap cuts within 0.5s
+    for (const seg of cand.segments) {
+      const sSnap = snapToBeatEdge(ep, seg.start_seconds, "start");
+      if (sSnap) {
+        seg.start = sSnap.start;
+        seg.start_seconds = sSnap.start_seconds;
       }
-    } catch (e: any) {
-      console.error(`Extraction failed on Ep ${ep.episode_number}:`, e.message);
+      const eSnap = snapToBeatEdge(ep, seg.end_seconds, "end");
+      if (eSnap) {
+        seg.end = eSnap.end;
+        seg.end_seconds = eSnap.end_seconds;
+      }
+      seg.duration = seg.end_seconds - seg.start_seconds;
+    }
+    cand.total_duration = cand.segments.reduce((a, s) => a + s.duration, 0);
+
+    // Validation
+    let errs = checkCandidate(cand, episodesByNum);
+    if (errs.length > 0 && errs.some((e) => e.includes("cliffhanger quote not found in the last"))) {
+      const { trimmed } = trimToCliffhanger(cand, episodesByNum);
+      if (trimmed) {
+        cand = trimmed;
+        errs = checkCandidate(cand, episodesByNum);
+      }
+    }
+
+    if (errs.length === 0) {
+      validCandidates.push(cand);
+    } else {
+      rejected.push({ candidate: cand, reasons: errs });
     }
   }
 
-  // Audit valid candidates
+  return {
+    episode_number: ep.episode_number,
+    candidates: validCandidates,
+    rejected,
+  };
+}
+
+// ============================================================================
+// Batch Audit
+// ============================================================================
+
+export async function auditCandidateBatch(
+  candidates: PromoCandidate[],
+  episodes: Episode[],
+  options: PipelineOptions = {}
+): Promise<PromoCandidate[]> {
+  const provider = options.provider || "gemini";
+  if (provider === "heuristic" || !options.apiKey) {
+    return candidates.map((cand) => ({
+      ...cand,
+      quality_audit: {
+        passed: true,
+        method: "rules" as const,
+        critique: "Offline rule-lint passed.",
+        confidence_score: 6.0,
+        risks: [],
+      },
+      audit_tier: 1,
+    }));
+  }
+
+  const apiKey = options.apiKey;
+  const modelName =
+    options.model || (provider === "gemini" ? "gemini-2.5-flash" : "gpt-4o-mini");
+  const episodesByNum = new Map<number, Episode>(episodes.map((e) => [e.episode_number, e]));
+
   const AUDIT_SYSTEM = `You are an adversarial video marketing auditor for vertical microdramas.
 Inspect the clip dialogue and determine if it has a lethal flaw:
 1. resolution_leak (cut resolves the conflict, viewer won't pay)
@@ -981,10 +1001,17 @@ Inspect the clip dialogue and determine if it has a lethal flaw:
 Output JSON:
 {"pass": true/false, "flaw": null or string, "critique": "string", "conversion_intent": 8.0}`;
 
-  for (const cand of validCandidates) {
-    const ep = episodesByNum.get(cand.episodes[0])!;
+  const audited: PromoCandidate[] = [];
+  for (const cand of candidates) {
+    const ep = episodesByNum.get(cand.episodes[0]);
+    if (!ep) {
+      audited.push(cand);
+      continue;
+    }
     const clipBeats = spokenBeats(ep).filter(
-      (b) => b.start_seconds >= cand.segments[0].start_seconds - EPS && b.end_seconds <= cand.segments[cand.segments.length - 1].end_seconds + EPS
+      (b) =>
+        b.start_seconds >= cand.segments[0].start_seconds - EPS &&
+        b.end_seconds <= cand.segments[cand.segments.length - 1].end_seconds + EPS
     );
     const clipText = clipBeats.map((b) => `${b.speaker || "Action"}: ${b.text}`).join("\n");
 
@@ -1016,26 +1043,79 @@ Cliffhanger tagged: ${cand.cliffhanger.type} ("${cand.cliffhanger.quote}")`;
       cand.judge_verdicts = [
         {
           judge: provider,
-          model: modelName,
+          model: options.model || (provider === "gemini" ? "gemini-2.5-flash" : "gpt-4o-mini"),
           pass: Boolean(aud.pass),
           flaw_type: aud.flaw || null,
           one_line_reason: aud.critique || "",
           conversion_intent: aud.conversion_intent || null,
         },
       ];
-    } catch {
+    } catch (e: any) {
       cand.quality_audit = {
-        passed: true,
-        method: "rules",
-        critique: "Automated lint passed.",
-        confidence_score: 6.0,
-        risks: [],
+        passed: false,
+        method: "error",
+        critique: `Audit call failed: ${e?.message || String(e)}`,
+        confidence_score: 0.0,
+        risks: ["unaudited_due_to_api_error"],
       };
-      cand.audit_tier = 1;
+      cand.audit_tier = 3;
+    }
+    audited.push(cand);
+  }
+
+  return audited;
+}
+
+// ============================================================================
+// Full Pipeline Runner
+// ============================================================================
+
+export async function runPipelineOnEpisodes(
+  episodes: Episode[],
+  options: PipelineOptions = {}
+): Promise<{
+  ranked_promos: PromoCandidate[];
+  pool: PromoCandidate[];
+  rejected: any[];
+  meta: any;
+}> {
+  const provider = options.provider || "gemini";
+  const taxonomy = loadDefaultTaxonomy();
+  const rejected: any[] = [];
+  const validCandidates: PromoCandidate[] = [];
+
+  // Offline Heuristic mode
+  if (provider === "heuristic" || !options.apiKey) {
+    const heuristicPool = runHeuristicExtraction(episodes, taxonomy);
+    const ranked = rankCandidates(heuristicPool, options.topK || 15, options.weights);
+    return {
+      ranked_promos: ranked,
+      pool: heuristicPool,
+      rejected: [],
+      meta: {
+        provider: "heuristic",
+        model: "offline-smoke-test",
+        episodes_count: episodes.length,
+        beats_count: episodes.reduce((a, e) => a + e.beats.length, 0),
+        generated_at: new Date().toISOString(),
+      },
+    };
+  }
+
+  // Process episodes modularly
+  for (const ep of episodes) {
+    try {
+      const res = await extractEpisodeCandidates(ep, options);
+      validCandidates.push(...res.candidates);
+      rejected.push(...res.rejected);
+    } catch (e: any) {
+      console.error(`Extraction failed on Ep ${ep.episode_number}:`, e?.message || e);
     }
   }
 
-  const ranked = rankCandidates(validCandidates, options.topK || 15, options.weights);
+  // Audit valid candidates
+  const audited = await auditCandidateBatch(validCandidates, episodes, options);
+  const ranked = rankCandidates(audited, options.topK || 15, options.weights);
 
   return {
     ranked_promos: ranked,
@@ -1043,7 +1123,7 @@ Cliffhanger tagged: ${cand.cliffhanger.type} ("${cand.cliffhanger.quote}")`;
     rejected,
     meta: {
       provider,
-      model: modelName,
+      model: options.model || (provider === "gemini" ? "gemini-2.5-flash" : "gpt-4o-mini"),
       episodes_count: episodes.length,
       beats_count: episodes.reduce((a, e) => a + e.beats.length, 0),
       valid_candidates_count: validCandidates.length,

@@ -314,7 +314,7 @@ def run_audit_panel(
                 "model": provider_obj.model,
                 "pass": c.quality_audit.passed,
                 "flaw_type": c.quality_audit.flaw_type,
-                "one_line_reason": c.quality_audit.critique.split("\n")[0][:150],
+                "one_line_reason": c.quality_audit.critique.split("\n")[0].strip(),
                 "conversion_intent": c.quality_audit.conversion_intent,
             }]
             c.audit_panel = {
@@ -448,7 +448,7 @@ def run_audit_panel(
                 "model": p1.model,
                 "pass": a1.passed,
                 "flaw_type": a1.flaw_type,
-                "one_line_reason": a1.critique.split("\n")[0][:150],
+                "one_line_reason": a1.critique.split("\n")[0].strip(),
                 "conversion_intent": a1.conversion_intent,
             },
             {
@@ -456,7 +456,7 @@ def run_audit_panel(
                 "model": p2.model,
                 "pass": a2.passed,
                 "flaw_type": a2.flaw_type,
-                "one_line_reason": a2.critique.split("\n")[0][:150],
+                "one_line_reason": a2.critique.split("\n")[0].strip(),
                 "conversion_intent": a2.conversion_intent,
             },
         ]

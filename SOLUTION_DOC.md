@@ -20,14 +20,15 @@ An editor watches every episode to pick 20-60s promos by hand, and new shows shi
 
 ## 3. Results & Measured Ablations (`outputs/ablations/`)
 - **Headline Run (50 episodes):** 62 candidates proposed, 62 valid, 60 deduped across the season.
+- **Top 3-5 Near-Tie & First Post Selection:** The top 3-5 promos are a near-tie with a tight rank index range of 7.40 to 7.51 for the top 3 (7.13 to 7.51 across top 5). Between them, post Rank 2 (Ep 2, index 7.48) first instead of Rank 1 (Ep 5, index 7.51), because the judges split sharply on Rank 1's conversion intent (6.5 vs 8.5) due to the recovered keepsake relieving tension, whereas Rank 2 maintains unambiguous cliffhanger urgency with consensus high conversion intent (8.5 across judges).
 - **Independent Dual-Judge Panel (`gpt-6-luna` + `gemini-3.5-flash-lite`):**
   - Evaluated on all 60 candidates: Judge 1 pass rate **55.0%** (33/60), Judge 2 pass rate **63.3%** (38/60).
   - Raw agreement rate is **68.3%** (41/60), with Cohen's kappa **κ = 0.3493** (fair consensus).
   - Consensus audit tiers: **Tier 1 = 26, Tier 2 = 19, Tier 3 = 15** (0 audit errors). All 15 headline promos are Tier 1 consensus picks.
   - Gemini failed 3 previous top-15 promos: `ep28_cand_2` (`resolution_leak`: reveals execution & herbarium book evidence), `ep46_cand_1` (`resolution_leak`: High Priest dialogue resolves core mystery), and `ep34_cand_1` (`slow_burn`: courtroom preamble takes 15s to establish stakes).
 - **Cliffhanger Trim-and-Revalidate:** When a cliffhanger beat ends before the final 6s tail window, code trims the cut to the beat's real end edge and re-verifies all hard constraints. In Ep 15, `ep15_cand_1` was recovered by trimming 7.5s (41.2s -> 33.7s).
-- **Empty Episode Diagnosis:** 6 empty episodes remain in the main pool (`[6, 8, 10, 11, 17, 25]`). Episodes 6, 8, 10, 17 returned 0 model proposals (genuinely quiet dialogue); Episode 11 had cliffhanger quotes ending after cut points; Episode 25 had unsnapped start cuts. Episodes 3, 14, 22, 24, 38, 44, 47, 49 now yield valid candidates.
-- **Payoff Location Verification:** 5 of top 15 promos have a code-verified payoff_location in the screenplay (Rank 2 Ep 2 `00:37.50`, Rank 3 Ep 3 `01:24.00`, Rank 13 Ep 35 `02:25.50`, Rank 14 Ep 18 `01:51.50`, Rank 15 Ep 1 `01:10.60`). The other 10 are `unknown` because the conflict resolves in later episodes or model-proposed timestamps did not snap to real beat edges (preventing hallucinated timestamps).
+- **Empty Episode Diagnosis:** The empty-episode drop (13 to 6) came mainly from the conversion prompt, with cliffhanger trimming recovering one candidate (Ep 15). 6 empty episodes remain in the main pool (`[6, 8, 10, 11, 17, 25]`): Episodes 6, 8, 10, 17 returned 0 model proposals (genuinely quiet dialogue); Episode 11 had cliffhanger quotes ending after cut points; Episode 25 had unsnapped start cuts. Episodes 3, 14, 22, 24, 38, 44, 47, 49 now yield valid candidates.
+- **Payoff Location Verification:** 5 of top 15 promos have a code-verified payoff_location in the screenplay (timestamp validated as a real beat; meaning not checked: Rank 2 Ep 2 `00:37.50`, Rank 3 Ep 3 `01:24.00`, Rank 13 Ep 35 `02:25.50`, Rank 14 Ep 18 `01:51.50`, Rank 15 Ep 1 `01:10.60`). The other 10 are `unknown` because the conflict resolves in later episodes or model-proposed timestamps did not snap to real beat edges (preventing hallucinated timestamps).
 
 ## 4. Failure Modes, Taxonomy Fit & System Limits
 - **Invalid Offline Audit Replaced:** An earlier keyword audit passed 87/87 candidates due to unreachable score thresholds (`outputs/smoke_test_heuristic/promos.json`, commit `809d946`). Fixed: audits are labelled by method (`llm`/`rules`/`error`), rule lint is distinguished from quality, and single-judge runs refuse same-model self-auditing unless `--allow-self-audit` is explicit.
@@ -39,7 +40,8 @@ An editor watches every episode to pick 20-60s promos by hand, and new shows shi
 Editors review picks via the Next.js viewer (deployed live at [kuku-promo-finder-theta.vercel.app](https://kuku-promo-finder-theta.vercel.app/)) or `outputs/PROMOS.md`, displaying audit tier badges, dual-judge critique breakdowns, flaw types, and cliffhanger trim indicators. The web app includes an interactive "Upload Custom Script" tool and zero-dependency REST API (`/api/pipeline/analyze`) supporting ZIP or multi-file uploads with Gemini/OpenAI execution. `--export-csv` outputs `outputs/promos.csv` with one row per segment formatted in `mm:ss.ss` with verbatim quotes and verified `payoff_location`.
 
 ## 6. Cost & Execution Profile (Measured)
-- **Committed Headline Run:** Extraction and audit panel executed with caching across OpenAI `gpt-6-luna` and Gemini `gemini-3.5-flash-lite`. Cached cost is **$0.0190**, with **$0.0002** live cost from discovery probes. Pure re-ranking is **$0.0000** and runs in **<0.1s**.
+- **Cost Ledger & Total Spend:** Total spend across all runs in `outputs/cost_ledger.json` is **$0.0134** (headline run: $0.0002 live, $0.0190 cached; ablations and extra stages: $0.0132 live). Pure re-ranking is **$0.0000** and runs in **<0.1s**.
+- **Committed Headline Run:** Extraction and audit panel executed with caching across OpenAI `gpt-6-luna` and Gemini `gemini-3.5-flash-lite`. Cached cost is **$0.0190**, with **$0.0002** live cost from discovery probes.
 - **Stage Modularity:** Rerank, cold-read, and panel stages run independently with full token and cost provenance recorded in meta files.
 
 ## 7. Tools Used

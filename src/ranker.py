@@ -1,5 +1,5 @@
 """
-Ranking, physical constraint enforcement, deduplication, and MMR diversity reranking.
+Ranking, physical constraint enforcement, deduplication, and diversity reranking.
 """
 
 from typing import List, Dict
@@ -95,7 +95,7 @@ class PromoRanker:
     ) -> List[PromoCandidate]:
         """
         Greedy diversity-penalised ranking (a count-based penalty per repeated hook type and
-        episode; not embedding-based MMR). Audit outcome is a gate: while any audited-passing
+        episode). Audit outcome is a gate: while any audited-passing
         candidate remains, failing ones cannot be picked, so every pass outranks every fail.
         Failing candidates are still listed after the passes, with a 0.78x multiplier
         (0.65x for a resolution leak), so the report shows them honestly flagged.

@@ -77,7 +77,7 @@
         "model": "gpt-6-luna",
         "pass": true,
         "flaw_type": null,
-        "one_line_reason": "The keepsake is recovered, but the antagonists’ humiliation of Juliana is not answered: the man’s explicit warning to Gerald cuts off before any retal",
+        "one_line_reason": "The keepsake is recovered, but the antagonists’ humiliation of Juliana is not answered: the man’s explicit warning to Gerald cuts off before any retaliation lands, so the main conflict remains open. The immediate stakes are legible from the opening, though the final threat is familiar and the rescued book settles the clip’s first, smaller source of suspense.",
         "conversion_intent": 6.5
       },
       {
@@ -85,7 +85,7 @@
         "model": "gemini-3.5-flash-lite",
         "pass": true,
         "flaw_type": null,
-        "one_line_reason": "The promo opens instantly with emotional stakes and physical drama, transitioning smoothly into hero protection and ending on a sharp, tense verbal th",
+        "one_line_reason": "The promo opens instantly with emotional stakes and physical drama, transitioning smoothly into hero protection and ending on a sharp, tense verbal threat before any resolution occurs.",
         "conversion_intent": 8.5
       }
     ],
@@ -204,7 +204,7 @@
         "model": "gpt-6-luna",
         "pass": true,
         "flaw_type": null,
-        "one_line_reason": "The public wedding rejection and selfish switch to Clarissa are immediately legible, and the clip ends on Juliana’s unanswered plea to her father with",
+        "one_line_reason": "The public wedding rejection and selfish switch to Clarissa are immediately legible, and the clip ends on Juliana’s unanswered plea to her father without showing a rescue or comeuppance. The only notable dependency is visual: the father’s stern reaction needs to read clearly as refusal or withheld support, since he does not answer in the excerpt.",
         "conversion_intent": 7.5
       },
       {
@@ -212,7 +212,7 @@
         "model": "gemini-3.5-flash-lite",
         "pass": true,
         "flaw_type": null,
-        "one_line_reason": "The clip delivers an immediate intimate betrayal within the first three seconds and steadily escalates tension without resolving the humiliation. Endi",
+        "one_line_reason": "The clip delivers an immediate intimate betrayal within the first three seconds and steadily escalates tension without resolving the humiliation. Ending on an unanswered plea to her cold father leaves a strong curiosity gap for a viewer looking for revenge or rescue.",
         "conversion_intent": 8.5
       }
     ],
@@ -331,7 +331,7 @@
         "model": "gpt-6-luna",
         "pass": true,
         "flaw_type": null,
-        "one_line_reason": "The opening immediately establishes Juliana being forcibly removed, and the stranger’s final order leaves the confrontation unresolved, creating a cle",
+        "one_line_reason": "The opening immediately establishes Juliana being forcibly removed, and the stranger’s final order leaves the confrontation unresolved, creating a clear reason to watch the next moment. The cold viewer need not know the characters’ backstory; however, the “armed standoff” label overstates what the screenplay shows, since no weapons appear.",
         "conversion_intent": 7.5
       },
       {
@@ -339,7 +339,7 @@
         "model": "gemini-3.5-flash-lite",
         "pass": true,
         "flaw_type": null,
-        "one_line_reason": "The clip delivers an immediate hook with the heroine being violently dragged out, followed by high-tension hero intervention that cuts cleanly before ",
+        "one_line_reason": "The clip delivers an immediate hook with the heroine being violently dragged out, followed by high-tension hero intervention that cuts cleanly before any physical resolution or identity reveal.",
         "conversion_intent": 8.5
       }
     ],
@@ -461,7 +461,7 @@
         "model": "gpt-6-luna",
         "pass": true,
         "flaw_type": null,
-        "one_line_reason": "The ultimatum and threat to hang her husband make the danger and Juliana’s sacrifice understandable immediately, and the clip ends before we see what ",
+        "one_line_reason": "The ultimatum and threat to hang her husband make the danger and Juliana’s sacrifice understandable immediately, and the clip ends before we see what she must retrieve or what happens next. “It” has no clear antecedent for a cold viewer, but the uncertainty is a curiosity gap rather than a resolution leak.",
         "conversion_intent": 7.2
       },
       {
@@ -469,7 +469,7 @@
         "model": "gemini-3.5-flash-lite",
         "pass": true,
         "flaw_type": null,
-        "one_line_reason": "The promo effectively establishes a high-stakes, dangerous situation with a clear, immediate threat to the protagonist's husband. The dialogue clearly",
+        "one_line_reason": "The promo effectively establishes a high-stakes, dangerous situation with a clear, immediate threat to the protagonist's husband. The dialogue clearly conveys the coercion and Juliana's sacrificial resolve, creating a strong curiosity gap about the dangerous task ahead.",
         "conversion_intent": 8.5
       }
     ],
@@ -590,7 +590,7 @@
         "model": "gpt-6-luna",
         "pass": true,
         "flaw_type": null,
-        "one_line_reason": "The ultimatum and Juliana’s refusal create a clear choice, and the clip withholds the judge’s sentence rather than resolving the conflict. Cold viewer",
+        "one_line_reason": "The ultimatum and Juliana’s refusal create a clear choice, and the clip withholds the judge’s sentence rather than resolving the conflict. Cold viewers may not understand what “these practices” means until the witchcraft accusation arrives later, and the final cliff relies partly on the raised-hand visual, but the courtroom dialogue makes the pending verdict legible.",
         "conversion_intent": 7.5
       },
       {
@@ -598,7 +598,7 @@
         "model": "gemini-3.5-flash-lite",
         "pass": true,
         "flaw_type": null,
-        "one_line_reason": "This promo effectively establishes a high-stakes conflict around Lady Juliana's defiance against a witchcraft accusation, ending on a strong cliffhang",
+        "one_line_reason": "This promo effectively establishes a high-stakes conflict around Lady Juliana's defiance against a witchcraft accusation, ending on a strong cliffhanger with her verdict withheld. The dialogue is self-contained and compelling, creating immediate curiosity for a new viewer.",
         "conversion_intent": 9.0
       }
     ],
@@ -719,7 +719,7 @@
         "model": "gpt-6-luna",
         "pass": true,
         "flaw_type": null,
-        "one_line_reason": "The class-based contempt lands immediately, and Juliana’s sharp retort is only a brief reversal: Catherine escalates by destroying the book and ends w",
+        "one_line_reason": "The class-based contempt lands immediately, and Juliana’s sharp retort is only a brief reversal: Catherine escalates by destroying the book and ends with the poker inches from Juliana’s face, leaving the central danger unresolved. The book’s destruction and the final threat rely partly on convincing fire and close-up visuals, but the dialogue makes the emotional stakes legible without prior knowledge.",
         "conversion_intent": 7.5
       },
       {
@@ -727,7 +727,7 @@
         "model": "gemini-3.5-flash-lite",
         "pass": true,
         "flaw_type": null,
-        "one_line_reason": "The clip hooks immediately with high-stakes elitist dialogue and escalates rapidly through emotional destruction to physical jeopardy. The unresolved ",
+        "one_line_reason": "The clip hooks immediately with high-stakes elitist dialogue and escalates rapidly through emotional destruction to physical jeopardy. The unresolved threat of the hot iron inches from the protagonist's eyes creates a powerful curiosity gap with zero resolution leak.",
         "conversion_intent": 9.0
       }
     ],
@@ -850,7 +850,7 @@
         "model": "gpt-6-luna",
         "pass": true,
         "flaw_type": null,
-        "one_line_reason": "The conspiracy and imminent execution threat are clear immediately, and nothing shows the accusation succeeding or the conflict being resolved. A cold",
+        "one_line_reason": "The conspiracy and imminent execution threat are clear immediately, and nothing shows the accusation succeeding or the conflict being resolved. A cold viewer is not told who “her” is or why she is being targeted, and the long, dialogue-heavy villain scene offers little connection to the protagonist—but the explicit plan to frame and hang her creates a strong next-moment question.",
         "conversion_intent": 7.0
       },
       {
@@ -858,7 +858,7 @@
         "model": "gemini-3.5-flash-lite",
         "pass": true,
         "flaw_type": null,
-        "one_line_reason": "The promo effectively establishes a chilling conspiracy against Juliana, clearly outlining the manufactured evidence and the dire consequences. The im",
+        "one_line_reason": "The promo effectively establishes a chilling conspiracy against Juliana, clearly outlining the manufactured evidence and the dire consequences. The immediate threat and high stakes are evident from the opening seconds, creating a strong curiosity gap.",
         "conversion_intent": 8.5
       }
     ],
@@ -981,7 +981,7 @@
         "model": "gpt-6-luna",
         "pass": true,
         "flaw_type": null,
-        "one_line_reason": "The clip clearly establishes that Alexander’s marriage is being challenged and that a council ruling is pending in ten days; neither the marriage nor ",
+        "one_line_reason": "The clip clearly establishes that Alexander’s marriage is being challenged and that a council ruling is pending in ten days; neither the marriage nor the dispute is resolved. A cold viewer may not know why losing her would matter emotionally, but the immediate stakes and unresolved outcome are legible from the dialogue.",
         "conversion_intent": 6.5
       },
       {
@@ -989,7 +989,7 @@
         "model": "gemini-3.5-flash-lite",
         "pass": true,
         "flaw_type": null,
-        "one_line_reason": "The promo immediately establishes a high-stakes conflict over Alexander's marriage and identity, culminating in a compelling, unresolved threat. While",
+        "one_line_reason": "The promo immediately establishes a high-stakes conflict over Alexander's marriage and identity, culminating in a compelling, unresolved threat. While some initial character references might be vague for a cold viewer, the core conflict and Alexander's status are quickly clarified.",
         "conversion_intent": 8.5
       }
     ],
@@ -1110,7 +1110,7 @@
         "model": "gpt-6-luna",
         "pass": true,
         "flaw_type": null,
-        "one_line_reason": "The opening immediately establishes a takeover, and the final line makes the danger personal without showing Alexander solve it. A cold viewer may not",
+        "one_line_reason": "The opening immediately establishes a takeover, and the final line makes the danger personal without showing Alexander solve it. A cold viewer may not know who Rupert or Lady Catherine are, or how Catherine relates to the mother, but the estate usurpation and family peril remain understandable.",
         "conversion_intent": 6.5
       },
       {
@@ -1118,7 +1118,7 @@
         "model": "gemini-3.5-flash-lite",
         "pass": true,
         "flaw_type": null,
-        "one_line_reason": "The promo effectively establishes a high-stakes family peril and the usurper threat right away without leaking the resolution. The dialogue clearly fr",
+        "one_line_reason": "The promo effectively establishes a high-stakes family peril and the usurper threat right away without leaking the resolution. The dialogue clearly frames the mother's imprisonment and the antagonist's takeover, driving strong curiosity.",
         "conversion_intent": 8.5
       }
     ],
@@ -1239,7 +1239,7 @@
         "model": "gpt-6-luna",
         "pass": true,
         "flaw_type": null,
-        "one_line_reason": "The poisoning accusation is answered almost immediately—Juliana confirms it and says the Duchess is safe—so that hook loses its tension. The ring ques",
+        "one_line_reason": "The poisoning accusation is answered almost immediately—Juliana confirms it and says the Duchess is safe—so that hook loses its tension. The ring question supplies a fresh unresolved mystery, though its impact depends on viewers noticing the ring and reading the Duchess’s reaction as significant.",
         "conversion_intent": 7.0
       },
       {
@@ -1247,7 +1247,7 @@
         "model": "gemini-3.5-flash-lite",
         "pass": true,
         "flaw_type": null,
-        "one_line_reason": "The clip establishes high stakes and clear emotional resonance immediately, culminating in a powerful cliffhanger regarding the signet ring. A cold vi",
+        "one_line_reason": "The clip establishes high stakes and clear emotional resonance immediately, culminating in a powerful cliffhanger regarding the signet ring. A cold viewer will easily understand the tension of the poisoning plot and the mystery of the protagonist's hidden identity, driving strong curiosity to see the next episode.",
         "conversion_intent": 8.5
       }
     ],
@@ -1369,7 +1369,7 @@
         "model": "gpt-6-luna",
         "pass": true,
         "flaw_type": null,
-        "one_line_reason": "The poisoning is stated immediately, and the Duchess’s collapse makes the stakes legible; the cure is only being prepared, not shown to work. The appr",
+        "one_line_reason": "The poisoning is stated immediately, and the Duchess’s collapse makes the stakes legible; the cure is only being prepared, not shown to work. The approaching person is unidentified and the door opening cuts off before we see who it is, creating a clear next-moment question, though the opening “her” has a brief referential ambiguity for cold viewers.",
         "conversion_intent": 7.5
       },
       {
@@ -1377,7 +1377,7 @@
         "model": "gemini-3.5-flash-lite",
         "pass": true,
         "flaw_type": null,
-        "one_line_reason": "The clip establishes high medical and physical stakes immediately through the poisoning discovery and tense race to brew an antidote. The closing door",
+        "one_line_reason": "The clip establishes high medical and physical stakes immediately through the poisoning discovery and tense race to brew an antidote. The closing door latch creates a powerful, high-anxiety cliffhanger that forces viewers to want to know who is entering and whether they can finish the cure.",
         "conversion_intent": 8.5
       }
     ],
@@ -1498,7 +1498,7 @@
         "model": "gpt-6-luna",
         "pass": true,
         "flaw_type": null,
-        "one_line_reason": "The opening door slam and immediate order create a clear interruption, and the proclamation makes the stakes legible even without prior context. It do",
+        "one_line_reason": "The opening door slam and immediate order create a clear interruption, and the proclamation makes the stakes legible even without prior context. It does reveal that the marriage is being declared invalid, but cuts before Alexander or Juliana can respond, leaving the counter-move as a credible reason to continue.",
         "conversion_intent": 7.5
       },
       {
@@ -1506,7 +1506,7 @@
         "model": "gemini-3.5-flash-lite",
         "pass": true,
         "flaw_type": null,
-        "one_line_reason": "The clip establishes an immediate, high-stakes crisis with the wedding being invalidated by religious and state authority, creating a strong curiosity",
+        "one_line_reason": "The clip establishes an immediate, high-stakes crisis with the wedding being invalidated by religious and state authority, creating a strong curiosity gap regarding how the protagonists will retaliate. The ending cuts on the antagonist's triumphant smirk, forcing the viewer to want to see the countermove.",
         "conversion_intent": 8.5
       }
     ],
@@ -1628,7 +1628,7 @@
         "model": "gpt-6-luna",
         "pass": true,
         "flaw_type": null,
-        "one_line_reason": "The opening line immediately signals a massacre, and the dialogue makes Alexander’s survival and the unresolved question of who wanted him presumed de",
+        "one_line_reason": "The opening line immediately signals a massacre, and the dialogue makes Alexander’s survival and the unresolved question of who wanted him presumed dead understandable without prior context. The answer is withheld at the final “Who?”, leaving a clear curiosity gap; the emotional weight does rely somewhat on the close-ups and performed intensity.",
         "conversion_intent": 7.5
       },
       {
@@ -1636,7 +1636,7 @@
         "model": "gemini-3.5-flash-lite",
         "pass": true,
         "flaw_type": null,
-        "one_line_reason": "The clip maintains a strong curiosity gap by framing a conspiracy involving the protagonist's survival, effectively drawing the viewer into the myster",
+        "one_line_reason": "The clip maintains a strong curiosity gap by framing a conspiracy involving the protagonist's survival, effectively drawing the viewer into the mystery of who betrayed him. The emotional stakes are clear and immediate, successfully pivoting from a personal tragedy to a larger political intrigue.",
         "conversion_intent": 8.5
       }
     ],
@@ -1758,7 +1758,7 @@
         "model": "gpt-6-luna",
         "pass": true,
         "flaw_type": null,
-        "one_line_reason": "The danger is clear from the opening cough and smoke, and the clip ends with Juliana and Alexander still trapped—there is no resolution leak. The fire",
+        "one_line_reason": "The danger is clear from the opening cough and smoke, and the clip ends with Juliana and Alexander still trapped—there is no resolution leak. The fire peril is compelling but generic, so a cold viewer may be curious about their escape without yet seeing why this moment connects to the broader show.",
         "conversion_intent": 6.5
       },
       {
@@ -1766,7 +1766,7 @@
         "model": "gemini-3.5-flash-lite",
         "pass": true,
         "flaw_type": null,
-        "one_line_reason": "The clip maintains high tension by establishing immediate danger and isolating the protagonists, effectively using the fire as a ticking-clock mechani",
+        "one_line_reason": "The clip maintains high tension by establishing immediate danger and isolating the protagonists, effectively using the fire as a ticking-clock mechanism. It avoids resolution leaks by ending at the peak of the impasse, successfully forcing the viewer to wonder how they will escape.",
         "conversion_intent": 8.5
       }
     ],
@@ -1886,7 +1886,7 @@
         "model": "gpt-6-luna",
         "pass": true,
         "flaw_type": null,
-        "one_line_reason": "The wedding betrayal is clear within the opening seconds, and Juliana's final accusation leaves a charged beat unanswered. The sister's smugness makes",
+        "one_line_reason": "The wedding betrayal is clear within the opening seconds, and Juliana's final accusation leaves a charged beat unanswered. The sister's smugness makes her likely complicity fairly obvious, so the cliffhanger is more about her confirming it than a genuinely uncertain reveal.",
         "conversion_intent": 7.5
       },
       {
@@ -1894,7 +1894,7 @@
         "model": "gemini-3.5-flash-lite",
         "pass": true,
         "flaw_type": null,
-        "one_line_reason": "The clip hits an immediate, clear public wedding betrayal within the first 3 seconds and escalates dramatic tension without resolving Juliana's plight",
+        "one_line_reason": "The clip hits an immediate, clear public wedding betrayal within the first 3 seconds and escalates dramatic tension without resolving Juliana's plight or revealing her next step.",
         "conversion_intent": 8.5
       }
     ],

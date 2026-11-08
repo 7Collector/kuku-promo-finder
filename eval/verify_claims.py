@@ -81,23 +81,29 @@ def compute_ground_truth_metrics() -> Dict[str, Any]:
                 f"Promo {p.get('promo_id')} has extractor model '{extractor_model}' as sole judge without --allow-self-audit"
             )
 
-    # 6. Costs from meta files
-    meta_files = sorted(ROOT.glob("outputs/**/*.meta.json"))
-    total_cost = 0.0
-    per_run_costs = {}
-    for mf in meta_files:
-        try:
-            m_data = json.loads(mf.read_text(encoding="utf-8"))
-            rel = str(mf.relative_to(ROOT))
-            run_c = 0.0
-            if "stages" in m_data and isinstance(m_data["stages"], dict):
-                for s in m_data["stages"].values():
-                    run_c += float(s.get("live_cost_usd", 0.0))
-            per_run_costs[rel] = round(run_c, 4)
-            total_cost += run_c
-        except Exception:
-            pass
-    total_cost = round(total_cost, 4)
+    # 6. Costs from cost ledger (canonical record of all runs and stages)
+    ledger_path = ROOT / "outputs" / "cost_ledger.json"
+    if ledger_path.exists():
+        ledger_data = json.loads(ledger_path.read_text(encoding="utf-8"))
+        total_cost = round(float(ledger_data.get("summary", {}).get("total_live_cost_usd", 0.0)), 4)
+        per_run_costs = {r.get("meta_file", r.get("run_id", "")): float(r.get("live_cost_usd", 0.0)) for r in ledger_data.get("runs", [])}
+    else:
+        meta_files = sorted(ROOT.glob("outputs/**/*.meta.json"))
+        total_cost = 0.0
+        per_run_costs = {}
+        for mf in meta_files:
+            try:
+                m_data = json.loads(mf.read_text(encoding="utf-8"))
+                rel = str(mf.relative_to(ROOT))
+                run_c = 0.0
+                if "stages" in m_data and isinstance(m_data["stages"], dict):
+                    for s in m_data["stages"].values():
+                        run_c += float(s.get("live_cost_usd", 0.0))
+                per_run_costs[rel] = round(run_c, 4)
+                total_cost += run_c
+            except Exception:
+                pass
+        total_cost = round(total_cost, 4)
 
     return {
         "top_15_new_hooks": new_hooks,
@@ -129,6 +135,19 @@ def verify_file_claims(doc_path: Path, metrics: Dict[str, Any]) -> List[str]:
 
     text = doc_path.read_text(encoding="utf-8")
     issues = []
+
+    # Check forbidden terms: "virality" and "A-grade"
+    if re.search(r"\bvirality\b", text, re.IGNORECASE):
+        issues.append(f"{doc_path.name}: contains forbidden term 'virality'")
+    if re.search(r"\ba-grade\b", text, re.IGNORECASE):
+        issues.append(f"{doc_path.name}: contains forbidden term 'A-grade'")
+
+    # Check total cost if mentioned
+    cost_match = re.search(r"(?:total\s+(?:meta\s+)?cost|total\s+spend|ledger\s+total)[^$\d]*\$([0-9.]+)", text, re.IGNORECASE)
+    if cost_match:
+        claimed_cost = float(cost_match.group(1))
+        if abs(claimed_cost - metrics["total_cost"]) > 0.0005:
+            issues.append(f"{doc_path.name}: claimed total cost ${claimed_cost:.4f}, but ledger total is ${metrics['total_cost']:.4f}")
 
     # Check top-15 new hook/cliffhanger counts
     # Pattern: X of top 15 hooks and Y of top 15 cliffhangers

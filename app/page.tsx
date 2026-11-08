@@ -94,11 +94,6 @@ interface Promo {
   };
 }
 
-function getViralityScore(score: number): number {
-  if (!score) return 8.5;
-  const inflated = score * 1.18 + 0.2;
-  return Math.min(9.8, Math.max(8.0, Number(inflated.toFixed(1))));
-}
 
 export default function HomePage() {
   const [promos, setPromos] = useState<Promo[]>([]);
@@ -107,7 +102,8 @@ export default function HomePage() {
   const [meta, setMeta] = useState<any>(null);
   const [selectedHook, setSelectedHook] = useState("all");
   const [selectedType, setSelectedType] = useState("all");
-  const [minScore, setMinScore] = useState(6.0);
+  const [minScore, setMinScore] = useState(5.0);
+  const [expandedReasons, setExpandedReasons] = useState<Record<number, boolean>>({});
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "table">("grid");
   const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -307,16 +303,20 @@ export default function HomePage() {
     return map;
   }, [allPromos]);
 
+  const scoreValues = allPromos.map((p) => p.scores?.adjusted_score ?? p.scores?.composite_score ?? 0).filter((s) => s > 0);
+  const dataMin = scoreValues.length > 0 ? Math.floor(Math.min(...scoreValues) * 10) / 10 : 5.0;
+  const dataMax = scoreValues.length > 0 ? Math.ceil(Math.max(...scoreValues) * 10) / 10 : 8.0;
+
   const isFiltered =
     selectedHook !== "all" ||
     selectedType !== "all" ||
-    minScore > 6.0 ||
+    minScore > dataMin ||
     searchQuery.trim() !== "";
 
   function resetFilters() {
     setSelectedHook("all");
     setSelectedType("all");
-    setMinScore(6.0);
+    setMinScore(dataMin);
     setSearchQuery("");
   }
 
@@ -577,7 +577,7 @@ export default function HomePage() {
                 &ldquo;{heroPromo.hook.quote}&rdquo;
               </p>
               <span style={{ fontSize: 13, color: "var(--accent-mark-on-board)" }}>
-                {heroPromo.hook.psychological_trigger}
+                {heroPromo.hook.psychological_trigger || (heroPromo.hook.type?.startsWith("new:") ? "Model-proposed type (no taxonomy driver)" : "")}
               </span>
             </div>
 
@@ -594,21 +594,38 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid var(--board-rule)", paddingTop: "var(--s-16)" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid var(--board-rule)", paddingTop: "var(--s-16)", flexWrap: "wrap", gap: "var(--s-16)" }}>
             <p className="om-subhead" style={{ color: "var(--on-board-2)", maxWidth: 700 }}>
               💡 <strong style={{ color: "var(--on-board)" }}>Why it works:</strong> {heroPromo.why_it_works}
             </p>
             <div style={{ textAlign: "right" }}>
-              <span className="om-caption" style={{ color: "var(--on-board-2)", display: "block" }}>
-                Virality &amp; Conversion Score
+              <span
+                className="om-caption"
+                style={{ color: "var(--on-board-2)", display: "block", cursor: "help" }}
+                title="Weighted prior over hook, cliffhanger, payoff, injustice and clarity. Not a conversion prediction."
+              >
+                Rank index (relative, uncalibrated) ℹ️
               </span>
               <span className="om-display om-num" style={{ color: "var(--on-board)", fontSize: 28 }}>
-                {getViralityScore(heroPromo.scores.adjusted_score || heroPromo.scores.composite_score).toFixed(1)}
-                <span style={{ fontSize: 16, color: "var(--on-board-2)" }}>/10</span>
+                {(heroPromo.scores.adjusted_score || heroPromo.scores.composite_score).toFixed(2)}
               </span>
-              <span className="om-caption" style={{ display: "block", color: "var(--on-board-2)", fontSize: 11 }}>
-                Index: {(heroPromo.scores.adjusted_score || heroPromo.scores.composite_score).toFixed(2)}
-              </span>
+              <div style={{ display: "flex", gap: 6, justifyContent: "flex-end", marginTop: 4, flexWrap: "wrap", alignItems: "center" }}>
+                {heroPromo.audit_tier && (
+                  <span className="om-tag" style={{ background: "rgba(255,255,255,0.15)", color: "#fff", fontSize: 11 }}>
+                    Tier {heroPromo.audit_tier}
+                  </span>
+                )}
+                {heroPromo.judge_verdicts?.map((jv, i) => (
+                  <span key={i} className="om-tag" style={{ background: jv.pass ? "rgba(46, 125, 50, 0.3)" : "rgba(198, 40, 40, 0.3)", color: "#fff", fontSize: 11 }}>
+                    {jv.judge === "openai" ? "GPT-6" : "Gemini"}: {jv.pass ? "PASS" : "FAIL"}
+                  </span>
+                ))}
+                {heroPromo.conversion_intent != null && (
+                  <span className="om-tag" style={{ background: "rgba(255,255,255,0.15)", color: "#fff", fontSize: 11 }}>
+                    Conv: {heroPromo.conversion_intent}/10
+                  </span>
+                )}
+              </div>
             </div>
           </div>
         </section>
@@ -761,7 +778,22 @@ export default function HomePage() {
               { id: "single_episode", label: "Single episode" },
               { id: "cross_episode", label: "Cross-episode composite" },
             ].map((chip) => {
-              const count = typeCounts[chip.id];
+              const count = typeCounts[chip.id] || 0;
+              const isCross = chip.id === "cross_episode";
+              if (isCross && count === 0) {
+                return (
+                  <button
+                    key={chip.id}
+                    disabled
+                    className="kuku-chip"
+                    style={{ opacity: 0.5, cursor: "not-allowed" }}
+                    title="Cross-episode composites are off by default"
+                  >
+                    <span>Cross-episode (off by default)</span>
+                    <span className="kuku-chip-count">0</span>
+                  </button>
+                );
+              }
               return (
                 <button
                   key={chip.id}
@@ -778,14 +810,18 @@ export default function HomePage() {
           </div>
 
           <div style={{ display: "flex", alignItems: "center", gap: "var(--s-12)" }}>
-            <span className="om-caption" style={{ color: "var(--ink-3)" }}>
-              Min score: <strong className="om-num" style={{ color: "var(--ink)" }}>{minScore.toFixed(1)}</strong>
+            <span
+              className="om-caption"
+              style={{ color: "var(--ink-3)", cursor: "help" }}
+              title="Weighted prior over hook, cliffhanger, payoff, injustice and clarity. Not a conversion prediction."
+            >
+              Min rank index: <strong className="om-num" style={{ color: "var(--ink)" }}>{minScore.toFixed(2)}</strong> ℹ️
             </span>
             <input
               type="range"
-              min="5.0"
-              max="9.5"
-              step="0.5"
+              min={dataMin}
+              max={dataMax}
+              step="0.05"
               value={minScore}
               onChange={(e) => setMinScore(parseFloat(e.target.value))}
               style={{ width: 130, accentColor: "var(--accent)" }}
@@ -894,13 +930,29 @@ export default function HomePage() {
                   <div style={{ textAlign: "right" }}>
                     <div style={{ display: "inline-flex", alignItems: "baseline", gap: 2 }}>
                       <span className="om-headline om-num" style={{ color: "var(--accent)", fontSize: 20, fontWeight: 700 }}>
-                        {getViralityScore(effScore).toFixed(1)}
+                        {effScore.toFixed(2)}
                       </span>
-                      <span className="om-caption" style={{ color: "var(--ink-3)", fontSize: 11 }}>/10</span>
                     </div>
-                    <span className="om-caption" style={{ display: "block", color: "var(--ink-3)", fontSize: 10 }}>
-                      index: {effScore.toFixed(2)}{penalty < 1.0 ? ` (MMR ×${penalty.toFixed(2)})` : ""}
+                    <span
+                      className="om-caption"
+                      style={{ display: "block", color: "var(--ink-3)", fontSize: 10, cursor: "help" }}
+                      title="Weighted prior over hook, cliffhanger, payoff, injustice and clarity. Not a conversion prediction."
+                    >
+                      Rank index ℹ️
+                      {penalty < 1.0 ? ` (penalty ×${penalty.toFixed(2)})` : ""}
                     </span>
+                    <div style={{ display: "flex", gap: 4, justifyContent: "flex-end", marginTop: 4, flexWrap: "wrap" }}>
+                      {p.audit_tier && (
+                        <span className="om-tag" style={{ background: "var(--sunken)", fontSize: 10 }}>
+                          Tier {p.audit_tier}
+                        </span>
+                      )}
+                      {p.conversion_intent != null && (
+                        <span className="om-tag" style={{ background: "var(--sunken)", fontSize: 10 }}>
+                          Conv: {p.conversion_intent}/10
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
 
@@ -1033,9 +1085,13 @@ export default function HomePage() {
                       <span style={{ fontSize: 12, color: "var(--warning-strong)", display: "flex", alignItems: "center", gap: 4, fontWeight: 500 }}>
                         <AlertTriangle size={14} /> Unaudited
                       </span>
+                    ) : p.audit_tier != null ? (
+                      <span style={{ fontSize: 12, color: p.audit_tier === 1 ? "var(--success-strong)" : p.audit_tier === 2 ? "var(--warning-strong)" : "var(--ink-2)", display: "flex", alignItems: "center", gap: 4, fontWeight: 500 }}>
+                        <ShieldCheck size={14} /> Tier {p.audit_tier} ({p.judge_verdicts?.map(v => `${v.judge === 'openai' ? 'GPT-6' : 'Gemini'}:${v.pass ? 'PASS' : 'FAIL'}`).join(', ') || (p.audit_tier === 1 ? "Consensus Pass" : "Split")})
+                      </span>
                     ) : p.quality_audit?.passed ? (
                       <span style={{ fontSize: 12, color: "var(--success-strong)", display: "flex", alignItems: "center", gap: 4, fontWeight: 500 }}>
-                        <ShieldCheck size={14} /> {p.quality_audit.method === "llm" ? "Passed LLM audit" : "Passed rule lint"}
+                        <ShieldCheck size={14} /> {p.quality_audit.method === "llm" ? "Audited" : "Passed rule lint"}
                       </span>
                     ) : (
                       <span style={{ fontSize: 12, color: "var(--warning-strong)", display: "flex", alignItems: "center", gap: 4, fontWeight: 500 }}>
@@ -1089,10 +1145,18 @@ export default function HomePage() {
                   <tr key={p.promo_id} style={{ borderBottom: "1px solid var(--hairline)" }}>
                     <td style={{ padding: "12px 16px", fontWeight: 700 }}>#{p.rank}</td>
                     <td style={{ padding: "12px 16px" }} className="om-num">
-                      <strong style={{ color: "var(--accent)" }}>{getViralityScore(p.scores.adjusted_score || p.scores.composite_score).toFixed(1)}</strong>
-                      <span style={{ fontSize: 11, color: "var(--ink-3)", marginLeft: 4 }}>
-                        ({(p.scores.adjusted_score || p.scores.composite_score).toFixed(2)})
+                      <strong style={{ color: "var(--accent)" }}>{(p.scores.adjusted_score || p.scores.composite_score).toFixed(2)}</strong>
+                      <span
+                        style={{ fontSize: 10, color: "var(--ink-3)", display: "block", cursor: "help" }}
+                        title="Weighted prior over hook, cliffhanger, payoff, injustice and clarity. Not a conversion prediction."
+                      >
+                        Rank index
                       </span>
+                      {p.audit_tier && (
+                        <span style={{ fontSize: 11, color: "var(--ink-2)", display: "block" }}>
+                          Tier {p.audit_tier} {p.conversion_intent != null ? `· Conv ${p.conversion_intent}/10` : ""}
+                        </span>
+                      )}
                     </td>
                     <td style={{ padding: "12px 16px" }}>Ep {p.episodes.join(" & ")}</td>
                     <td style={{ padding: "12px 16px" }} className="om-num">
@@ -1165,17 +1229,50 @@ export default function HomePage() {
                     Promo Rank #{activeModalPromo.rank} · {activeModalPromo.promo_type.replace("_", " ")}
                   </span>
                   <span
+                    className="om-tag"
+                    title="Weighted prior over hook, cliffhanger, payoff, injustice and clarity. Not a conversion prediction."
                     style={{
-                      background: "var(--ai-gradient)",
+                      background: "var(--accent)",
                       color: "#fff",
                       padding: "2px 8px",
                       borderRadius: "var(--radius-full)",
                       fontSize: 11,
                       fontWeight: 700,
+                      cursor: "help",
                     }}
                   >
-                    Virality {getViralityScore(activeModalPromo.scores.adjusted_score || activeModalPromo.scores.composite_score).toFixed(1)}/10
+                    Rank index: {(activeModalPromo.scores.adjusted_score || activeModalPromo.scores.composite_score).toFixed(2)}
                   </span>
+                  {activeModalPromo.audit_tier && (
+                    <span
+                      className="om-tag"
+                      style={{
+                        background: activeModalPromo.audit_tier === 1 ? "var(--success-container)" : "var(--warning-container)",
+                        color: activeModalPromo.audit_tier === 1 ? "var(--success-on-container)" : "var(--warning-on-container)",
+                        padding: "2px 8px",
+                        borderRadius: "var(--radius-full)",
+                        fontSize: 11,
+                        fontWeight: 600,
+                      }}
+                    >
+                      Tier {activeModalPromo.audit_tier}
+                    </span>
+                  )}
+                  {activeModalPromo.conversion_intent != null && (
+                    <span
+                      className="om-tag"
+                      style={{
+                        background: "var(--sunken)",
+                        color: "var(--ink-2)",
+                        padding: "2px 8px",
+                        borderRadius: "var(--radius-full)",
+                        fontSize: 11,
+                        fontWeight: 600,
+                      }}
+                    >
+                      Conv: {activeModalPromo.conversion_intent}/10
+                    </span>
+                  )}
                 </div>
                 <h2 className="om-title-large" style={{ marginTop: 4 }}>
                   {activeModalPromo.hook.name}
@@ -1241,7 +1338,7 @@ export default function HomePage() {
                   &ldquo;{activeModalPromo.hook.quote}&rdquo;
                 </p>
                 <p className="om-subhead" style={{ color: "var(--ink-2)", marginTop: 4, fontSize: 13 }}>
-                  <strong>Driver:</strong> {activeModalPromo.hook.psychological_trigger}
+                  <strong>Driver:</strong> {activeModalPromo.hook.psychological_trigger || (activeModalPromo.hook.type?.startsWith("new:") ? "Model-proposed type (no taxonomy driver)" : "N/A")}
                 </p>
               </div>
 
@@ -1319,18 +1416,45 @@ export default function HomePage() {
                   Judge Panel Verdicts {activeModalPromo.audit_tier != null ? `(Tier ${activeModalPromo.audit_tier})` : ""}
                 </span>
                 <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                  {activeModalPromo.judge_verdicts.map((jv, idx) => (
-                    <div key={idx} style={{ fontSize: 12, borderLeft: jv.pass ? "3px solid var(--success-strong)" : "3px solid var(--warning-strong)", paddingLeft: 8 }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 6, fontWeight: 600 }}>
-                        <span style={{ color: jv.pass ? "var(--success-strong)" : "var(--warning-strong)" }}>
-                          {jv.pass ? "PASS" : `FAIL (${jv.flaw_type || "unspecified"})`}
-                        </span>
-                        <span style={{ color: "var(--ink-2)" }}>· {jv.judge}:{jv.model}</span>
-                        {jv.conversion_intent != null && <span style={{ color: "var(--ink-3)" }}>· conv: {jv.conversion_intent}/10</span>}
+                  {activeModalPromo.judge_verdicts.map((jv, idx) => {
+                    const isLong = (jv.one_line_reason || "").length > 140;
+                    const isExpanded = Boolean(expandedReasons[idx]);
+                    const displayText = isLong && !isExpanded
+                      ? jv.one_line_reason.slice(0, 140) + "…"
+                      : jv.one_line_reason;
+                    return (
+                      <div key={idx} style={{ fontSize: 12, borderLeft: jv.pass ? "3px solid var(--success-strong)" : "3px solid var(--warning-strong)", paddingLeft: 8 }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 6, fontWeight: 600 }}>
+                          <span style={{ color: jv.pass ? "var(--success-strong)" : "var(--warning-strong)" }}>
+                            {jv.pass ? "PASS" : `FAIL (${jv.flaw_type || "unspecified"})`}
+                          </span>
+                          <span style={{ color: "var(--ink-2)" }}>· {jv.judge}:{jv.model}</span>
+                          {jv.conversion_intent != null && <span style={{ color: "var(--ink-3)" }}>· conv: {jv.conversion_intent}/10</span>}
+                        </div>
+                        <p style={{ margin: "2px 0 0", color: "var(--ink-2)", lineHeight: "1.4" }}>
+                          {displayText}
+                          {isLong && (
+                            <button
+                              onClick={() => setExpandedReasons(prev => ({ ...prev, [idx]: !prev[idx] }))}
+                              style={{
+                                marginLeft: 6,
+                                background: "none",
+                                border: "none",
+                                color: "var(--accent)",
+                                cursor: "pointer",
+                                fontSize: 11,
+                                fontWeight: 600,
+                                padding: 0,
+                                textDecoration: "underline",
+                              }}
+                            >
+                              {isExpanded ? "Show less" : "Show full reason"}
+                            </button>
+                          )}
+                        </p>
                       </div>
-                      <p style={{ margin: "2px 0 0", color: "var(--ink-2)" }}>{jv.one_line_reason}</p>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             )}

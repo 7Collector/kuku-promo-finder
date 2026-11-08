@@ -34,6 +34,21 @@ class TestVerifyClaims(unittest.TestCase):
         if all_issues:
             self.fail(f"Claims mismatch detected:\n" + "\n".join(all_issues))
 
+    def test_virality_fails_verification(self):
+        """Asserts that verify_file_claims fails if 'virality' or 'A-grade' is present in a file."""
+        import tempfile
+        metrics = compute_ground_truth_metrics()
+        with tempfile.NamedTemporaryFile("w+", suffix=".md", delete=False) as f:
+            f.write("# Doc\nPredicting virality score for promos.\n")
+            f.flush()
+            temp_path = Path(f.name)
+
+        try:
+            issues = verify_file_claims(temp_path, metrics)
+            self.assertTrue(any("virality" in iss for iss in issues), f"Expected virality issue, got {issues}")
+        finally:
+            temp_path.unlink()
+
 
 if __name__ == "__main__":
     unittest.main()
